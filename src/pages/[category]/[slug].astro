@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+
+import ProductDetail from "@/components/product/ProductDetail.astro";
+import { categoryMeta, type ProductCategory } from "@/lib/products";
+
+export async function getStaticPaths() {
+  const products = await getCollection("products");
+  return products.map((product) => ({
+    params: {
+      category: categoryMeta[product.data.category].route.replaceAll("/", ""),
+      slug: product.data.slug,
+    },
+    props: { product, allProducts: products },
+  }));
+}
+
+const { product, allProducts } = Astro.props;
+const routeCategory = Astro.params.category;
+const expectedCategory = categoryMeta[
+  product.data.category as ProductCategory
+].route.replaceAll("/", "");
+if (routeCategory !== expectedCategory)
+  throw new Error("Product category route mismatch.");
+---
+
+<ProductDetail product={product} allProducts={allProducts} />

@@ -1,0 +1,205 @@
+---
+import { Image } from "astro:assets";
+
+import TextLink from "@/components/primitives/TextLink.astro";
+import { resolveProductMedia } from "@/lib/product-media";
+import {
+  formatSpecification,
+  getProductHref,
+  getPublicPrice,
+  getVerifiedDisplacement,
+  getVerifiedStats,
+  type ProductEntry,
+} from "@/lib/products";
+
+interface Props {
+  product: ProductEntry;
+  featured?: boolean;
+  headingLevel?: 2 | 3;
+}
+
+const { product, featured = false, headingLevel = 2 } = Astro.props;
+const Heading = `h${headingLevel}` as "h2" | "h3";
+const stats = getVerifiedStats(product, 2);
+const imageRecord =
+  product.data.images.find((image) => image.role === "cutout") ??
+  product.data.images.find((image) => image.role === "hero");
+const image = imageRecord ? resolveProductMedia(imageRecord.src) : undefined;
+const price = getPublicPrice(product);
+const displacement = getVerifiedDisplacement(product);
+---
+
+<article
+  class:list={["product-card", featured && "product-card--featured"]}
+  data-product-card
+  data-family={product.data.family.toLowerCase()}
+  data-usage={product.data.usage.join(" ")}
+  data-displacement={displacement}
+>
+  <div class="product-card__media">
+    {image && imageRecord ? (
+      <Image
+        src={image}
+        alt={imageRecord.alt}
+        widths={[320, 480, 640, 800]}
+        sizes="(min-width: 1280px) 30vw, (min-width: 768px) 48vw, 100vw"
+        layout="full-width"
+        loading="lazy"
+      />
+    ) : (
+      <div class="product-card__placeholder" aria-hidden="true">
+        <span>{product.data.family}</span>
+      </div>
+    )}
+    {imageRecord?.rights.status === "proposal" && (
+      <span class="product-card__asset-state">Visual de propuesta</span>
+    )}
+  </div>
+  <div class="product-card__body">
+    <p class="product-card__eyebrow">{product.data.family}</p>
+    <Heading class="product-card__title">
+      <a href={getProductHref(product)}>{product.data.name}</a>
+    </Heading>
+    {product.data.descriptor && (
+      <p class="product-card__descriptor">{product.data.descriptor}</p>
+    )}
+    {stats.length > 0 && (
+      <dl class="product-card__stats">
+        {stats.map((stat) => (
+          <div>
+            <dt>{stat.label}</dt>
+            <dd>{formatSpecification(stat)}</dd>
+          </div>
+        ))}
+      </dl>
+    )}
+    {price && price.type !== "unavailable" && (
+      <p class="product-card__price">
+        {price.type === "enquire"
+          ? "Precio a consultar"
+          : `${price.currency} ${price.amount.toLocaleString("es-UY")}`}
+      </p>
+    )}
+    <div class="product-card__actions">
+      <TextLink href={getProductHref(product)} directional>
+        Ver detalle
+      </TextLink>
+      <span
+        class="product-card__compare"
+        aria-label="Comparación disponible en una fase posterior"
+      >
+        Comparar · próximamente
+      </span>
+    </div>
+  </div>
+</article>
+
+<style>
+  .product-card {
+    display: grid;
+    min-width: 0;
+    border: var(--border-hairline) solid var(--color-border-subtle);
+    background: var(--color-surface-primary);
+  }
+  .product-card__media {
+    position: relative;
+    display: grid;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    place-items: center;
+    background: var(--color-surface-secondary);
+  }
+  .product-card__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .product-card__placeholder {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+    background:
+      linear-gradient(
+        145deg,
+        transparent 48%,
+        rgb(0 183 229 / 16%) 48% 52%,
+        transparent 52%
+      ),
+      var(--color-neutral-100);
+    color: var(--color-border-strong);
+    font-family: var(--font-family-display);
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 800;
+  }
+  .product-card__asset-state {
+    position: absolute;
+    inset: auto auto var(--space-3) var(--space-3);
+    padding: var(--space-1) var(--space-2);
+    background: rgb(8 12 15 / 88%);
+    color: var(--color-text-inverted);
+    font-size: var(--font-size-caption);
+  }
+  .product-card__body {
+    display: grid;
+    padding: var(--space-5);
+    gap: var(--space-3);
+  }
+  .product-card__eyebrow {
+    color: var(--color-link-on-light);
+    font-size: var(--font-size-label);
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .product-card__title {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-2);
+    line-height: 0.95;
+  }
+  .product-card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .product-card__title a:hover {
+    color: var(--color-link-on-light);
+  }
+  .product-card__descriptor {
+    min-height: 1.5em;
+    color: var(--color-text-secondary);
+  }
+  .product-card__stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+    padding-block-start: var(--space-3);
+    border-block-start: var(--border-hairline) solid var(--color-border-subtle);
+  }
+  .product-card__stats div {
+    min-width: 0;
+  }
+  .product-card__stats dt {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-caption);
+  }
+  .product-card__stats dd {
+    margin-block-start: var(--space-1);
+    font-weight: 750;
+  }
+  .product-card__price {
+    font-weight: 750;
+  }
+  .product-card__actions {
+    display: flex;
+    min-height: var(--target-minimum);
+    margin-block-start: var(--space-2);
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .product-card__compare {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-caption);
+  }
+</style>

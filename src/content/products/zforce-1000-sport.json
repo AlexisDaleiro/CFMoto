@@ -1,0 +1,87 @@
+{
+  "productId": "side-by-side-zforce-1000-sport",
+  "slug": "zforce-1000-sport",
+  "name": "ZFORCE 1000 Sport",
+  "category": "side-by-side",
+  "family": "ZFORCE",
+  "usage": ["sport", "recreation"],
+  "publicationStatus": "draft",
+  "descriptor": "Sport",
+  "description": "Una apertura off-road de propuesta que prueba una personalidad más física sin cambiar tipografía, color ni componentes del sistema.",
+  "copyStatus": "proposal",
+  "compareGroup": "side-by-side",
+  "availability": "unknown",
+  "keyStats": [
+    {
+      "key": "displacement",
+      "label": "Cilindrada",
+      "group": "engine",
+      "status": "available",
+      "value": 963,
+      "unit": "cc",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "curbWeight",
+      "label": "Peso declarado",
+      "group": "dimensions",
+      "status": "available",
+      "value": 690,
+      "unit": "kg",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    }
+  ],
+  "specifications": [
+    {
+      "key": "displacement",
+      "label": "Cilindrada",
+      "group": "engine",
+      "status": "available",
+      "value": 963,
+      "unit": "cc",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "curbWeight",
+      "label": "Peso declarado",
+      "group": "dimensions",
+      "status": "available",
+      "value": 690,
+      "unit": "kg",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    }
+  ],
+  "compareAttributes": [],
+  "features": [],
+  "relatedProducts": ["uforce-800"],
+  "images": [],
+  "colors": [],
+  "cta": {
+    "quote": false,
+    "testRide": false,
+    "whatsapp": false,
+    "dealer": false
+  },
+  "verification": {
+    "status": "needsReview",
+    "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+    "note": "Identity and listed stats are independently verified; power, torque and commercial data remain omitted."
+  },
+  "locale": "es-UY"
+}

@@ -1,0 +1,173 @@
+---
+import { Image } from "astro:assets";
+
+import Button from "@/components/primitives/Button.astro";
+import Stack from "@/components/primitives/Stack.astro";
+import TextLink from "@/components/primitives/TextLink.astro";
+import { resolveProductMedia } from "@/lib/product-media";
+import {
+  formatSpecification,
+  getProductHref,
+  getVerifiedStats,
+  type ProductEntry,
+} from "@/lib/products";
+
+interface Props {
+  product: ProductEntry;
+}
+const { product } = Astro.props;
+const stats = getVerifiedStats(product, 3);
+const imageRecord = product.data.images.find(
+  (image) => image.role === "hero" && image.aspectRatio === "2/1",
+);
+const image = imageRecord ? resolveProductMedia(imageRecord.src) : undefined;
+---
+
+<section
+  class="featured"
+  data-surface="dark"
+  aria-labelledby={`featured-${product.data.slug}`}
+>
+  <div class="featured__media">
+    {image && imageRecord && (
+      <Image
+        src={image}
+        alt={imageRecord.alt}
+        widths={[640, 960, 1280, 1600]}
+        sizes="(min-width: 768px) 62vw, 100vw"
+        layout="constrained"
+        loading="lazy"
+      />
+    )}
+  </div>
+  <div class="featured__content">
+    <Stack gap="6">
+      <div>
+        <p class="type-label section-kicker">
+          {product.data.family} · {product.data.descriptor}
+        </p>
+        <h2 id={`featured-${product.data.slug}`} class="featured__model">
+          {product.data.name}
+        </h2>
+      </div>
+      {product.data.description && (
+        <p class="type-body-l featured__intro">{product.data.description}</p>
+      )}
+      <dl class="featured-stats">
+        {stats.map((stat) => (
+          <div>
+            <dt>{formatSpecification(stat)}</dt>
+            <dd>{stat.label}</dd>
+          </div>
+        ))}
+      </dl>
+      <div class="featured__status">
+        <span>Precio y disponibilidad</span>
+        <strong>Pendientes de validación comercial</strong>
+      </div>
+      <div class="action-cluster">
+        <Button href={getProductHref(product)} size="large">
+          Ver {product.data.name}
+        </Button>
+        <TextLink
+          href={`/motos/?family=${product.data.family.toLowerCase()}`}
+          directional
+        >
+          Explorar familia {product.data.family}
+        </TextLink>
+      </div>
+    </Stack>
+  </div>
+</section>
+
+<style>
+  .featured {
+    display: grid;
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+  .featured__media {
+    display: grid;
+    min-height: 21rem;
+    overflow: hidden;
+    place-items: center;
+    background: var(--color-neutral-950);
+  }
+  .featured__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 70% center;
+  }
+  .featured__content {
+    display: grid;
+    padding: var(--section-space-editorial) var(--page-margin);
+    align-items: center;
+  }
+  .section-kicker {
+    color: var(--color-brand-cyan);
+  }
+  .featured__model {
+    font-family: var(--font-family-display);
+    font-size: clamp(4.5rem, 3rem + 8vw, 9rem);
+    font-weight: 800;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+  }
+  .featured__intro {
+    max-width: 35rem;
+    color: var(--color-text-inverted-secondary);
+  }
+  .featured-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+  .featured-stats div {
+    padding-block-start: var(--space-3);
+    border-block-start: var(--border-hairline) solid var(--color-border-on-dark);
+  }
+  .featured-stats dt {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-stat-m);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .featured-stats dd {
+    margin-block-start: var(--space-1);
+    color: var(--color-text-inverted-secondary);
+    font-size: var(--font-size-body-s);
+  }
+  .featured__status {
+    display: grid;
+    max-width: 35rem;
+    padding: var(--space-4);
+    gap: var(--space-1);
+    border-inline-start: var(--border-accent) solid var(--color-brand-cyan);
+    background: var(--color-surface-dark-raised);
+  }
+  .featured__status span {
+    color: var(--color-text-inverted-secondary);
+    font-size: var(--font-size-body-s);
+  }
+  .action-cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+  }
+  @media (min-width: 48rem) {
+    .featured {
+      grid-template-columns: minmax(0, 5fr) minmax(20rem, 3fr);
+    }
+    .featured__media {
+      min-height: 46rem;
+    }
+    .featured__content {
+      padding-inline: clamp(var(--space-8), 5vw, var(--space-20));
+    }
+    .featured-stats {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -1,0 +1,14 @@
+---
+import { getCollection } from "astro:content";
+import CatalogPage from "@/components/catalog/CatalogPage.astro";
+const products = (await getCollection("products")).filter(
+  (product) => product.data.category === "atv",
+);
+---
+
+<CatalogPage
+  title="ATV"
+  descriptor="Foundation de catálogo ATV con identidad y datos sujetos a validación local."
+  category="atv"
+  products={products}
+/>

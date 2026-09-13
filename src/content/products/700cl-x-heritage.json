@@ -1,0 +1,59 @@
+{
+  "productId": "motorcycle-700cl-x-heritage",
+  "slug": "700cl-x-heritage",
+  "name": "700CL-X Heritage",
+  "category": "motorcycle",
+  "family": "CL-X",
+  "usage": ["heritage"],
+  "publicationStatus": "draft",
+  "descriptor": "Heritage",
+  "copyStatus": "proposal",
+  "compareGroup": "motorcycle",
+  "availability": "unknown",
+  "keyStats": [
+    {
+      "key": "displacement",
+      "label": "Cilindrada",
+      "group": "engine",
+      "status": "available",
+      "value": 693,
+      "unit": "cc",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "maximumTorque",
+      "label": "Torque máximo",
+      "group": "engine",
+      "status": "available",
+      "value": 68,
+      "unit": "Nm",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    }
+  ],
+  "specifications": [],
+  "compareAttributes": [],
+  "features": [],
+  "relatedProducts": ["450sr", "800mt-touring"],
+  "images": [],
+  "colors": [],
+  "cta": {
+    "quote": false,
+    "testRide": false,
+    "whatsapp": false,
+    "dealer": false
+  },
+  "verification": {
+    "status": "needsReview",
+    "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+    "note": "Safe catalog record; market status, colors, assets and commercial data require validation."
+  },
+  "locale": "es-UY"
+}

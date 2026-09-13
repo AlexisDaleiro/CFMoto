@@ -1,0 +1,112 @@
+---
+import Container from "@/components/primitives/Container.astro";
+import Section from "@/components/primitives/Section.astro";
+import {
+  formatSpecification,
+  isVerifiedSpecification,
+  type ProductSpecification,
+} from "@/lib/products";
+
+interface Props {
+  specifications: ProductSpecification[];
+}
+const { specifications } = Astro.props;
+const verified = specifications.filter(isVerifiedSpecification);
+const groupLabels = {
+  engine: "Motor",
+  chassis: "Chasis",
+  dimensions: "Dimensiones",
+  electronics: "Electrónica",
+  capacities: "Capacidades",
+} as const;
+const groups = Object.entries(groupLabels)
+  .map(([id, label]) => ({
+    id,
+    label,
+    items: verified.filter((item) => item.group === id),
+  }))
+  .filter((group) => group.items.length > 0);
+---
+
+{groups.length > 0 && (
+  <Section density="editorial" aria-labelledby="specifications-title">
+    <Container size="standard">
+      <div class="specifications">
+        <div>
+          <p class="type-label">ENGINEERED CLARITY</p>
+          <h2 id="specifications-title" class="type-heading-1">
+            Especificaciones
+          </h2>
+          <p>Solo se muestran datos con estado verificado.</p>
+        </div>
+        <div class="specification-groups">
+          {groups.map((group, index) => (
+            <details open={index === 0}>
+              <summary>{group.label}</summary>
+              <dl>
+                {group.items.map((item) => (
+                  <div>
+                    <dt>{item.label}</dt>
+                    <dd>{formatSpecification(item)}</dd>
+                  </div>
+                ))}
+              </dl>
+            </details>
+          ))}
+        </div>
+      </div>
+    </Container>
+  </Section>
+)}
+
+<style>
+  .specifications {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .specifications > div:first-child {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+  }
+  .specifications > div:first-child p:last-child {
+    color: var(--color-text-secondary);
+  }
+  .specifications .type-label {
+    color: var(--color-link-on-light);
+  }
+  .specification-groups {
+    border-block-start: var(--border-hairline) solid var(--color-border-strong);
+  }
+  details {
+    border-block-end: var(--border-hairline) solid var(--color-border-subtle);
+  }
+  summary {
+    display: flex;
+    min-height: 3.5rem;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 750;
+  }
+  dl div {
+    display: grid;
+    padding: var(--space-4) 0;
+    gap: var(--space-1);
+    border-block-start: var(--border-hairline) solid var(--color-border-subtle);
+  }
+  dt {
+    color: var(--color-text-secondary);
+  }
+  dd {
+    font-weight: 750;
+  }
+  @media (min-width: 48rem) {
+    .specifications {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: var(--space-12);
+    }
+    dl div {
+      grid-template-columns: minmax(10rem, 1fr) minmax(0, 1fr);
+    }
+  }
+</style>

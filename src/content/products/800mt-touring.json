@@ -1,0 +1,139 @@
+{
+  "productId": "motorcycle-800mt-touring",
+  "slug": "800mt-touring",
+  "name": "800MT Touring",
+  "category": "motorcycle",
+  "family": "MT",
+  "usage": ["adventure"],
+  "publicationStatus": "draft",
+  "descriptor": "Adventure Touring",
+  "description": "Una apertura orientada a viajar y explorar, construida como copy de propuesta y separada de los datos técnicos verificados.",
+  "copyStatus": "proposal",
+  "compareGroup": "motorcycle",
+  "availability": "unknown",
+  "keyStats": [
+    {
+      "key": "displacement",
+      "label": "Cilindrada",
+      "group": "engine",
+      "status": "available",
+      "value": 799,
+      "unit": "cc",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "maximumPower",
+      "label": "Potencia máxima",
+      "group": "engine",
+      "status": "available",
+      "value": 95,
+      "unit": "HP",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "maximumTorque",
+      "label": "Torque máximo",
+      "group": "engine",
+      "status": "available",
+      "value": 75,
+      "unit": "Nm",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "curbWeight",
+      "label": "Peso declarado",
+      "group": "dimensions",
+      "status": "available",
+      "value": 231,
+      "unit": "kg",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    }
+  ],
+  "specifications": [
+    {
+      "key": "displacement",
+      "label": "Cilindrada",
+      "group": "engine",
+      "status": "available",
+      "value": 799,
+      "unit": "cc",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "maximumPower",
+      "label": "Potencia máxima",
+      "group": "engine",
+      "status": "available",
+      "value": 95,
+      "unit": "HP",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "maximumTorque",
+      "label": "Torque máximo",
+      "group": "engine",
+      "status": "available",
+      "value": 75,
+      "unit": "Nm",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "curbWeight",
+      "label": "Peso declarado",
+      "group": "dimensions",
+      "status": "available",
+      "value": 231,
+      "unit": "kg",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    }
+  ],
+  "compareAttributes": [],
+  "features": [],
+  "relatedProducts": ["450sr", "700cl-x-heritage"],
+  "images": [],
+  "colors": [],
+  "cta": {
+    "quote": false,
+    "testRide": false,
+    "whatsapp": false,
+    "dealer": false
+  },
+  "verification": {
+    "status": "needsReview",
+    "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+    "note": "Identity and listed stats are independently verified; commercial state remains unresolved."
+  },
+  "locale": "es-UY"
+}

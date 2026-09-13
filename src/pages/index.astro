@@ -1,21 +1,511 @@
 ---
+import { getEntry } from "astro:content";
+
+import PrototypeHeroMedia from "@/components/media/PrototypeHeroMedia.astro";
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Button from "@/components/primitives/Button.astro";
 import Container from "@/components/primitives/Container.astro";
 import Section from "@/components/primitives/Section.astro";
 import Stack from "@/components/primitives/Stack.astro";
+import TextLink from "@/components/primitives/TextLink.astro";
+import FeaturedProduct from "@/components/product/FeaturedProduct.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const product = await getEntry("products", "450sr");
+if (!product) throw new Error("The required 450SR fixture is missing.");
+
+const worlds = [
+  {
+    index: "01",
+    title: "Motos",
+    description: "Racing, Naked, Adventure y Heritage.",
+    href: "/motos/",
+  },
+  {
+    index: "02",
+    title: "ATV",
+    description: "Caminos para trabajo y recreación.",
+    href: "/atv/",
+  },
+  {
+    index: "03",
+    title: "Side-by-Side",
+    description: "Vehículos Sport y Utility.",
+    href: "/side-by-side/",
+  },
+] as const;
 ---
 
-<BaseLayout title="Foundation técnico" robots="noindex, nofollow">
-  <Section density="functional">
-    <Container size="readable">
-      <Stack gap="4">
-        <p class="type-label">CFMOTO URUGUAY</p>
-        <h1 class="type-heading-1">Astro Technical Foundation</h1>
-        <p class="type-body-l">
-          Phase 4 cargada correctamente. La Home visual se construirá en Phase
-          5.
-        </p>
+<BaseLayout
+  title="CFMOTO Uruguay"
+  description="Explorá motos, ATV y Side-by-Side de CFMOTO Uruguay."
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" />
+
+  <section class="home-hero" data-surface="photo" aria-labelledby="home-title">
+    <PrototypeHeroMedia
+      class="home-hero__image"
+      alt="Visual conceptual de una motocicleta deportiva usado exclusivamente para este prototipo"
+      loading="eager"
+      priority
+    />
+    <div class="home-hero__shade" aria-hidden="true"></div>
+    <Container size="product" class="home-hero__content">
+      <Stack gap="6">
+        <p class="prototype-label">PROTOTIPO VISUAL · ASSET NO OFICIAL</p>
+        <h1 id="home-title" class="home-title">
+          <span>CFMOTO</span>
+          <span>URUGUAY</span>
+        </h1>
+        <p class="home-hero__lead">Motos. ATV. Side-by-Side.</p>
+        <div class="action-cluster">
+          <Button href="#mundos" size="large">
+            Explorar vehículos
+          </Button>
+          <Button href="/motos/450sr/" variant="ghost" size="large">
+            Ver 450SR
+          </Button>
+        </div>
+      </Stack>
+    </Container>
+  </section>
+
+  <Section id="mundos" density="editorial" aria-labelledby="worlds-title">
+    <Container size="wide">
+      <Stack gap="8">
+        <div class="section-heading">
+          <p class="type-label section-kicker">ELEGÍ TU MUNDO</p>
+          <h2 id="worlds-title" class="type-heading-1">
+            Una entrada clara para cada forma de moverse.
+          </h2>
+        </div>
+        <div class="world-grid">
+          {worlds.map((world) => (
+            <article class="world-card">
+              <span class="world-card__index" aria-hidden="true">
+                {world.index}
+              </span>
+              <div>
+                <h3 class="type-heading-2">{world.title}</h3>
+                <p>{world.description}</p>
+              </div>
+              <TextLink href={world.href} directional>
+                Explorar {world.title}
+              </TextLink>
+            </article>
+          ))}
+        </div>
       </Stack>
     </Container>
   </Section>
+
+  <FeaturedProduct product={product} />
+
+  <Section
+    density="immersive"
+    surface="light"
+    aria-labelledby="experience-title"
+  >
+    <Container size="wide">
+      <Stack gap="8">
+        <div class="section-heading">
+          <p class="type-label section-kicker">EXPERIENCIA CFMOTO</p>
+          <h2 id="experience-title" class="type-heading-1">
+            Emoción para entrar. Claridad para decidir.
+          </h2>
+        </div>
+        <div class="experience-grid">
+          <article class="experience-card experience-card--racing">
+            <p class="type-label">PERFORMANCE EDITORIAL</p>
+            <h3>RACING</h3>
+            <p>Una ruta editorial hacia la familia SR.</p>
+            <TextLink href="/experiencia/racing/" directional>
+              Explorar Racing
+            </TextLink>
+          </article>
+          <article class="experience-card experience-card--adventure">
+            <p class="type-label">OPEN TERRAIN</p>
+            <h3>ADVENTURE</h3>
+            <p>Una ruta editorial hacia la familia MT.</p>
+            <TextLink href="/experiencia/adventure/" directional>
+              Explorar Adventure
+            </TextLink>
+          </article>
+        </div>
+      </Stack>
+    </Container>
+  </Section>
+
+  <Section
+    density="editorial"
+    surface="dark"
+    aria-labelledby="technology-title"
+  >
+    <Container size="standard">
+      <div class="technology-layout">
+        <div class="technology-mark" aria-hidden="true">
+          <span>01</span>
+          <span>—</span>
+          <span>TECH</span>
+        </div>
+        <Stack gap="6">
+          <p class="type-label section-kicker">ENGINEERED CLARITY</p>
+          <h2 id="technology-title" class="type-heading-1">
+            La tecnología se explica. No se decora.
+          </h2>
+          <p class="type-body-l">
+            Technology tendrá pruebas verificadas, relaciones con productos y
+            lectura precisa. El prototipo evita telemetría o claims ficticios.
+          </p>
+          <TextLink href="/experiencia/technology/" directional>
+            Explorar Technology
+          </TextLink>
+        </Stack>
+      </div>
+    </Container>
+  </Section>
+
+  <Section density="editorial" aria-labelledby="offroad-title">
+    <Container size="wide">
+      <Stack gap="8">
+        <div class="section-heading">
+          <p class="type-label section-kicker">MÁS ALLÁ DEL ASFALTO</p>
+          <h2 id="offroad-title" class="type-heading-1">
+            Trabajo o recreación.
+          </h2>
+        </div>
+        <div class="path-grid">
+          <a href="/atv/?usage=work">
+            <span class="type-label">ATV</span>
+            <strong>TRABAJO</strong>
+            <span>Explorar camino →</span>
+          </a>
+          <a href="/side-by-side/?usage=recreation">
+            <span class="type-label">SIDE-BY-SIDE</span>
+            <strong>RECREACIÓN</strong>
+            <span>Explorar camino →</span>
+          </a>
+        </div>
+      </Stack>
+    </Container>
+  </Section>
+
+  <Section
+    id="red"
+    density="immersive"
+    surface="light"
+    aria-labelledby="network-title"
+  >
+    <Container size="standard">
+      <div class="network-cta">
+        <div>
+          <p class="type-label section-kicker">RED LOCAL</p>
+          <h2 id="network-title" class="type-heading-1">
+            Encontrá el punto adecuado para tu próxima decisión.
+          </h2>
+        </div>
+        <div class="action-cluster">
+          <Button href="/concesionarios/" size="large">
+            Ver concesionarios
+          </Button>
+          <TextLink href="/service/" directional>
+            Encontrar service
+          </TextLink>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <footer slot="footer" class="prototype-footer" data-surface="dark">
+    <Container size="wide">
+      <div>
+        <p class="brand-footer">
+          CFMOTO <span>URUGUAY</span>
+        </p>
+        <p>
+          Phase 5 visual prototype · No indexable · Datos y assets sujetos a
+          validación.
+        </p>
+      </div>
+    </Container>
+  </footer>
 </BaseLayout>
+
+<style>
+  .home-hero {
+    position: relative;
+    display: grid;
+    min-height: min(54rem, calc(100svh - 4rem));
+    overflow: hidden;
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+    isolation: isolate;
+  }
+  :global(.home-hero__image),
+  .home-hero__shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  :global(.home-hero__image) {
+    z-index: -2;
+    object-fit: cover;
+    object-position: 66% center;
+  }
+  .home-hero__shade {
+    z-index: -1;
+    background:
+      linear-gradient(
+        90deg,
+        rgb(8 12 15 / 96%) 0%,
+        rgb(8 12 15 / 72%) 42%,
+        transparent 74%
+      ),
+      linear-gradient(0deg, rgb(8 12 15 / 65%) 0%, transparent 45%);
+  }
+  .home-hero__content {
+    display: grid;
+    padding-block: var(--section-space-immersive);
+    align-items: end;
+  }
+  .prototype-label,
+  .section-kicker {
+    color: var(--color-brand-cyan);
+    font-size: var(--font-size-label);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .home-title {
+    display: flex;
+    max-width: 7ch;
+    flex-direction: column;
+    font-family: var(--font-family-display);
+    font-size: clamp(4.5rem, 2.25rem + 10vw, 10rem);
+    font-weight: 800;
+    line-height: 0.72;
+    letter-spacing: -0.055em;
+  }
+  .home-title span:last-child {
+    margin-inline-start: 0.1em;
+    color: transparent;
+    font-size: 0.43em;
+    letter-spacing: 0.12em;
+    -webkit-text-stroke: 1px var(--color-text-inverted-secondary);
+  }
+  .home-hero__lead {
+    color: var(--color-text-inverted-secondary);
+    font-size: var(--font-size-body-l);
+  }
+  .action-cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+  }
+  .section-heading {
+    display: grid;
+    max-width: 52rem;
+    gap: var(--space-3);
+  }
+  .world-grid {
+    display: grid;
+    border-block-start: var(--border-hairline) solid var(--color-border-strong);
+  }
+  .world-card {
+    position: relative;
+    display: grid;
+    min-height: 19rem;
+    padding: var(--space-6) 0;
+    align-content: space-between;
+    gap: var(--space-8);
+    border-block-end: var(--border-hairline) solid var(--color-border-strong);
+  }
+  .world-card__index {
+    color: var(--color-border-strong);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-stat-m);
+    font-weight: 700;
+  }
+  .world-card h3 {
+    margin-block-end: var(--space-3);
+  }
+  .world-card p {
+    color: var(--color-text-secondary);
+  }
+  .experience-grid,
+  .path-grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .experience-card {
+    position: relative;
+    display: grid;
+    min-height: 25rem;
+    min-width: 0;
+    padding: var(--space-6);
+    align-content: end;
+    gap: var(--space-4);
+    overflow: hidden;
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+  .experience-card::before {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(140deg, transparent 30%, rgb(0 183 229 / 25%));
+    content: "";
+  }
+  .experience-card--adventure::before {
+    background:
+      linear-gradient(145deg, transparent 45%, rgb(0 183 229 / 20%)),
+      repeating-linear-gradient(
+        165deg,
+        transparent 0 3.5rem,
+        rgb(255 255 255 / 4%) 3.5rem 3.6rem
+      );
+  }
+  .experience-card > * {
+    position: relative;
+  }
+  .experience-card h3 {
+    font-family: var(--font-family-display);
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 0.85;
+  }
+  .experience-card p:not(.type-label) {
+    color: var(--color-text-inverted-secondary);
+  }
+  .technology-layout {
+    display: grid;
+    gap: var(--space-8);
+    align-items: center;
+  }
+  .technology-mark {
+    display: grid;
+    aspect-ratio: 1;
+    padding: var(--space-6);
+    place-content: center;
+    border: var(--border-hairline) solid var(--color-border-on-dark);
+    color: var(--color-brand-cyan);
+    font-family: var(--font-family-display);
+    font-size: clamp(2rem, 1rem + 7vw, 7rem);
+    font-weight: 700;
+    line-height: 0.7;
+    text-align: center;
+  }
+  .technology-layout p:not(.type-label) {
+    max-width: 39rem;
+    color: var(--color-text-inverted-secondary);
+  }
+  .path-grid a {
+    display: grid;
+    min-height: 18rem;
+    min-width: 0;
+    padding: var(--space-6);
+    align-content: space-between;
+    border: var(--border-hairline) solid var(--color-border-subtle);
+    background: var(--color-surface-primary);
+    color: var(--color-text-primary);
+    text-decoration: none;
+  }
+  .path-grid strong {
+    font-family: var(--font-family-display);
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+    line-height: 0.9;
+  }
+  .path-grid a:hover {
+    border-color: var(--color-brand-cyan-active);
+    box-shadow: inset 0 -0.25rem var(--color-brand-cyan);
+  }
+  .network-cta {
+    display: grid;
+    gap: var(--space-8);
+    align-items: end;
+  }
+  .prototype-footer {
+    padding-block: var(--space-8);
+    border-block-start: var(--border-hairline) solid var(--color-border-on-dark);
+    background: var(--color-surface-dark);
+    color: var(--color-text-inverted-secondary);
+    font-size: var(--font-size-body-s);
+  }
+  .prototype-footer > :global(.container) > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+  .brand-footer {
+    color: var(--color-text-inverted);
+    font-weight: 800;
+  }
+  .brand-footer span {
+    margin-inline-start: var(--space-2);
+    color: var(--color-brand-cyan);
+    font-size: 0.7em;
+    letter-spacing: 0.1em;
+  }
+  @media (min-width: 48rem) {
+    .world-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .world-card {
+      padding: var(--space-6);
+      border-inline-end: var(--border-hairline) solid var(--color-border-subtle);
+    }
+    .world-card:last-child {
+      border-inline-end: 0;
+    }
+    .experience-grid,
+    .path-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .technology-layout {
+      grid-template-columns: minmax(15rem, 0.8fr) minmax(0, 1.2fr);
+    }
+    .network-cta {
+      grid-template-columns: minmax(0, 1.5fr) auto;
+    }
+  }
+  @media (max-width: 47.99rem) {
+    .home-hero {
+      min-height: 44rem;
+    }
+    :global(.home-hero__image) {
+      object-position: center;
+    }
+    .home-hero__shade {
+      background: linear-gradient(
+        180deg,
+        rgb(8 12 15 / 98%) 0%,
+        rgb(8 12 15 / 92%) 36%,
+        rgb(8 12 15 / 12%) 72%,
+        rgb(8 12 15 / 38%) 100%
+      );
+    }
+    .home-hero__content {
+      align-items: start;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .home-title,
+    .home-hero__lead,
+    .action-cluster {
+      animation: reveal-up var(--motion-expressive) var(--ease-enter) both;
+    }
+    .home-hero__lead {
+      animation-delay: 80ms;
+    }
+    .action-cluster {
+      animation-delay: 140ms;
+    }
+    @keyframes reveal-up {
+      from {
+        transform: translateY(var(--space-4));
+        opacity: 0;
+      }
+    }
+  }
+</style>

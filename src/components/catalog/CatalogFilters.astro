@@ -1,0 +1,154 @@
+---
+import { usageLabels, type ProductEntry } from "@/lib/products";
+
+interface Props {
+  products: ProductEntry[];
+  id: string;
+  allowDisplacement?: boolean;
+  allowSort?: boolean;
+}
+const {
+  products,
+  id,
+  allowDisplacement = false,
+  allowSort = false,
+} = Astro.props;
+const families = [
+  ...new Set(products.map((product) => product.data.family)),
+].sort();
+const usages = [
+  ...new Set(products.flatMap((product) => product.data.usage)),
+].sort();
+---
+
+<form
+  class="catalog-filters"
+  data-catalog-form
+  data-form-id={id}
+  action={Astro.url.pathname}
+  method="get"
+>
+  {families.length > 1 && (
+    <fieldset>
+      <legend>Familia</legend>
+      {families.map((family) => (
+        <label>
+          <input type="checkbox" name="family" value={family.toLowerCase()} />{" "}
+          <span>{family}</span>
+        </label>
+      ))}
+    </fieldset>
+  )}
+  {usages.length > 1 && (
+    <fieldset>
+      <legend>Uso</legend>
+      {usages.map((usage) => (
+        <label>
+          <input type="checkbox" name="usage" value={usage} />{" "}
+          <span>{usageLabels[usage] ?? usage}</span>
+        </label>
+      ))}
+    </fieldset>
+  )}
+  {allowDisplacement && (
+    <fieldset>
+      <legend>Cilindrada</legend>
+      <label>
+        <input type="checkbox" name="displacement" value="under-500" />{" "}
+        <span>Hasta 499 cc</span>
+      </label>
+      <label>
+        <input type="checkbox" name="displacement" value="500-799" />{" "}
+        <span>500–799 cc</span>
+      </label>
+      <label>
+        <input type="checkbox" name="displacement" value="800-plus" />{" "}
+        <span>800 cc o más</span>
+      </label>
+    </fieldset>
+  )}
+  {allowSort && (
+    <label class="sort-field">
+      <span>Ordenar</span>
+      <select name="sort">
+        <option value="relevance">Relevancia</option>
+        <option value="displacement">Cilindrada</option>
+      </select>
+    </label>
+  )}
+  <div class="filter-actions">
+    <button class="filter-apply" type="submit">
+      Aplicar filtros
+    </button>
+    <a href={Astro.url.pathname} data-clear-filters>
+      Limpiar filtros
+    </a>
+  </div>
+</form>
+
+<style>
+  .catalog-filters {
+    display: grid;
+    gap: var(--space-6);
+  }
+  fieldset {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    gap: var(--space-2);
+    border: 0;
+  }
+  legend,
+  .sort-field > span {
+    margin-block-end: var(--space-2);
+    font-weight: 750;
+  }
+  label:not(.sort-field) {
+    display: flex;
+    min-height: var(--target-minimum);
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+  }
+  input {
+    width: 1.125rem;
+    height: 1.125rem;
+    accent-color: var(--color-brand-cyan-active);
+  }
+  .sort-field {
+    display: grid;
+    gap: var(--space-2);
+  }
+  select {
+    min-height: var(--control-height-default);
+    padding-inline: var(--space-3);
+    border: var(--border-hairline) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-primary);
+    color: var(--color-text-primary);
+  }
+  .filter-actions {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .filter-apply,
+  .filter-actions a {
+    display: inline-flex;
+    min-height: var(--control-height-default);
+    padding-inline: var(--space-4);
+    align-items: center;
+    justify-content: center;
+    border: var(--border-strong) solid var(--color-brand-cyan);
+    border-radius: var(--radius-sm);
+    background: var(--color-brand-cyan);
+    color: var(--color-on-brand);
+    font-weight: 750;
+    text-align: center;
+    text-decoration: none;
+  }
+  .filter-actions a {
+    border-color: var(--color-border-strong);
+    background: transparent;
+    color: var(--color-text-primary);
+  }
+</style>

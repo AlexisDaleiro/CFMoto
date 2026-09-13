@@ -113,6 +113,19 @@ export const productSchema = z.object({
   name: z.string().min(1),
   category: z.enum(["motorcycle", "atv", "side-by-side"]),
   family: z.string().min(1),
+  usage: z
+    .array(
+      z.enum([
+        "sport",
+        "naked",
+        "adventure",
+        "heritage",
+        "recreation",
+        "utility",
+        "work",
+      ]),
+    )
+    .default([]),
   modelYear: z.number().int().min(2000).max(2100).optional(),
   publicationStatus: z.enum([
     "draft",
@@ -123,6 +136,7 @@ export const productSchema = z.object({
   ]),
   descriptor: z.string().min(1).optional(),
   description: z.string().min(1).optional(),
+  copyStatus: z.enum(["verified", "proposal"]).default("proposal"),
   compareGroup: z.string().min(1),
   availability: z.enum([
     "available",
@@ -133,6 +147,18 @@ export const productSchema = z.object({
   keyStats: z.array(specificationSchema).max(5).default([]),
   specifications: z.array(specificationSchema).default([]),
   compareAttributes: z.array(specificationSchema).default([]),
+  features: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        type: z.enum(["performance", "technology", "design", "capability"]),
+        title: z.string().min(1),
+        body: z.string().min(1),
+        verification: verificationSchema,
+      }),
+    )
+    .default([]),
+  relatedProducts: z.array(z.string().min(1)).max(4).default([]),
   images: z.array(imageSchema).default([]),
   colors: z
     .array(

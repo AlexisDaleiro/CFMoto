@@ -1,0 +1,94 @@
+---
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Container from "@/components/primitives/Container.astro";
+import Section from "@/components/primitives/Section.astro";
+import Stack from "@/components/primitives/Stack.astro";
+import FeatureSection from "@/components/product/FeatureSection.astro";
+import KeyStats from "@/components/product/KeyStats.astro";
+import ProductHero from "@/components/product/ProductHero.astro";
+import RelatedProducts from "@/components/product/RelatedProducts.astro";
+import Specifications from "@/components/product/Specifications.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {
+  getRelatedProducts,
+  getVerifiedStats,
+  type ProductEntry,
+} from "@/lib/products";
+
+interface Props {
+  product: ProductEntry;
+  allProducts: ProductEntry[];
+}
+const { product, allProducts } = Astro.props;
+const stats = getVerifiedStats(product);
+const related = getRelatedProducts(product, allProducts);
+const description = product.data.description;
+---
+
+<BaseLayout
+  title={`${product.data.name} — CFMOTO Uruguay`}
+  description={
+    product.data.descriptor
+      ? `${product.data.name}: ${product.data.descriptor}. Información verificada disponible para Uruguay.`
+      : `${product.data.name} — CFMOTO Uruguay.`
+  }
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" />
+  <ProductHero product={product} />
+  <KeyStats stats={stats} />
+  {description && (
+    <Section density="editorial" surface="light" aria-labelledby="story-title">
+      <Container size="standard">
+        <div class="product-story">
+          <Stack gap="3">
+            <p class="type-label">
+              {product.data.copyStatus === "proposal"
+                ? "POSICIONAMIENTO DE PROPUESTA"
+                : product.data.family}
+            </p>
+            <h2 id="story-title" class="type-heading-1">
+              {product.data.descriptor ?? product.data.name}
+            </h2>
+          </Stack>
+          <p class="type-body-l">{description}</p>
+        </div>
+      </Container>
+    </Section>
+  )}
+  <Specifications specifications={product.data.specifications} />
+  <FeatureSection features={product.data.features} />
+  <RelatedProducts products={related} />
+  <footer slot="footer" class="product-footer" data-surface="dark">
+    <Container size="wide">
+      <p>Catálogo Phase 6 · Datos y assets sujetos a validación.</p>
+    </Container>
+  </footer>
+</BaseLayout>
+
+<style>
+  .product-story {
+    display: grid;
+    gap: var(--space-8);
+    align-items: start;
+  }
+  .product-story .type-label {
+    color: var(--color-link-on-light);
+  }
+  .product-story > p {
+    max-width: 42rem;
+  }
+  .product-footer {
+    padding-block: var(--space-6);
+    border-block-start: var(--border-hairline) solid var(--color-border-on-dark);
+    background: var(--color-surface-dark);
+    color: var(--color-text-inverted-secondary);
+    font-size: var(--font-size-body-s);
+  }
+  @media (min-width: 48rem) {
+    .product-story {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-12);
+    }
+  }
+</style>

@@ -1,0 +1,206 @@
+---
+import { Image, getImage } from "astro:assets";
+
+import Breadcrumbs from "@/components/navigation/Breadcrumbs.astro";
+import Container from "@/components/primitives/Container.astro";
+import { resolveProductMedia } from "@/lib/product-media";
+import { categoryMeta, type ProductEntry } from "@/lib/products";
+
+interface Props {
+  product: ProductEntry;
+}
+const { product } = Astro.props;
+const desktopRecord = product.data.images.find(
+  (image) => image.role === "hero" && image.aspectRatio === "2/1",
+);
+const mobileRecord = product.data.images.find(
+  (image) => image.role === "hero" && image.aspectRatio === "2/3",
+);
+const desktopImage = desktopRecord
+  ? resolveProductMedia(desktopRecord.src)
+  : undefined;
+const mobileImage = mobileRecord
+  ? resolveProductMedia(mobileRecord.src)
+  : undefined;
+const mobileOutput = mobileImage
+  ? await getImage({ src: mobileImage, width: 768, format: "webp" })
+  : undefined;
+const category = categoryMeta[product.data.category];
+---
+
+<section
+  class:list={["product-hero", !desktopImage && "product-hero--graphic"]}
+  data-surface="photo"
+  aria-labelledby="product-title"
+>
+  {desktopImage && desktopRecord && (
+    <picture class="product-hero__picture">
+      {mobileOutput && (
+        <source media="(max-width: 47.99rem)" srcset={mobileOutput.src} />
+      )}
+      <Image
+        class="product-hero__image"
+        src={desktopImage}
+        alt={desktopRecord.alt}
+        widths={[640, 960, 1280, 1600, 1920]}
+        sizes="100vw"
+        layout="full-width"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </picture>
+  )}
+  <div class="product-hero__shade" aria-hidden="true"></div>
+  <Container size="product" class="product-hero__inner">
+    <Breadcrumbs
+      items={[
+        { label: "Inicio", href: "/" },
+        { label: category.label, href: category.route },
+        { label: product.data.name },
+      ]}
+    />
+    <div class="product-identity">
+      {desktopRecord?.rights.status === "proposal" && (
+        <p class="proposal-label">PROTOTIPO · VISUAL NO OFICIAL</p>
+      )}
+      <p class="product-family">
+        {product.data.family}
+        {product.data.descriptor && ` · ${product.data.descriptor}`}
+      </p>
+      <h1 id="product-title">{product.data.name}</h1>
+      <p class="product-state">
+        Precio y disponibilidad pendientes de validación comercial.
+      </p>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .product-hero {
+    position: relative;
+    display: grid;
+    min-height: min(50rem, calc(100svh - 4rem));
+    overflow: hidden;
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+    isolation: isolate;
+  }
+  .product-hero--graphic::before {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      linear-gradient(
+        128deg,
+        transparent 42%,
+        rgb(0 183 229 / 20%) 42% 48%,
+        transparent 48%
+      ),
+      repeating-linear-gradient(
+        165deg,
+        transparent 0 7rem,
+        rgb(255 255 255 / 3%) 7rem 7.1rem
+      ),
+      var(--color-neutral-950);
+    content: "";
+  }
+  .product-hero__picture {
+    display: contents;
+  }
+  :global(.product-hero__image),
+  .product-hero__shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  :global(.product-hero__image) {
+    z-index: -2;
+    object-fit: cover;
+    object-position: 68% center;
+  }
+  .product-hero__shade {
+    z-index: -1;
+    background:
+      linear-gradient(
+        90deg,
+        rgb(8 12 15 / 98%) 0%,
+        rgb(8 12 15 / 73%) 39%,
+        transparent 72%
+      ),
+      linear-gradient(0deg, rgb(8 12 15 / 65%), transparent 45%);
+  }
+  .product-hero__inner {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    padding-block-end: var(--section-space-immersive);
+  }
+  .product-hero :global(.breadcrumbs a),
+  .product-hero :global(.breadcrumbs [aria-current="page"]) {
+    color: var(--color-text-inverted-secondary);
+  }
+  .product-identity {
+    display: grid;
+    max-width: 42rem;
+    align-content: end;
+    gap: var(--space-4);
+  }
+  .proposal-label {
+    color: var(--color-brand-cyan);
+    font-size: var(--font-size-label);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .product-family {
+    color: var(--color-text-inverted-secondary);
+    font-weight: 650;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  h1 {
+    max-width: 8ch;
+    font-family: var(--font-family-display);
+    font-size: clamp(5rem, 3rem + 11vw, 13rem);
+    font-weight: 800;
+    line-height: 0.72;
+    letter-spacing: -0.055em;
+  }
+  .product-state {
+    max-width: 30rem;
+    font-size: var(--font-size-body-l);
+  }
+  @media (max-width: 47.99rem) {
+    .product-hero {
+      min-height: 45rem;
+    }
+    :global(.product-hero__image) {
+      object-position: center;
+    }
+    .product-hero__shade {
+      background: linear-gradient(
+        180deg,
+        rgb(8 12 15 / 98%) 0%,
+        rgb(8 12 15 / 94%) 46%,
+        rgb(8 12 15 / 68%) 70%,
+        rgb(8 12 15 / 24%) 100%
+      );
+    }
+    .product-identity {
+      align-content: start;
+    }
+    h1 {
+      font-size: clamp(4.2rem, 22vw, 7rem);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .product-identity {
+      animation: product-reveal var(--motion-expressive) var(--ease-enter) both;
+    }
+    @keyframes product-reveal {
+      from {
+        transform: translateY(var(--space-4));
+        opacity: 0;
+      }
+    }
+  }
+</style>

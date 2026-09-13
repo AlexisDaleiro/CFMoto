@@ -1,0 +1,68 @@
+---
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Button from "@/components/primitives/Button.astro";
+import Container from "@/components/primitives/Container.astro";
+import Section from "@/components/primitives/Section.astro";
+import Stack from "@/components/primitives/Stack.astro";
+import TextLink from "@/components/primitives/TextLink.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Página no encontrada — CFMOTO Uruguay"
+  description="La página solicitada no está disponible."
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" />
+  <Section
+    class="not-found"
+    density="immersive"
+    surface="light"
+    aria-labelledby="not-found-title"
+  >
+    <Container size="readable">
+      <Stack gap="6">
+        <p class="error-code">404</p>
+        <h1 id="not-found-title" class="type-display-l">
+          Esta página cambió o no existe.
+        </h1>
+        <p class="type-body-l">
+          Podés volver al inicio o seguir explorando el catálogo de motos.
+        </p>
+        <div class="not-found__actions">
+          <Button href="/">Volver al inicio</Button>
+          <TextLink href="/motos/" directional>
+            Explorar motos
+          </TextLink>
+        </div>
+        <p class="type-caption">
+          La red de concesionarios se incorporará cuando sus datos locales estén
+          validados.
+        </p>
+      </Stack>
+    </Container>
+  </Section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: calc(100svh - 5rem);
+    display: grid;
+    align-items: center;
+  }
+  .error-code {
+    color: var(--color-link-on-light);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-stat-m);
+    font-weight: 800;
+  }
+  .not-found__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+  }
+  .type-caption {
+    color: var(--color-text-secondary);
+  }
+</style>

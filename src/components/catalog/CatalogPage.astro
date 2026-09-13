@@ -1,0 +1,483 @@
+---
+import CatalogFilters from "@/components/catalog/CatalogFilters.astro";
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Container from "@/components/primitives/Container.astro";
+import Section from "@/components/primitives/Section.astro";
+import Stack from "@/components/primitives/Stack.astro";
+import ProductCard from "@/components/product/ProductCard.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {
+  getVerifiedDisplacement,
+  type ProductCategory,
+  type ProductEntry,
+} from "@/lib/products";
+
+interface Props {
+  title: string;
+  descriptor: string;
+  category: ProductCategory;
+  products: ProductEntry[];
+}
+const { title, descriptor, category, products } = Astro.props;
+const allowDisplacement =
+  category === "motorcycle" &&
+  products.filter((product) => getVerifiedDisplacement(product) !== undefined)
+    .length > 1;
+const allowSort = allowDisplacement;
+const hasFilters =
+  new Set(products.map((product) => product.data.family)).size > 1 ||
+  new Set(products.flatMap((product) => product.data.usage)).size > 1 ||
+  allowDisplacement;
+---
+
+<BaseLayout
+  title={`${title} — CFMOTO Uruguay`}
+  description={descriptor}
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" />
+  <Section
+    class="catalog-intro"
+    density="editorial"
+    surface="light"
+    aria-labelledby="catalog-title"
+  >
+    <Container size="wide">
+      <Stack gap="4">
+        <p class="type-label">CATÁLOGO · ENGINEERED CLARITY</p>
+        <h1 id="catalog-title" class="catalog-title">
+          {title}
+        </h1>
+        <p class="type-body-l catalog-descriptor">{descriptor}</p>
+      </Stack>
+    </Container>
+  </Section>
+  <Section density="editorial" aria-labelledby="results-title">
+    <Container size="wide">
+      <div
+        class:list={["catalog-layout", !hasFilters && "catalog-layout--simple"]}
+        data-catalog
+      >
+        {hasFilters && (
+          <aside class="desktop-filters" aria-label="Filtros del catálogo">
+            <h2 class="type-heading-3">Filtrar</h2>
+            <CatalogFilters
+              products={products}
+              id="desktop"
+              allowDisplacement={allowDisplacement}
+              allowSort={allowSort}
+            />
+          </aside>
+        )}
+        <div class="catalog-results">
+          <div class="results-toolbar">
+            <div>
+              <h2 id="results-title" class="type-heading-3">
+                Modelos
+              </h2>
+              <p aria-live="polite" data-result-count>
+                {products.length}{" "}
+                {products.length === 1 ? "resultado" : "resultados"}
+              </p>
+            </div>
+            {hasFilters && (
+              <button
+                class="mobile-filter-trigger"
+                type="button"
+                data-filter-open
+              >
+                Filtrar <span data-active-count></span>
+              </button>
+            )}
+          </div>
+          <p class="filter-notice" role="status" data-filter-notice hidden></p>
+          <div
+            class="active-filters"
+            aria-label="Filtros activos"
+            data-active-filters
+            hidden
+          ></div>
+          <div class="product-grid" data-product-grid>
+            {products.map((product) => (
+              <ProductCard product={product} />
+            ))}
+          </div>
+          <div class="catalog-empty" data-empty-state hidden>
+            <h3 class="type-heading-2">
+              No encontramos modelos con estos filtros.
+            </h3>
+            <p>
+              Probá una combinación más amplia o volvé a ver el catálogo
+              completo.
+            </p>
+            <a href={Astro.url.pathname} data-clear-filters>
+              Limpiar filtros
+            </a>
+          </div>
+        </div>
+        {hasFilters && (
+          <dialog
+            class="filter-dialog"
+            aria-labelledby="mobile-filter-title"
+            data-filter-dialog
+          >
+            <div class="filter-dialog__header">
+              <h2 id="mobile-filter-title" class="type-heading-3">
+                Filtrar modelos
+              </h2>
+              <button type="button" data-filter-close autofocus>
+                Cerrar <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <CatalogFilters
+              products={products}
+              id="mobile"
+              allowDisplacement={allowDisplacement}
+              allowSort={allowSort}
+            />
+          </dialog>
+        )}
+      </div>
+    </Container>
+  </Section>
+  <footer slot="footer" class="catalog-footer" data-surface="dark">
+    <Container size="wide">
+      <p>Catálogo Phase 6 · Información sujeta a validación local.</p>
+    </Container>
+  </footer>
+</BaseLayout>
+
+<script>
+  const catalogs = document.querySelectorAll<HTMLElement>("[data-catalog]");
+  catalogs.forEach((catalog) => {
+    const cards = [
+      ...catalog.querySelectorAll<HTMLElement>("[data-product-card]"),
+    ];
+    const forms = [
+      ...catalog.querySelectorAll<HTMLFormElement>("[data-catalog-form]"),
+    ];
+    const grid = catalog.querySelector<HTMLElement>("[data-product-grid]");
+    const count = catalog.querySelector<HTMLElement>("[data-result-count]");
+    const activeCount = catalog.querySelector<HTMLElement>(
+      "[data-active-count]",
+    );
+    const empty = catalog.querySelector<HTMLElement>("[data-empty-state]");
+    const notice = catalog.querySelector<HTMLElement>("[data-filter-notice]");
+    const activeFilters = catalog.querySelector<HTMLElement>(
+      "[data-active-filters]",
+    );
+    const dialog = catalog.querySelector<HTMLDialogElement>(
+      "[data-filter-dialog]",
+    );
+    const open = catalog.querySelector<HTMLButtonElement>("[data-filter-open]");
+    const close = catalog.querySelector<HTMLButtonElement>(
+      "[data-filter-close]",
+    );
+    const allowed = new Set(["family", "usage", "displacement", "sort"]);
+
+    const values = (params: URLSearchParams, name: string) =>
+      params.getAll(name);
+    const matchesDisplacement = (value: number, filters: string[]) =>
+      filters.length === 0 ||
+      filters.some((filter) =>
+        filter === "under-500"
+          ? value < 500
+          : filter === "500-799"
+            ? value >= 500 && value < 800
+            : filter === "800-plus"
+              ? value >= 800
+              : false,
+      );
+    const syncForms = (params: URLSearchParams) =>
+      forms.forEach((form) => {
+        form
+          .querySelectorAll<HTMLInputElement>("input[type=checkbox]")
+          .forEach((input) => {
+            input.checked = values(params, input.name).includes(input.value);
+          });
+        form.querySelectorAll<HTMLSelectElement>("select").forEach((select) => {
+          select.value = params.get(select.name) ?? "relevance";
+        });
+      });
+    const apply = (params: URLSearchParams, announce = false) => {
+      const families = values(params, "family");
+      const usages = values(params, "usage");
+      const displacements = values(params, "displacement");
+      const visible = cards.filter((card) => {
+        const cardUsage = (card.dataset.usage ?? "").split(" ");
+        const displacement = Number(card.dataset.displacement);
+        return (
+          (families.length === 0 ||
+            families.includes(card.dataset.family ?? "")) &&
+          (usages.length === 0 ||
+            usages.some((usage) => cardUsage.includes(usage))) &&
+          matchesDisplacement(displacement, displacements)
+        );
+      });
+      const order =
+        params.get("sort") === "displacement"
+          ? [...cards].sort(
+              (a, b) =>
+                Number(a.dataset.displacement || Infinity) -
+                Number(b.dataset.displacement || Infinity),
+            )
+          : cards;
+      order.forEach((card) => grid?.append(card));
+      cards.forEach((card) => {
+        card.hidden = !visible.includes(card);
+      });
+      if (count)
+        count.textContent = `${visible.length} ${visible.length === 1 ? "resultado" : "resultados"}`;
+      if (activeCount) {
+        const total = families.length + usages.length + displacements.length;
+        activeCount.textContent = total ? `(${total})` : "";
+      }
+      if (activeFilters) {
+        activeFilters.replaceChildren();
+        const selected = [...families, ...usages, ...displacements];
+        selected.forEach((value) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = `${value} ×`;
+          button.setAttribute("aria-label", `Quitar filtro ${value}`);
+          button.addEventListener("click", () => {
+            const next = new URLSearchParams(location.search);
+            for (const key of ["family", "usage", "displacement"]) {
+              const remaining = next
+                .getAll(key)
+                .filter((item) => item !== value);
+              next.delete(key);
+              remaining.forEach((item) => next.append(key, item));
+            }
+            const query = next.toString();
+            history.pushState(
+              {},
+              "",
+              `${location.pathname}${query ? `?${query}` : ""}`,
+            );
+            apply(next, true);
+          });
+          activeFilters.append(button);
+        });
+        activeFilters.hidden = selected.length === 0;
+      }
+      if (empty) empty.hidden = visible.length > 0;
+      syncForms(params);
+      if (announce && count) count.focus?.();
+    };
+    const readForm = (form: HTMLFormElement) => {
+      const params = new URLSearchParams();
+      new FormData(form).forEach((value, key) => {
+        if (String(value) && allowed.has(key))
+          params.append(key, String(value));
+      });
+      return params;
+    };
+    forms.forEach((form) =>
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const params = readForm(form);
+        const query = params.toString();
+        history.pushState(
+          {},
+          "",
+          `${location.pathname}${query ? `?${query}` : ""}`,
+        );
+        apply(params, true);
+        if (dialog?.open) dialog.close();
+      }),
+    );
+    catalog
+      .querySelectorAll<HTMLAnchorElement>("[data-clear-filters]")
+      .forEach((link) =>
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          history.pushState({}, "", location.pathname);
+          apply(new URLSearchParams(), true);
+          if (dialog?.open) dialog.close();
+        }),
+      );
+    open?.addEventListener("click", () => dialog?.showModal());
+    close?.addEventListener("click", () => dialog?.close());
+    dialog?.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog?.addEventListener("close", () => open?.focus());
+    addEventListener("popstate", () =>
+      apply(new URLSearchParams(location.search)),
+    );
+    const initial = new URLSearchParams(location.search);
+    const invalid = [...initial.keys()].filter((key) => !allowed.has(key));
+    if (invalid.length && notice) {
+      notice.hidden = false;
+      notice.textContent = `Se ignoró ${invalid.length === 1 ? "un filtro no reconocido" : "filtros no reconocidos"}.`;
+    }
+    apply(initial);
+  });
+</script>
+
+<style>
+  .catalog-intro .type-label {
+    color: var(--color-link-on-light);
+  }
+  .catalog-title {
+    font-family: var(--font-family-display);
+    font-size: clamp(4rem, 2.5rem + 9vw, 9rem);
+    font-weight: 800;
+    line-height: 0.78;
+    letter-spacing: -0.045em;
+  }
+  .catalog-descriptor {
+    max-width: 42rem;
+    color: var(--color-text-secondary);
+  }
+  .catalog-layout {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .desktop-filters {
+    display: none;
+  }
+  .catalog-results {
+    min-width: 0;
+  }
+  .results-toolbar {
+    display: flex;
+    min-height: 4rem;
+    margin-block-end: var(--space-6);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    border-block-end: var(--border-hairline) solid var(--color-border-strong);
+  }
+  .results-toolbar p {
+    color: var(--color-text-secondary);
+  }
+  .mobile-filter-trigger {
+    min-height: var(--control-height-default);
+    padding-inline: var(--space-4);
+    border: var(--border-strong) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-primary);
+    color: var(--color-text-primary);
+    font-weight: 750;
+  }
+  .product-grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .product-grid > :global([hidden]) {
+    display: none;
+  }
+  .catalog-empty {
+    padding: var(--space-12) var(--space-4);
+    text-align: center;
+  }
+  .catalog-empty p {
+    margin-block: var(--space-3) var(--space-5);
+    color: var(--color-text-secondary);
+  }
+  .catalog-empty a {
+    display: inline-flex;
+    min-height: var(--target-minimum);
+    align-items: center;
+    color: var(--color-link-on-light);
+    font-weight: 750;
+  }
+  .filter-notice {
+    margin-block-end: var(--space-4);
+    padding: var(--space-3);
+    border-inline-start: var(--border-accent) solid var(--color-brand-cyan);
+    background: var(--color-surface-secondary);
+  }
+  .active-filters {
+    display: flex;
+    margin-block-end: var(--space-5);
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .active-filters[hidden] {
+    display: none;
+  }
+  .active-filters button {
+    min-height: var(--target-minimum);
+    padding-inline: var(--space-3);
+    border: var(--border-hairline) solid var(--color-border-strong);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-primary);
+    color: var(--color-text-primary);
+    font-weight: 650;
+  }
+  .filter-dialog {
+    width: min(100%, 34rem);
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin-inline-end: 0;
+    padding: var(--space-5);
+    border: 0;
+    background: var(--color-surface-primary);
+    color: var(--color-text-primary);
+  }
+  .filter-dialog::backdrop {
+    background: rgb(8 12 15 / 72%);
+  }
+  :global(html:has([data-filter-dialog][open])) {
+    overflow: hidden;
+  }
+  .filter-dialog__header {
+    display: flex;
+    min-height: 4rem;
+    margin-block-end: var(--space-6);
+    align-items: center;
+    justify-content: space-between;
+    border-block-end: var(--border-hairline) solid var(--color-border-strong);
+  }
+  .filter-dialog__header button {
+    min-height: var(--target-minimum);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-weight: 750;
+  }
+  .filter-dialog__header span {
+    color: var(--color-link-on-light);
+    font-size: 1.5rem;
+  }
+  .catalog-footer {
+    padding-block: var(--space-6);
+    background: var(--color-surface-dark);
+    color: var(--color-text-inverted-secondary);
+    font-size: var(--font-size-body-s);
+  }
+  @media (min-width: 48rem) {
+    .product-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    .catalog-layout {
+      grid-template-columns: minmax(13rem, 1fr) minmax(0, 3fr);
+      gap: var(--space-10);
+      align-items: start;
+    }
+    .catalog-layout--simple {
+      grid-template-columns: 1fr;
+    }
+    .desktop-filters {
+      position: sticky;
+      inset-block-start: 7rem;
+      display: grid;
+      gap: var(--space-5);
+    }
+    .mobile-filter-trigger,
+    .filter-dialog {
+      display: none;
+    }
+  }
+  @media (min-width: 80rem) {
+    .product-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

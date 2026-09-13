@@ -1,0 +1,14 @@
+---
+import { getCollection } from "astro:content";
+import CatalogPage from "@/components/catalog/CatalogPage.astro";
+const products = (await getCollection("products")).filter(
+  (product) => product.data.category === "motorcycle",
+);
+---
+
+<CatalogPage
+  title="Motos"
+  descriptor="Explorá la gama por familia, uso y datos técnicos verificados."
+  category="motorcycle"
+  products={products}
+/>

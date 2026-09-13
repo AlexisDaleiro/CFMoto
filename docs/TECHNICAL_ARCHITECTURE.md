@@ -35,7 +35,7 @@ Folders are created only when used. Future product/location/editorial components
 ## Rendering and JavaScript policy
 
 - Static HTML by default.
-- Current pages/components contain no client directives and emit approximately 0 KB authored hydration JavaScript.
+- Current pages/components contain no client directives or framework hydration. Phase 5 adds one minified 568-byte inline script per prototype page for the native mobile Header dialog, scroll lock and focus restoration.
 - Native links, buttons, layout and content never require a UI framework.
 - A future island must document problem, no-JS baseline, payload budget, owner and deletion condition.
 - No React, Vue, Svelte, state manager, analytics, map, carousel, forms framework, API route, database or CMS.
@@ -88,7 +88,7 @@ Three draft/needsReview identity fixtures exercise motorcycle/ATV/Side-by-Side. 
 - Exact URL files: `public`, with explicit dimensions when used through `Image`.
 - Default image layout is `constrained` with Astro responsive styles enabled; product/hero code chooses `full-width` only when composition requires.
 - Local source assets allow intrinsic dimensions; alt remains mandatory. Hero/LCP loading/fetch priority is selected per real page, not globally.
-- No wrapper exists yet because plain Astro Image provides the foundation. Art direction may justify a future component.
+- `PrototypeHeroMedia` is the first justified wrapper: it selects separate generated desktop/mobile proposal assets through `<picture>` art direction while retaining Astro optimization. It is prototype-specific and must not become the generic production image API.
 - No logo was invented and no random photography downloaded.
 
 ## SEO foundation
@@ -124,7 +124,7 @@ Budgets are gates to measure, not claimed Lighthouse results:
 
 | Resource | Foundation | Initial page expectation |
 |---|---|---|
-| Authored hydration JS | ~0 KB | 0 KB by default; any island justified |
+| Authored client JS | 568 bytes inline/page on Phase 5 routes | native Header behavior only; no framework hydration |
 | Framework/UI JS | none | none until feature evidence |
 | Global CSS | ~11.5 KB uncompressed current build | target <30 KB compressed foundation + primitives before page CSS review |
 | Page-specific preview CSS | ~7.1 KB uncompressed | development-only; not a production page budget |
@@ -132,6 +132,8 @@ Budgets are gates to measure, not claimed Lighthouse results:
 | Hero image | none in foundation | page-specific responsive asset; target decided from real source/LCP baseline |
 
 Core Web Vitals goals remain LCP ≤2.5s, INP ≤200ms and CLS ≤0.1 at the 75th percentile once production traffic/testing exists. Lighthouse 95+ remains an objective, not a Phase 4 result.
+
+Phase 5 build measurement: four CSS chunks total ~35.3KB uncompressed; the Header script is 568 bytes minified inline per prototype route; nine responsive WebP outputs total ~592.8KB across the build (a browser selects one hero candidate per slot); fonts remain ~267.2KB across ten WOFF2 files. These are build inventory numbers, not transferred-page totals or Lighthouse claims.
 
 ## Tooling and quality
 
@@ -145,8 +147,8 @@ Astro telemetry may need `ASTRO_TELEMETRY_DISABLED=1` in restricted CI/sandbox e
 ## Future integration boundaries
 
 - **Sitemap/canonical:** after verified production URL.
-- **Header/Home:** Phase 5, using existing primitives/tokens.
-- **Product routes/cards:** after page-level validation and publication gate.
+- **Header/Home:** Phase 5 prototype implemented; future data/navigation panels remain content-gated.
+- **Product routes/cards:** 450SR visual route exists as `draft`/`noindex`; reusable production PDP/cards still require page-level validation and publication gate.
 - **Map, CRM, forms, analytics, CMS:** only after provider/workflow/legal decisions; islands/server routes added narrowly.
 - **Security headers:** deployment-specific configuration after origins/integrations are known.
 

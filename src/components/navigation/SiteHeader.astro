@@ -1,0 +1,466 @@
+---
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = Astro.url.pathname } = Astro.props;
+
+const primaryItems = [
+  { label: "Motos", href: "/motos/" },
+  { label: "ATV", href: "/atv/" },
+  { label: "Side-by-Side", href: "/side-by-side/" },
+  { label: "Experiencia", href: "/experiencia/" },
+  { label: "Concesionarios", href: "/concesionarios/" },
+  { label: "Service", href: "/service/" },
+] as const;
+
+const isCurrent = (href: string) =>
+  href === "/" ? currentPath === href : currentPath.startsWith(href);
+---
+
+<header class="site-header" data-site-header data-surface="dark">
+  <div class="site-header__inner">
+    <a class="brand" href="/" aria-label="CFMOTO Uruguay — Inicio">
+      <span class="brand__name">CFMOTO</span>
+      <span class="brand__market">URUGUAY</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Navegación principal">
+      {primaryItems.map((item) => (
+        <a
+          href={item.href}
+          aria-current={isCurrent(item.href) ? "page" : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <nav class="desktop-utilities" aria-label="Acciones">
+      <a href="/comparar/">Comparar</a>
+      <a class="header-cta" href="/cotizar/">
+        Cotizar
+      </a>
+    </nav>
+
+    <div class="mobile-actions">
+      <a class="mobile-compare" href="/comparar/">
+        Comparar
+      </a>
+      <button
+        class="menu-trigger"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-menu-open
+      >
+        <span>Menú</span>
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <dialog
+    class="mobile-menu"
+    id="mobile-menu"
+    aria-labelledby="mobile-menu-title"
+  >
+    <div class="mobile-menu__header">
+      <p class="brand" id="mobile-menu-title">
+        <span class="brand__name">CFMOTO</span>
+        <span class="brand__market">MENÚ</span>
+      </p>
+      <button class="menu-close" type="button" data-menu-close autofocus>
+        Cerrar <span aria-hidden="true">×</span>
+      </button>
+    </div>
+
+    <nav class="mobile-menu__nav" aria-label="Navegación móvil">
+      <details>
+        <summary>
+          Motos <span aria-hidden="true">＋</span>
+        </summary>
+        <div class="mobile-menu__level">
+          <a href="/motos/">Ver todas las motos</a>
+          <a href="/motos/?family=sr">SR · Racing</a>
+          <a href="/motos/?family=nk">NK · Naked</a>
+          <a href="/motos/?family=mt">MT · Adventure</a>
+          <a href="/motos/?family=cl-x">CL-X · Heritage</a>
+        </div>
+      </details>
+      <details>
+        <summary>
+          ATV <span aria-hidden="true">＋</span>
+        </summary>
+        <div class="mobile-menu__level">
+          <a href="/atv/">Ver todos los ATV</a>
+          <a href="/atv/?usage=work">Trabajo</a>
+          <a href="/atv/?usage=recreation">Recreación</a>
+        </div>
+      </details>
+      <details>
+        <summary>
+          Side-by-Side <span aria-hidden="true">＋</span>
+        </summary>
+        <div class="mobile-menu__level">
+          <a href="/side-by-side/">Ver todos</a>
+          <a href="/side-by-side/?usage=sport">Sport</a>
+          <a href="/side-by-side/?usage=utility">Utility</a>
+        </div>
+      </details>
+      <details>
+        <summary>
+          Experiencia CFMOTO <span aria-hidden="true">＋</span>
+        </summary>
+        <div class="mobile-menu__level">
+          <a href="/experiencia/">Explorar experiencia</a>
+          <a href="/experiencia/racing/">Racing</a>
+          <a href="/experiencia/adventure/">Adventure</a>
+          <a href="/experiencia/technology/">Technology</a>
+        </div>
+      </details>
+      <a href="/concesionarios/">Concesionarios</a>
+      <a href="/service/">Service</a>
+    </nav>
+
+    <div class="mobile-menu__utilities">
+      <a href="/comparar/">Comparar</a>
+      <a href="/test-ride/">Solicitar test ride</a>
+      <a class="header-cta" href="/cotizar/">
+        Cotizar
+      </a>
+    </div>
+  </dialog>
+
+  <noscript>
+    <nav class="no-script-nav" aria-label="Navegación sin JavaScript">
+      {primaryItems.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
+      <a href="/comparar/">Comparar</a>
+      <a href="/test-ride/">Test ride</a>
+      <a href="/cotizar/">Cotizar</a>
+    </nav>
+  </noscript>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-site-header]");
+
+  if (header) {
+    const trigger = header.querySelector<HTMLButtonElement>("[data-menu-open]");
+    const close = header.querySelector<HTMLButtonElement>("[data-menu-close]");
+    const dialog = header.querySelector<HTMLDialogElement>("dialog");
+
+    if (trigger && close && dialog) {
+      const closeMenu = () => {
+        if (dialog.open) dialog.close();
+      };
+
+      trigger.addEventListener("click", () => {
+        dialog.showModal();
+        trigger.setAttribute("aria-expanded", "true");
+        document.documentElement.classList.add("menu-open");
+      });
+
+      close.addEventListener("click", closeMenu);
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) closeMenu();
+      });
+      dialog.addEventListener("close", () => {
+        trigger.setAttribute("aria-expanded", "false");
+        document.documentElement.classList.remove("menu-open");
+        trigger.focus();
+      });
+    }
+  }
+</script>
+
+<style>
+  :global(html.menu-open) {
+    overflow: hidden;
+  }
+
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--z-sticky);
+    border-block-end: var(--border-hairline) solid var(--color-border-on-dark);
+    background: rgb(8 12 15 / 94%);
+    color: var(--color-on-dark);
+    backdrop-filter: blur(1rem);
+  }
+
+  .site-header__inner {
+    display: flex;
+    width: min(100% - (2 * var(--page-margin)), var(--container-product));
+    min-height: 4rem;
+    margin-inline: auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .brand {
+    display: inline-flex;
+    min-height: var(--target-minimum);
+    align-items: baseline;
+    gap: var(--space-2);
+    color: var(--color-text-inverted);
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .brand__name {
+    font-family: var(--font-family-display);
+    font-size: 1.65rem;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+  }
+
+  .brand__market {
+    color: var(--color-brand-cyan);
+    font-size: 0.625rem;
+    font-weight: 750;
+    letter-spacing: 0.12em;
+  }
+
+  .desktop-nav,
+  .desktop-utilities {
+    display: none;
+  }
+
+  .mobile-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .mobile-compare,
+  .menu-trigger,
+  .menu-close {
+    min-height: var(--target-minimum);
+    color: var(--color-text-inverted);
+    font-size: var(--font-size-navigation);
+    font-weight: 650;
+  }
+
+  .mobile-compare {
+    display: none;
+    align-items: center;
+  }
+
+  .menu-trigger,
+  .menu-close {
+    display: inline-flex;
+    padding: 0;
+    align-items: center;
+    gap: var(--space-3);
+    border: 0;
+    background: transparent;
+  }
+
+  .menu-icon,
+  .menu-icon::before {
+    display: block;
+    width: 1.25rem;
+    height: 0.125rem;
+    background: currentColor;
+    content: "";
+  }
+
+  .menu-icon::before {
+    transform: translateY(-0.35rem);
+  }
+
+  .mobile-menu {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+
+  .mobile-menu::backdrop {
+    background: rgb(8 12 15 / 72%);
+  }
+
+  .mobile-menu__header,
+  .mobile-menu__nav,
+  .mobile-menu__utilities {
+    width: min(100% - (2 * var(--page-margin)), var(--container-readable));
+    margin-inline: auto;
+  }
+
+  .mobile-menu__header {
+    display: flex;
+    min-height: 4rem;
+    align-items: center;
+    justify-content: space-between;
+    border-block-end: var(--border-hairline) solid var(--color-border-on-dark);
+  }
+
+  .menu-close span {
+    color: var(--color-brand-cyan);
+    font-size: 1.5rem;
+  }
+
+  .mobile-menu__nav {
+    padding-block: var(--space-6);
+  }
+
+  .mobile-menu__nav > a,
+  .mobile-menu summary,
+  .mobile-menu__level a {
+    display: flex;
+    min-height: 3.25rem;
+    align-items: center;
+    justify-content: space-between;
+    border-block-end: var(--border-hairline) solid var(--color-border-on-dark);
+    color: var(--color-text-inverted);
+    font-size: 1.125rem;
+    font-weight: 650;
+    text-decoration: none;
+  }
+
+  .mobile-menu summary {
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-menu details[open] summary span {
+    transform: rotate(45deg);
+  }
+
+  .mobile-menu__level {
+    padding-inline-start: var(--space-4);
+    border-inline-start: var(--border-accent) solid var(--color-brand-cyan);
+  }
+
+  .mobile-menu__level a {
+    min-height: var(--target-minimum);
+    color: var(--color-text-inverted-secondary);
+    font-size: var(--font-size-body-m);
+    font-weight: 500;
+  }
+
+  .mobile-menu__utilities {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    padding-block: var(--space-4) var(--space-8);
+  }
+
+  .mobile-menu__utilities a {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: center;
+    border: var(--border-strong) solid var(--color-text-inverted);
+    color: var(--color-text-inverted);
+    font-weight: 650;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .mobile-menu__utilities .header-cta {
+    grid-column: 1 / -1;
+  }
+
+  .no-script-nav {
+    display: grid;
+    width: min(100% - (2 * var(--page-margin)), var(--container-readable));
+    margin-inline: auto;
+    padding-block: var(--space-4);
+    gap: var(--space-2);
+  }
+
+  .no-script-nav a {
+    display: flex;
+    min-height: var(--target-minimum);
+    align-items: center;
+    color: var(--color-text-inverted);
+  }
+
+  .header-cta {
+    border-color: var(--color-brand-cyan) !important;
+    background: var(--color-brand-cyan);
+    color: var(--color-on-brand) !important;
+  }
+
+  @media (min-width: 30rem) {
+    .mobile-compare {
+      display: inline-flex;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .site-header__inner {
+      min-height: 5rem;
+      gap: var(--space-5);
+    }
+
+    .desktop-nav,
+    .desktop-utilities {
+      display: flex;
+      align-items: center;
+    }
+
+    .desktop-nav {
+      margin-inline: auto;
+      gap: clamp(var(--space-3), 1.4vw, var(--space-6));
+    }
+
+    .desktop-nav a,
+    .desktop-utilities a {
+      display: inline-flex;
+      min-height: var(--target-minimum);
+      align-items: center;
+      color: var(--color-text-inverted-secondary);
+      font-size: clamp(0.6875rem, 0.5rem + 0.3vw, var(--font-size-navigation));
+      font-weight: 650;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .desktop-nav a:hover,
+    .desktop-nav a[aria-current="page"],
+    .desktop-utilities a:hover {
+      color: var(--color-text-inverted);
+    }
+
+    .desktop-nav a[aria-current="page"] {
+      box-shadow: inset 0 -0.125rem var(--color-brand-cyan);
+    }
+
+    .desktop-utilities {
+      gap: var(--space-3);
+    }
+
+    .desktop-utilities .header-cta {
+      min-height: 2.75rem;
+      padding-inline: var(--space-4);
+    }
+
+    .mobile-actions {
+      display: none;
+    }
+
+    .no-script-nav {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-menu details[open] summary span {
+      transform: none;
+    }
+  }
+</style>

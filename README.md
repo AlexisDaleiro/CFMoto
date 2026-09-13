@@ -1,6 +1,6 @@
 # CFMOTO Uruguay
 
-Astro foundation for the future CFMOTO Uruguay showroom, catalog and lead platform. Phase 4 intentionally includes foundations and a development preview—not final pages or commercial features.
+Astro prototype for the future CFMOTO Uruguay showroom, catalog and lead platform. Phase 5 includes the responsive Header, Home and a validation-safe 450SR visual prototype—not production commercial features.
 
 ## Requirements
 
@@ -16,8 +16,11 @@ npm run dev
 
 Routes:
 
-- `/` — minimal build placeholder
+- `/` — Phase 5 Home prototype (`noindex`)
+- `/motos/450sr/` — visual product prototype with verified-data boundary (`noindex`)
 - `/dev/foundation/` — development-only Design System test harness (`noindex`)
+
+Header links intentionally expose the approved future IA. Routes other than the three above are not implemented yet.
 
 The Astro Fonts API downloads/caches provisional fonts during build. Network access may be needed on the first clean install/build; runtime output serves them locally.
 

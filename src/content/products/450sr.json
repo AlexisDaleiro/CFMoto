@@ -4,14 +4,145 @@
   "name": "450SR",
   "category": "motorcycle",
   "family": "SR",
+  "usage": ["sport"],
   "publicationStatus": "draft",
-  "descriptor": "Registro mínimo para validar el schema; no es contenido comercial publicable.",
+  "descriptor": "Sport Racing",
+  "description": "Una apertura de producto expresiva; datos, estados y acciones vuelven inmediatamente a la capa de precisión.",
+  "copyStatus": "proposal",
   "compareGroup": "motorcycle",
   "availability": "unknown",
-  "keyStats": [],
-  "specifications": [],
+  "keyStats": [
+    {
+      "key": "displacement",
+      "label": "Cilindrada",
+      "group": "engine",
+      "status": "available",
+      "value": 450,
+      "unit": "cc",
+      "verification": {
+        "status": "verified",
+        "source": {
+          "label": "Phase 0 content audit",
+          "market": "Uruguay"
+        },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "maximumTorque",
+      "label": "Torque máximo",
+      "group": "engine",
+      "status": "available",
+      "value": 39,
+      "unit": "Nm",
+      "verification": {
+        "status": "verified",
+        "source": {
+          "label": "Phase 0 content audit",
+          "market": "Uruguay"
+        },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "curbWeight",
+      "label": "Peso declarado",
+      "group": "dimensions",
+      "status": "available",
+      "value": 168,
+      "unit": "kg",
+      "verification": {
+        "status": "verified",
+        "source": {
+          "label": "Phase 0 content audit",
+          "market": "Uruguay"
+        },
+        "verifiedAt": "2026-09-13"
+      }
+    }
+  ],
+  "specifications": [
+    {
+      "key": "displacement",
+      "label": "Cilindrada",
+      "group": "engine",
+      "status": "available",
+      "value": 450,
+      "unit": "cc",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "maximumTorque",
+      "label": "Torque máximo",
+      "group": "engine",
+      "status": "available",
+      "value": 39,
+      "unit": "Nm",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    },
+    {
+      "key": "curbWeight",
+      "label": "Peso declarado",
+      "group": "dimensions",
+      "status": "available",
+      "value": 168,
+      "unit": "kg",
+      "verification": {
+        "status": "verified",
+        "source": { "label": "Phase 0 content audit", "market": "Uruguay" },
+        "verifiedAt": "2026-09-13"
+      }
+    }
+  ],
   "compareAttributes": [],
-  "images": [],
+  "features": [],
+  "relatedProducts": ["800mt-touring", "700cl-x-heritage"],
+  "images": [
+    {
+      "id": "450sr-concept-hero",
+      "role": "hero",
+      "src": "src/assets/prototypes/450sr-concept-hero.png",
+      "alt": "Visual conceptual de una motocicleta deportiva para validar la composición del prototipo 450SR",
+      "width": 1792,
+      "height": 896,
+      "aspectRatio": "2/1",
+      "focalPoint": {
+        "x": 0.72,
+        "y": 0.52
+      },
+      "rights": {
+        "status": "proposal",
+        "owner": "OpenAI generated prototype asset",
+        "allowedUse": "Phase 5 private visual prototype only"
+      }
+    },
+    {
+      "id": "450sr-concept-hero-mobile",
+      "role": "hero",
+      "src": "src/assets/prototypes/450sr-concept-hero-mobile.png",
+      "alt": "Variante vertical conceptual para validar la composición mobile del prototipo 450SR",
+      "width": 1024,
+      "height": 1536,
+      "aspectRatio": "2/3",
+      "focalPoint": {
+        "x": 0.5,
+        "y": 0.68
+      },
+      "rights": {
+        "status": "proposal",
+        "owner": "OpenAI generated prototype asset",
+        "allowedUse": "Phase 5 private visual prototype only"
+      }
+    }
+  ],
   "colors": [],
   "price": {
     "type": "enquire",

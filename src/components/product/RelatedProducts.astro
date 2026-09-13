@@ -1,0 +1,56 @@
+---
+import Container from "@/components/primitives/Container.astro";
+import Section from "@/components/primitives/Section.astro";
+import Stack from "@/components/primitives/Stack.astro";
+import ProductCard from "@/components/product/ProductCard.astro";
+import type { ProductEntry } from "@/lib/products";
+
+interface Props {
+  products: ProductEntry[];
+}
+const { products } = Astro.props;
+---
+
+{products.length > 0 && (
+  <Section density="editorial" surface="light" aria-labelledby="related-title">
+    <Container size="wide">
+      <Stack gap="8">
+        <div class="related-heading">
+          <p class="type-label">SEGUÍ EXPLORANDO</p>
+          <h2 id="related-title" class="type-heading-1">
+            Otros modelos
+          </h2>
+        </div>
+        <div class="related-grid">
+          {products.map((product) => (
+            <ProductCard product={product} headingLevel={3} />
+          ))}
+        </div>
+      </Stack>
+    </Container>
+  </Section>
+)}
+
+<style>
+  .related-heading {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .related-heading .type-label {
+    color: var(--color-link-on-light);
+  }
+  .related-grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+  @media (min-width: 48rem) {
+    .related-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 80rem) {
+    .related-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

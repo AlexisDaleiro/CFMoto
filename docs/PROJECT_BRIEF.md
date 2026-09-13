@@ -1,6 +1,6 @@
 # CFMOTO Uruguay — Project Brief
 
-**Fase:** Phase 0–4 completadas; READY para Phase 5 Header + Home + 450SR Visual Prototype  
+**Fase:** Phase 0–5 completadas; siguiente fase pendiente de brief
 **Corte de investigación:** 2026-09-13  
 **Estado:** borrador de trabajo para validación comercial
 
@@ -112,7 +112,13 @@ Phase 4 — Astro Technical Foundation fue autorizada con estos límites: founda
 
 Astro 7.3.2, TypeScript estricto, CSS nativo, tokens, tipografía local, layouts/primitives semánticos, SEO seguro, Content Layer tipada y accesibilidad base están implementados. El build estático no envía JavaScript propio de hidratación y los fixtures conservan estado de verificación explícito.
 
-Phase 5 — Header + Home Prototype + 450SR Visual Prototype está **READY**. La URL final, los assets de marca oficiales y los datos comerciales pendientes no impiden un prototipo responsable; permanecen como gates de producción.
+Phase 5 — Header + Home Prototype + 450SR Visual Prototype fue autorizada sobre esta base.
+
+## Resultado de Phase 5
+
+Header responsive, Home editorial y `/motos/450sr/` están implementados como prototipos no indexables. Demuestran Apex en apertura/producto y Engineered Clarity en datos/estados sin bifurcar componentes o tokens. El menú mobile usa controles nativos y JavaScript mínimo; la imagen conceptual tiene art direction desktop/mobile y estado `proposal`.
+
+Solo se muestran los datos 450SR registrados como verificados en Phase 0. Precio, disponibilidad, potencia, equipamiento y CTAs comerciales siguen bloqueados. La siguiente fase requiere un brief explícito; este resultado no está listo para producción.
 
 ## Criterio de éxito de Phase 0
 

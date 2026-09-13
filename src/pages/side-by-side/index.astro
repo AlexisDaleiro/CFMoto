@@ -1,0 +1,14 @@
+---
+import { getCollection } from "astro:content";
+import CatalogPage from "@/components/catalog/CatalogPage.astro";
+const products = (await getCollection("products")).filter(
+  (product) => product.data.category === "side-by-side",
+);
+---
+
+<CatalogPage
+  title="Side-by-Side"
+  descriptor="Explorá alternativas Sport y Utility sin mezclar necesidades ni datos no verificados."
+  category="side-by-side"
+  products={products}
+/>

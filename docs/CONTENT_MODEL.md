@@ -48,10 +48,14 @@ Location: `src/content/products/*.json`; loader: Astro `glob()`; schema: `produc
 
 - `descriptor?`: short decision-oriented description.
 - `description?`: longer product introduction.
+- `copyStatus`: `verified | proposal`; separates approved copy from creative positioning used by the prototype.
+- `usage[]`: controlled discovery values (`sport`, `naked`, `adventure`, `heritage`, `recreation`, `utility`, `work`). It is filter metadata, not a required URL level.
 - `compareGroup`: stable compatibility group; Phase 1 still prohibits cross-category comparison.
 - `availability`: `available | onRequest | temporarilyUnavailable | unknown`.
+- `features[]`: optional typed narrative modules with their own verification.
+- `relatedProducts[]`: optional explicit slugs, maximum four; rendering still enforces same-category relationships.
 
-Discovery tags, primary uses, features and editorial relationships are deferred until a real page/content need proves their exact shape. They are not placed in an arbitrary metadata bag.
+These fields were added for the Phase 6 listing and modular product page. They remain controlled and are not placed in an arbitrary metadata bag. `compareAttributes` and `cta` remain the existing equivalents of compare data and commercial actions; no parallel DTO was introduced.
 
 ### Key stats and specifications
 
@@ -104,10 +108,13 @@ Each color contains `id`, official `name`, optional `visualReference`, related `
 ## Current fixtures
 
 - `450sr.json`
+- `700cl-x-heritage.json`
+- `800mt-touring.json`
 - `cforce-450l.json`
 - `uforce-800.json`
+- `zforce-1000-sport.json`
 
-All are `draft`, `needsReview`, unavailable/unknown for public commerce and have CTAs disabled. They exist solely to validate category breadth and schema. No technical specification has been invented or marked verified.
+All remain `draft`, unavailable/unknown for public commerce and have CTAs disabled. CFORCE 450L and UFORCE 800 remain identity-only `needsReview` fixtures. 450SR, 800MT Touring and ZFORCE 1000 Sport demonstrate the shared detail architecture using only the individual values marked `verified`; 700CL-X Heritage is a safe partial listing record. The two generated 450SR images remain `proposal`. No price, availability, color, feature or commercial action is promoted to verified.
 
 ## Publication gate
 
@@ -120,7 +127,7 @@ A later route may publish a product only when all required conditions are enforc
 5. price/availability valid when displayed.
 6. CTA flags consistent with current operations and Locations.
 
-Phase 4 does not yet implement publishing routes; fixtures never appear on `/` or the development preview.
+Phase 6 renders these fixtures only in a `noindex` prototype environment. This validates templates but does not satisfy the production publication gate above.
 
 ## Future collection boundaries
 

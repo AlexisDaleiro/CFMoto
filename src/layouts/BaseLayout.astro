@@ -32,8 +32,10 @@ const props = Astro.props;
     <a class="skip-link" href="#main-content">
       Saltar al contenido
     </a>
+    <slot name="header" />
     <main id="main-content" tabindex="-1">
       <slot />
     </main>
+    <slot name="footer" />
   </body>
 </html>

@@ -1,0 +1,46 @@
+---
+import { Image, getImage } from "astro:assets";
+
+import desktopSource from "@/assets/prototypes/450sr-concept-hero.png";
+import mobileSource from "@/assets/prototypes/450sr-concept-hero-mobile.png";
+
+interface Props {
+  alt: string;
+  class?: string;
+  loading?: "eager" | "lazy";
+  priority?: boolean;
+}
+
+const {
+  alt,
+  class: className,
+  loading = "lazy",
+  priority = false,
+} = Astro.props;
+
+const mobileImage = await getImage({
+  src: mobileSource,
+  width: 768,
+  format: "webp",
+});
+---
+
+<picture class="prototype-media">
+  <source media="(max-width: 47.99rem)" srcset={mobileImage.src} />
+  <Image
+    class={className}
+    src={desktopSource}
+    alt={alt}
+    widths={[640, 960, 1280, 1600, 1920]}
+    sizes="100vw"
+    layout="full-width"
+    loading={loading}
+    fetchpriority={priority ? "high" : "auto"}
+  />
+</picture>
+
+<style>
+  .prototype-media {
+    display: contents;
+  }
+</style>

@@ -1,0 +1,59 @@
+---
+import Container from "@/components/primitives/Container.astro";
+import { formatSpecification, type ProductSpecification } from "@/lib/products";
+
+interface Props {
+  stats: Extract<ProductSpecification, { status: "available" }>[];
+}
+
+const { stats } = Astro.props;
+---
+
+{stats.length > 0 && (
+  <section class="key-stats" data-surface="dark" aria-label="Datos verificados">
+    <Container size="product">
+      <dl>
+        {stats.map((stat) => (
+          <div>
+            <dt>{formatSpecification(stat)}</dt>
+            <dd>{stat.label}</dd>
+          </div>
+        ))}
+      </dl>
+    </Container>
+  </section>
+)}
+
+<style>
+  .key-stats {
+    padding-block: var(--space-8);
+    border-block-start: var(--border-hairline) solid var(--color-border-on-dark);
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+  .key-stats dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
+  }
+  .key-stats dl div {
+    padding-inline-start: var(--space-4);
+    border-inline-start: var(--border-accent) solid var(--color-brand-cyan);
+  }
+  .key-stats dt {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-stat-m);
+    font-weight: 700;
+    line-height: 0.9;
+  }
+  .key-stats dd {
+    margin-block-start: var(--space-2);
+    color: var(--color-text-inverted-secondary);
+    font-size: var(--font-size-body-s);
+  }
+  @media (min-width: 48rem) {
+    .key-stats dl {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>
