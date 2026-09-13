@@ -107,6 +107,11 @@ export const specificationSchema = z.discriminatedUnion("status", [
   }),
 ]);
 
+export const compareAttributeReferenceSchema = z.object({
+  key: z.string().regex(/^[a-z][a-zA-Z0-9]*$/),
+  priority: z.number().int().min(1).max(100),
+});
+
 export const productSchema = z.object({
   productId: z.string().min(1),
   slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
@@ -146,7 +151,7 @@ export const productSchema = z.object({
   ]),
   keyStats: z.array(specificationSchema).max(5).default([]),
   specifications: z.array(specificationSchema).default([]),
-  compareAttributes: z.array(specificationSchema).default([]),
+  compareAttributes: z.array(compareAttributeReferenceSchema).default([]),
   features: z
     .array(
       z.object({

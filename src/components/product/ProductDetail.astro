@@ -1,4 +1,5 @@
 ---
+import CompareProductAction from "@/components/compare/CompareProductAction.astro";
 import SiteHeader from "@/components/navigation/SiteHeader.astro";
 import Container from "@/components/primitives/Container.astro";
 import Section from "@/components/primitives/Section.astro";
@@ -37,6 +38,7 @@ const description = product.data.description;
   <SiteHeader slot="header" />
   <ProductHero product={product} />
   <KeyStats stats={stats} />
+  <CompareProductAction product={product} />
   {description && (
     <Section density="editorial" surface="light" aria-labelledby="story-title">
       <Container size="standard">

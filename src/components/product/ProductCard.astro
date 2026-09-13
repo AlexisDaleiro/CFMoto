@@ -84,12 +84,13 @@ const displacement = getVerifiedDisplacement(product);
       <TextLink href={getProductHref(product)} directional>
         Ver detalle
       </TextLink>
-      <span
+      <a
         class="product-card__compare"
-        aria-label="Comparación disponible en una fase posterior"
+        href={`/comparar/?add=${product.data.slug}`}
+        data-analytics-event="compare_add"
       >
-        Comparar · próximamente
-      </span>
+        Comparar
+      </a>
     </div>
   </div>
 </article>
@@ -107,7 +108,7 @@ const displacement = getVerifiedDisplacement(product);
     aspect-ratio: 4 / 3;
     overflow: hidden;
     place-items: center;
-    background: var(--color-surface-secondary);
+    background: var(--color-surface-subtle);
   }
   .product-card__media :global(img) {
     width: 100%;
@@ -199,7 +200,11 @@ const displacement = getVerifiedDisplacement(product);
     gap: var(--space-3);
   }
   .product-card__compare {
-    color: var(--color-text-secondary);
+    display: inline-flex;
+    min-height: var(--target-minimum);
+    align-items: center;
+    color: var(--color-link-on-light);
     font-size: var(--font-size-caption);
+    font-weight: 700;
   }
 </style>

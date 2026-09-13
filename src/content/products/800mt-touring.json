@@ -119,7 +119,12 @@
       }
     }
   ],
-  "compareAttributes": [],
+  "compareAttributes": [
+    { "key": "displacement", "priority": 1 },
+    { "key": "maximumPower", "priority": 2 },
+    { "key": "maximumTorque", "priority": 3 },
+    { "key": "curbWeight", "priority": 4 }
+  ],
   "features": [],
   "relatedProducts": ["450sr", "700cl-x-heritage"],
   "images": [],

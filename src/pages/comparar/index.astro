@@ -1,0 +1,838 @@
+---
+import { getCollection } from "astro:content";
+
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Container from "@/components/primitives/Container.astro";
+import Section from "@/components/primitives/Section.astro";
+import Stack from "@/components/primitives/Stack.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { toCompareProduct } from "@/lib/compare";
+import { categoryMeta } from "@/lib/products";
+
+const products = await getCollection("products");
+const compareProducts = products.map(toCompareProduct);
+const categories = Object.entries(categoryMeta).map(([id, meta]) => ({
+  id,
+  ...meta,
+  products: compareProducts.filter((product) => product.category === id),
+}));
+---
+
+<BaseLayout
+  title="Comparar vehículos — CFMOTO Uruguay"
+  description="Compará hasta tres vehículos CFMOTO de la misma categoría mediante datos técnicos verificados."
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" currentPath="/comparar/" />
+
+  <Section density="editorial" surface="light" aria-labelledby="compare-title">
+    <Container size="wide">
+      <Stack gap="4">
+        <p class="type-label compare-kicker">HERRAMIENTA DE DECISIÓN</p>
+        <h1 id="compare-title" class="compare-title">
+          Comparar vehículos
+        </h1>
+        <p class="type-body-l compare-intro">
+          Revisá hasta tres modelos de la misma categoría. Los valores no
+          indican ganadores: muestran únicamente información verificada.
+        </p>
+      </Stack>
+    </Container>
+  </Section>
+
+  <Section density="functional" aria-labelledby="selection-title">
+    <Container size="wide">
+      <div
+        class="compare-experience"
+        data-compare-root
+        data-products={JSON.stringify(compareProducts)}
+        data-analytics-event="compare_view"
+      >
+        <p class="compare-notice" role="status" data-compare-notice hidden></p>
+        <p class="visually-hidden" aria-live="polite" data-compare-live></p>
+
+        <section
+          class="compare-conflict"
+          data-compare-conflict
+          hidden
+          aria-labelledby="conflict-title"
+        >
+          <h2 id="conflict-title" class="type-heading-2">
+            Revisá la selección
+          </h2>
+          <p data-conflict-message></p>
+          <div class="conflict-actions" data-conflict-actions></div>
+        </section>
+
+        <section
+          class="compare-current"
+          data-compare-current
+          hidden
+          aria-labelledby="current-title"
+        >
+          <div class="current-heading">
+            <div>
+              <h2 id="current-title" class="type-heading-2">
+                Comparación actual
+              </h2>
+              <p data-selected-count></p>
+            </div>
+            <button
+              type="button"
+              class="clear-compare"
+              data-clear-compare
+              data-analytics-event="compare_clear"
+            >
+              Limpiar comparación
+            </button>
+          </div>
+          <p class="one-product-hint" data-one-product hidden>
+            Añadí otro modelo de la misma categoría para comparar.
+          </p>
+          <div
+            class="matrix-controls"
+            data-matrix-controls
+            hidden
+            aria-label="Navegar productos comparados"
+          >
+            <button type="button" data-matrix-previous>
+              ← Producto anterior
+            </button>
+            <button type="button" data-matrix-next>
+              Producto siguiente →
+            </button>
+          </div>
+          <div
+            class="compare-matrix"
+            data-compare-matrix
+            tabindex="0"
+            aria-label="Tabla comparativa"
+          ></div>
+        </section>
+
+        <section
+          class="compare-zero"
+          data-compare-zero
+          aria-labelledby="zero-title"
+        >
+          <h2 id="zero-title" class="type-heading-2">
+            Elegí el primer vehículo.
+          </h2>
+          <p>
+            La comparación se construye con modelos compatibles y puede
+            compartirse mediante su URL.
+          </p>
+        </section>
+
+        <section class="compare-selector" aria-labelledby="selection-title">
+          <div class="selector-heading">
+            <h2 id="selection-title" class="type-heading-2">
+              Seleccionar modelos
+            </h2>
+            <p>Podés añadir hasta tres. Las categorías no se mezclan.</p>
+          </div>
+          {categories.map((category) => (
+            <div class="selector-category">
+              <div class="selector-category__heading">
+                <h3 class="type-heading-3">{category.label}</h3>
+                <a href={category.route}>Ver catálogo</a>
+              </div>
+              <ul>
+                {category.products.map((product) => (
+                  <li>
+                    <div>
+                      <span>{product.family}</span>
+                      <strong>{product.name}</strong>
+                    </div>
+                    <button
+                      type="button"
+                      data-select-product={product.slug}
+                      data-product-category={product.category}
+                      data-analytics-event="compare_add"
+                    >
+                      Añadir
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
+
+        <noscript>
+          <div class="compare-noscript">
+            <h2 class="type-heading-3">
+              Comparación interactiva no disponible sin JavaScript.
+            </h2>
+            <p>Podés revisar cada categoría y abrir sus fichas completas.</p>
+            <div>
+              {categories.map((category) => (
+                <a href={category.route}>{category.label}</a>
+              ))}
+            </div>
+          </div>
+        </noscript>
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>
+
+<script>
+  interface ClientAttribute {
+    key: string;
+    label: string;
+    group: "engine" | "chassis" | "dimensions" | "electronics" | "capacities";
+    priority: number;
+    display: string;
+    state: "available" | "notInformed" | "notAvailable" | "notApplicable";
+  }
+  interface ClientProduct {
+    slug: string;
+    name: string;
+    category: "motorcycle" | "atv" | "side-by-side";
+    family: string;
+    href: string;
+    attributes: ClientAttribute[];
+  }
+
+  const compareRoot = document.querySelector<HTMLElement>(
+    "[data-compare-root]",
+  );
+  if (compareRoot) {
+    const products = JSON.parse(
+      compareRoot.dataset.products ?? "[]",
+    ) as ClientProduct[];
+    const productBySlug = new Map(
+      products.map((product) => [product.slug, product]),
+    );
+    const storageKey = "cfmoto.compare.v1";
+    const groupLabels = {
+      engine: "Motor",
+      chassis: "Chasis",
+      dimensions: "Dimensiones",
+      electronics: "Electrónica",
+      capacities: "Capacidades",
+    } as const;
+    const current = compareRoot.querySelector<HTMLElement>(
+      "[data-compare-current]",
+    );
+    const zero = compareRoot.querySelector<HTMLElement>("[data-compare-zero]");
+    const notice = compareRoot.querySelector<HTMLElement>(
+      "[data-compare-notice]",
+    );
+    const live = compareRoot.querySelector<HTMLElement>("[data-compare-live]");
+    const count = compareRoot.querySelector<HTMLElement>(
+      "[data-selected-count]",
+    );
+    const oneHint =
+      compareRoot.querySelector<HTMLElement>("[data-one-product]");
+    const matrix = compareRoot.querySelector<HTMLElement>(
+      "[data-compare-matrix]",
+    );
+    const matrixControls = compareRoot.querySelector<HTMLElement>(
+      "[data-matrix-controls]",
+    );
+    const conflict = compareRoot.querySelector<HTMLElement>(
+      "[data-compare-conflict]",
+    );
+    const conflictMessage = compareRoot.querySelector<HTMLElement>(
+      "[data-conflict-message]",
+    );
+    const conflictActions = compareRoot.querySelector<HTMLElement>(
+      "[data-conflict-actions]",
+    );
+    let selected: string[] = [];
+
+    const unique = (values: string[]) => [...new Set(values)];
+    const validated = (values: string[]) =>
+      unique(values).filter((slug) => productBySlug.has(slug));
+    const readStored = () => {
+      try {
+        const value = JSON.parse(localStorage.getItem(storageKey) ?? "[]");
+        return Array.isArray(value)
+          ? validated(
+              value.filter((item): item is string => typeof item === "string"),
+            ).slice(0, 3)
+          : [];
+      } catch {
+        return [];
+      }
+    };
+    const announce = (message: string) => {
+      if (live) live.textContent = message;
+    };
+    const writeState = (
+      slugs: string[],
+      mode: "push" | "replace" = "push",
+      message?: string,
+    ) => {
+      selected = validated(slugs).slice(0, 3);
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(selected));
+      } catch {}
+      const url = selected.length
+        ? `/comparar/?models=${selected.join(",")}`
+        : "/comparar/";
+      history[mode === "push" ? "pushState" : "replaceState"]({}, "", url);
+      render();
+      dispatchEvent(new Event("compare:updated"));
+      if (message) announce(message);
+    };
+    const createAction = (
+      label: string,
+      action: () => void,
+      primary = false,
+    ) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = label;
+      if (primary) button.className = "primary-action";
+      button.addEventListener("click", action);
+      return button;
+    };
+    const hideConflict = () => {
+      if (conflict) conflict.hidden = true;
+    };
+    const showConflict = (
+      message: string,
+      actions: Array<{ label: string; run: () => void; primary?: boolean }>,
+    ) => {
+      if (!conflict || !conflictMessage || !conflictActions) return;
+      conflict.hidden = false;
+      conflictMessage.textContent = message;
+      conflictActions.replaceChildren(
+        ...actions.map((action) =>
+          createAction(action.label, action.run, action.primary),
+        ),
+      );
+      conflict.querySelector<HTMLElement>("button")?.focus();
+    };
+    const renderMatrix = (chosen: ClientProduct[]) => {
+      if (!matrix) return;
+      matrix.replaceChildren();
+      matrix.dataset.count = String(chosen.length);
+      const table = document.createElement("table");
+      const caption = document.createElement("caption");
+      caption.textContent = `Comparación de ${chosen.length} ${chosen.length === 1 ? "vehículo" : "vehículos"}`;
+      table.append(caption);
+      const head = table.createTHead();
+      const headRow = head.insertRow();
+      const attributeHeader = document.createElement("th");
+      attributeHeader.scope = "col";
+      attributeHeader.textContent = "Atributo";
+      headRow.append(attributeHeader);
+      chosen.forEach((product) => {
+        const cell = document.createElement("th");
+        cell.scope = "col";
+        const family = document.createElement("span");
+        family.textContent = product.family;
+        const link = document.createElement("a");
+        link.href = product.href;
+        link.textContent = product.name;
+        link.dataset.analyticsEvent = "compare_product_open";
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.textContent = "Quitar";
+        remove.dataset.analyticsEvent = "compare_remove";
+        remove.setAttribute(
+          "aria-label",
+          `Quitar ${product.name} de la comparación`,
+        );
+        remove.addEventListener("click", () => {
+          writeState(
+            selected.filter((slug) => slug !== product.slug),
+            "push",
+            `${product.name} quitado de la comparación.`,
+          );
+          requestAnimationFrame(() =>
+            compareRoot
+              .querySelector<HTMLButtonElement>(
+                `[data-select-product="${product.slug}"]`,
+              )
+              ?.focus(),
+          );
+        });
+        cell.append(family, link, remove);
+        headRow.append(cell);
+      });
+      const attributes = new Map<string, ClientAttribute>();
+      chosen
+        .flatMap((product) => product.attributes)
+        .forEach((attribute) => {
+          if (!attributes.has(attribute.key))
+            attributes.set(attribute.key, attribute);
+        });
+      const ordered = [...attributes.values()].sort(
+        (a, b) => a.priority - b.priority,
+      );
+      const groups = [...new Set(ordered.map((attribute) => attribute.group))];
+      groups.forEach((group) => {
+        const body = document.createElement("tbody");
+        const groupRow = body.insertRow();
+        const groupHeader = document.createElement("th");
+        groupHeader.colSpan = chosen.length + 1;
+        groupHeader.scope = "colgroup";
+        groupHeader.textContent = groupLabels[group];
+        groupRow.append(groupHeader);
+        ordered
+          .filter((attribute) => attribute.group === group)
+          .forEach((attribute) => {
+            const row = body.insertRow();
+            const label = document.createElement("th");
+            label.scope = "row";
+            label.textContent = attribute.label;
+            row.append(label);
+            chosen.forEach((product) => {
+              const value = document.createElement("td");
+              const productAttribute = product.attributes.find(
+                (item) => item.key === attribute.key,
+              );
+              value.textContent = productAttribute?.display ?? "No informado";
+              value.dataset.state = productAttribute?.state ?? "notInformed";
+              row.append(value);
+            });
+          });
+        table.append(body);
+      });
+      if (ordered.length === 0) {
+        const body = document.createElement("tbody");
+        const row = body.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = chosen.length + 1;
+        cell.textContent =
+          "Todavía no hay atributos comparables verificados para esta selección.";
+        body.append(row);
+        table.append(body);
+      }
+      matrix.append(table);
+    };
+    const render = () => {
+      hideConflict();
+      const chosen = selected
+        .map((slug) => productBySlug.get(slug))
+        .filter((product): product is ClientProduct => Boolean(product));
+      if (current) current.hidden = chosen.length === 0;
+      if (zero) zero.hidden = chosen.length > 0;
+      if (count) count.textContent = `${chosen.length} de 3 vehículos`;
+      if (oneHint) oneHint.hidden = chosen.length !== 1;
+      if (matrixControls) matrixControls.hidden = chosen.length < 2;
+      compareRoot
+        .querySelectorAll<HTMLButtonElement>("[data-select-product]")
+        .forEach((button) => {
+          const isSelected = selected.includes(
+            button.dataset.selectProduct ?? "",
+          );
+          button.disabled = isSelected;
+          button.textContent = isSelected ? "Añadido" : "Añadir";
+          button.setAttribute("aria-pressed", String(isSelected));
+        });
+      renderMatrix(chosen);
+    };
+    const handleCandidate = (slug: string) => {
+      const candidate = productBySlug.get(slug);
+      if (!candidate) {
+        if (notice) {
+          notice.hidden = false;
+          notice.textContent = "Se ignoró un modelo no reconocido.";
+        }
+        return;
+      }
+      if (selected.includes(slug)) {
+        writeState(
+          selected,
+          "replace",
+          `${candidate.name} ya estaba en la comparación.`,
+        );
+        return;
+      }
+      const first = selected.length
+        ? productBySlug.get(selected[0])
+        : undefined;
+      if (first && first.category !== candidate.category) {
+        showConflict("Solo podés comparar vehículos de la misma categoría.", [
+          {
+            label: `Iniciar comparación con ${candidate.name}`,
+            primary: true,
+            run: () =>
+              writeState(
+                [slug],
+                "push",
+                `Comparación reemplazada por ${candidate.name}.`,
+              ),
+          },
+          { label: "Cancelar", run: () => writeState(selected, "replace") },
+        ]);
+        return;
+      }
+      if (selected.length >= 3) {
+        showConflict(
+          "La comparación admite un máximo de tres vehículos. Elegí cuál reemplazar.",
+          [
+            ...selected.map((currentSlug) => ({
+              label: `Reemplazar ${productBySlug.get(currentSlug)?.name}`,
+              run: () =>
+                writeState(
+                  selected.map((item) => (item === currentSlug ? slug : item)),
+                  "push",
+                  `${candidate.name} añadido a la comparación.`,
+                ),
+            })),
+            { label: "Cancelar", run: () => writeState(selected, "replace") },
+          ],
+        );
+        return;
+      }
+      writeState(
+        [...selected, slug],
+        "push",
+        `${candidate.name} añadido a la comparación.`,
+      );
+    };
+
+    compareRoot
+      .querySelectorAll<HTMLButtonElement>("[data-select-product]")
+      .forEach((button) =>
+        button.addEventListener("click", () =>
+          handleCandidate(button.dataset.selectProduct ?? ""),
+        ),
+      );
+    compareRoot
+      .querySelector<HTMLButtonElement>("[data-clear-compare]")
+      ?.addEventListener("click", () =>
+        writeState([], "push", "Comparación vaciada."),
+      );
+    compareRoot
+      .querySelector<HTMLButtonElement>("[data-matrix-previous]")
+      ?.addEventListener("click", () =>
+        matrix?.scrollBy({ left: -240, behavior: "smooth" }),
+      );
+    compareRoot
+      .querySelector<HTMLButtonElement>("[data-matrix-next]")
+      ?.addEventListener("click", () =>
+        matrix?.scrollBy({ left: 240, behavior: "smooth" }),
+      );
+    addEventListener("popstate", () => {
+      const params = new URLSearchParams(location.search);
+      selected = validated(
+        (params.get("models") ?? "").split(",").filter(Boolean),
+      ).slice(0, 3);
+      render();
+    });
+
+    const params = new URLSearchParams(location.search);
+    const raw = (params.get("models") ?? "").split(",").filter(Boolean);
+    const invalidCount = raw.filter((slug) => !productBySlug.has(slug)).length;
+    const normalized = validated(raw);
+    selected = (params.has("models") ? normalized : readStored()).slice(0, 3);
+    const categoriesInUrl = new Set(
+      selected.map((slug) => productBySlug.get(slug)?.category),
+    );
+    const messages = [];
+    if (invalidCount) messages.push("Se ignoraron modelos no reconocidos.");
+    if (unique(raw).length > 3)
+      messages.push(
+        "La URL contenía más de tres modelos; se conservaron los primeros tres válidos.",
+      );
+    if (raw.length !== unique(raw).length)
+      messages.push("Se eliminó un modelo duplicado.");
+    if (messages.length && notice) {
+      notice.hidden = false;
+      notice.textContent = messages.join(" ");
+    }
+    render();
+    if (categoriesInUrl.size > 1) {
+      if (current) current.hidden = true;
+      if (zero) zero.hidden = true;
+      const groups = [...categoriesInUrl].map((category) =>
+        normalized.filter(
+          (slug) => productBySlug.get(slug)?.category === category,
+        ),
+      );
+      showConflict(
+        "La URL contiene categorías incompatibles. Elegí cuál conservar.",
+        groups.map((group) => ({
+          label: `Conservar ${group.map((slug) => productBySlug.get(slug)?.name).join(" y ")}`,
+          run: () => writeState(group, "replace"),
+        })),
+      );
+    } else if (params.get("add")) {
+      handleCandidate(params.get("add") ?? "");
+    } else if (!params.has("models") && selected.length) {
+      writeState(selected, "replace");
+    }
+  }
+</script>
+
+<style>
+  .compare-kicker {
+    color: var(--color-link-on-light);
+  }
+  .compare-title {
+    max-width: 10ch;
+    font-family: var(--font-family-display);
+    font-size: clamp(3.75rem, 2.5rem + 7vw, 8rem);
+    font-weight: 800;
+    line-height: 0.82;
+    letter-spacing: -0.045em;
+  }
+  .compare-intro {
+    max-width: 46rem;
+    color: var(--color-text-secondary);
+  }
+  .compare-experience {
+    display: grid;
+    gap: var(--space-10);
+  }
+  .compare-notice,
+  .compare-conflict,
+  .one-product-hint {
+    padding: var(--space-4);
+    border-inline-start: var(--border-accent) solid var(--color-brand-cyan);
+    background: var(--color-surface-subtle);
+  }
+  .compare-conflict {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .compare-conflict[hidden] {
+    display: none;
+  }
+  .conflict-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .conflict-actions :global(button),
+  .clear-compare,
+  .matrix-controls button {
+    min-height: var(--target-minimum);
+    padding-inline: var(--space-3);
+    border: var(--border-strong) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-primary);
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+  .conflict-actions :global(.primary-action) {
+    border-color: var(--color-brand-cyan);
+    background: var(--color-brand-cyan);
+    color: var(--color-on-brand);
+  }
+  .compare-current,
+  .compare-zero,
+  .compare-selector {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .compare-current[hidden],
+  .compare-zero[hidden] {
+    display: none;
+  }
+  .current-heading,
+  .selector-heading,
+  .selector-category__heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .current-heading p,
+  .selector-heading p,
+  .compare-zero p {
+    color: var(--color-text-secondary);
+  }
+  .clear-compare {
+    color: var(--color-link-on-light);
+  }
+  .matrix-controls {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+  .matrix-controls[hidden] {
+    display: none;
+  }
+  .compare-matrix {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    border: var(--border-hairline) solid var(--color-border-subtle);
+  }
+  .compare-matrix:focus-visible {
+    outline: var(--focus-width) solid var(--color-focus-on-light);
+    outline-offset: var(--focus-offset);
+  }
+  .compare-matrix :global(table) {
+    width: 100%;
+    min-width: 28rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+  }
+  .compare-matrix[data-count="2"] :global(table) {
+    min-width: 42rem;
+  }
+  .compare-matrix[data-count="3"] :global(table) {
+    min-width: 56rem;
+  }
+  .compare-matrix :global(caption) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .compare-matrix :global(th),
+  .compare-matrix :global(td) {
+    padding: var(--space-4);
+    border-inline-end: var(--border-hairline) solid var(--color-border-subtle);
+    border-block-end: var(--border-hairline) solid var(--color-border-subtle);
+    text-align: start;
+    vertical-align: top;
+  }
+  .compare-matrix :global(thead th) {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 2;
+    background: var(--color-surface-primary);
+  }
+  .compare-matrix :global(thead th:first-child),
+  .compare-matrix :global(tbody th[scope="row"]) {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: 3;
+    width: 9rem;
+    background: var(--color-surface-subtle);
+  }
+  .compare-matrix :global(thead th:not(:first-child)) {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .compare-matrix :global(thead span) {
+    color: var(--color-link-on-light);
+    font-size: var(--font-size-label);
+    letter-spacing: 0.06em;
+  }
+  .compare-matrix :global(thead a) {
+    color: var(--color-text-primary);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-3);
+    line-height: 0.95;
+  }
+  .compare-matrix :global(thead button) {
+    justify-self: start;
+    min-height: var(--target-minimum);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-link-on-light);
+    font-weight: 700;
+    text-decoration: underline;
+  }
+  .compare-matrix :global(th[scope="colgroup"]) {
+    position: static;
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+    font-size: var(--font-size-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .compare-matrix :global(td[data-state]:not([data-state="available"])) {
+    color: var(--color-text-secondary);
+  }
+  .compare-selector {
+    padding-block-start: var(--space-8);
+    border-block-start: var(--border-hairline) solid var(--color-border-strong);
+  }
+  .selector-category {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .selector-category__heading a {
+    display: inline-flex;
+    min-height: var(--target-minimum);
+    align-items: center;
+    color: var(--color-link-on-light);
+    font-weight: 700;
+  }
+  .selector-category ul {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    gap: var(--space-3);
+    list-style: none;
+  }
+  .selector-category li {
+    display: flex;
+    min-width: 0;
+    padding: var(--space-4);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    border: var(--border-hairline) solid var(--color-border-subtle);
+    background: var(--color-surface-primary);
+  }
+  .selector-category li div {
+    display: grid;
+    min-width: 0;
+  }
+  .selector-category li span {
+    color: var(--color-link-on-light);
+    font-size: var(--font-size-label);
+    font-weight: 700;
+  }
+  .selector-category li strong {
+    overflow-wrap: anywhere;
+  }
+  .selector-category li button {
+    min-width: 5.5rem;
+    min-height: var(--target-minimum);
+    padding-inline: var(--space-3);
+    border: var(--border-strong) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-primary);
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+  .selector-category li button[aria-pressed="true"] {
+    border-color: var(--color-brand-cyan-active);
+    background: var(--color-surface-subtle);
+  }
+  .compare-noscript {
+    display: grid;
+    padding: var(--space-5);
+    gap: var(--space-3);
+    border: var(--border-hairline) solid var(--color-border-strong);
+  }
+  .compare-noscript div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+  @media (min-width: 48rem) {
+    .selector-category ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .compare-matrix :global(thead th:first-child),
+    .compare-matrix :global(tbody th[scope="row"]) {
+      width: 12rem;
+    }
+  }
+  @media (min-width: 64rem) {
+    .matrix-controls {
+      display: none;
+    }
+    .selector-category ul {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .compare-matrix :global(table) {
+      min-width: 0 !important;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .compare-matrix {
+      scroll-behavior: auto;
+    }
+  }
+</style>

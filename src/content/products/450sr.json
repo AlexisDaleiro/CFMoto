@@ -102,7 +102,11 @@
       }
     }
   ],
-  "compareAttributes": [],
+  "compareAttributes": [
+    { "key": "displacement", "priority": 1 },
+    { "key": "maximumTorque", "priority": 3 },
+    { "key": "curbWeight", "priority": 4 }
+  ],
   "features": [],
   "relatedProducts": ["800mt-touring", "700cl-x-heritage"],
   "images": [

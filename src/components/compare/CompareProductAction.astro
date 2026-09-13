@@ -1,0 +1,53 @@
+---
+import Container from "@/components/primitives/Container.astro";
+import type { ProductEntry } from "@/lib/products";
+interface Props {
+  product: ProductEntry;
+}
+const { product } = Astro.props;
+---
+
+<aside class="compare-action" aria-label={`Comparar ${product.data.name}`}>
+  <Container size="product">
+    <div>
+      <p>
+        <strong>¿Estás evaluando alternativas?</strong> Añadí este modelo a una
+        comparación de su categoría.
+      </p>
+      <a
+        href={`/comparar/?add=${product.data.slug}`}
+        data-analytics-event="compare_add"
+      >
+        Comparar {product.data.name}
+      </a>
+    </div>
+  </Container>
+</aside>
+
+<style>
+  .compare-action {
+    padding-block: var(--space-4);
+    border-block-end: var(--border-hairline) solid var(--color-border-subtle);
+    background: var(--color-surface-subtle);
+  }
+  .compare-action > :global(.container) > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+  }
+  .compare-action p {
+    color: var(--color-text-secondary);
+  }
+  .compare-action strong {
+    color: var(--color-text-primary);
+  }
+  .compare-action a {
+    display: inline-flex;
+    min-height: var(--target-minimum);
+    align-items: center;
+    color: var(--color-link-on-light);
+    font-weight: 750;
+  }
+</style>

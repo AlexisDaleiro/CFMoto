@@ -1,0 +1,95 @@
+---
+const isComparePage = Astro.url.pathname.startsWith("/comparar");
+---
+
+{!isComparePage && (
+  <aside
+    class="compare-bar"
+    data-compare-bar
+    hidden
+    aria-label="Comparación actual"
+  >
+    <p>
+      <strong>Comparar vehículos</strong>
+      <span data-compare-bar-count></span>
+    </p>
+    <a href="/comparar/" data-compare-bar-link>
+      Ver comparación
+    </a>
+  </aside>
+)}
+
+<script>
+  const compareStorageKey = "cfmoto.compare.v1";
+  const validCompareSlug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  const readCompareStorage = () => {
+    try {
+      const value = JSON.parse(localStorage.getItem(compareStorageKey) ?? "[]");
+      return Array.isArray(value)
+        ? [
+            ...new Set(
+              value.filter(
+                (item) =>
+                  typeof item === "string" && validCompareSlug.test(item),
+              ),
+            ),
+          ].slice(0, 3)
+        : [];
+    } catch {
+      return [];
+    }
+  };
+  const updateCompareBar = () => {
+    const bar = document.querySelector<HTMLElement>("[data-compare-bar]");
+    if (!bar) return;
+    const slugs = readCompareStorage();
+    const count = bar.querySelector<HTMLElement>("[data-compare-bar-count]");
+    const link = bar.querySelector<HTMLAnchorElement>(
+      "[data-compare-bar-link]",
+    );
+    bar.hidden = slugs.length === 0;
+    if (count) count.textContent = `${slugs.length} de 3`;
+    if (link) link.href = `/comparar/?models=${slugs.join(",")}`;
+  };
+  updateCompareBar();
+  addEventListener("storage", updateCompareBar);
+  addEventListener("compare:updated", updateCompareBar);
+</script>
+
+<style>
+  .compare-bar {
+    position: fixed;
+    inset: auto var(--page-margin)
+      calc(var(--space-3) + env(safe-area-inset-bottom));
+    z-index: var(--z-sticky);
+    display: flex;
+    width: min(calc(100% - 2 * var(--page-margin)), 34rem);
+    margin-inline-start: auto;
+    padding: var(--space-3) var(--space-4);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    border-inline-start: var(--border-accent) solid var(--color-brand-cyan);
+    background: var(--color-surface-dark-raised);
+    color: var(--color-on-dark);
+    box-shadow: var(--shadow-overlay);
+  }
+  .compare-bar[hidden] {
+    display: none;
+  }
+  .compare-bar p {
+    display: grid;
+    font-size: var(--font-size-body-s);
+  }
+  .compare-bar span {
+    color: var(--color-text-inverted-secondary);
+  }
+  .compare-bar a {
+    display: inline-flex;
+    min-height: var(--target-minimum);
+    align-items: center;
+    color: var(--color-brand-cyan);
+    font-weight: 750;
+    white-space: nowrap;
+  }
+</style>

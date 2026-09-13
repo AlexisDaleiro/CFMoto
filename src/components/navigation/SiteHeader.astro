@@ -37,14 +37,14 @@ const isCurrent = (href: string) =>
     </nav>
 
     <nav class="desktop-utilities" aria-label="Acciones">
-      <a href="/comparar/">Comparar</a>
+      <a href="/comparar/" aria-current={isCurrent("/comparar/") ? "page" : undefined}>Comparar</a>
       <a class="header-cta" href="/cotizar/">
         Cotizar
       </a>
     </nav>
 
     <div class="mobile-actions">
-      <a class="mobile-compare" href="/comparar/">
+      <a class="mobile-compare" href="/comparar/" aria-current={isCurrent("/comparar/") ? "page" : undefined}>
         Comparar
       </a>
       <button
@@ -124,7 +124,7 @@ const isCurrent = (href: string) =>
     </nav>
 
     <div class="mobile-menu__utilities">
-      <a href="/comparar/">Comparar</a>
+      <a href="/comparar/" aria-current={isCurrent("/comparar/") ? "page" : undefined}>Comparar</a>
       <a href="/test-ride/">Solicitar test ride</a>
       <a class="header-cta" href="/cotizar/">
         Cotizar
