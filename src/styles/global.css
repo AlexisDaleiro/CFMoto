@@ -1,0 +1,78 @@
+@import "./reset.css";
+@import "./tokens.css";
+@import "./typography.css";
+@import "./utilities.css";
+
+html {
+  background: var(--color-surface-page);
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-surface-page);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-body-m);
+  line-height: var(--line-height-body-m);
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--color-link-on-light);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-thickness: 0.14em;
+}
+
+:focus-visible {
+  outline: var(--focus-width) solid var(--color-focus-on-light);
+  outline-offset: var(--focus-offset);
+}
+
+[data-surface="dark"] :focus-visible,
+[data-surface="photo"] :focus-visible {
+  outline-color: var(--color-focus-on-dark);
+}
+
+::selection {
+  background: var(--color-brand-cyan);
+  color: var(--color-on-brand);
+}
+
+main {
+  min-height: 70vh;
+}
+
+.surface-light {
+  background: var(--color-surface-primary);
+  color: var(--color-on-light);
+}
+
+.surface-dark {
+  background: var(--color-surface-dark);
+  color: var(--color-on-dark);
+}
+
+.surface-dark a:not([class]) {
+  color: var(--color-link-on-dark);
+}
+
+.skip-link {
+  position: fixed;
+  inset-block-start: var(--space-2);
+  inset-inline-start: var(--space-2);
+  z-index: var(--z-notice);
+  padding: var(--space-3) var(--space-4);
+  transform: translateY(calc(-100% - var(--space-4)));
+  background: var(--color-brand-cyan);
+  color: var(--color-on-brand);
+  font-weight: 700;
+  transition: transform var(--motion-fast) var(--ease-enter);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}

@@ -1,0 +1,30 @@
+{
+  "productId": "atv-cforce-450l",
+  "slug": "cforce-450l",
+  "name": "CFORCE 450L",
+  "category": "atv",
+  "family": "CFORCE",
+  "publicationStatus": "draft",
+  "compareGroup": "atv",
+  "availability": "unknown",
+  "keyStats": [],
+  "specifications": [],
+  "compareAttributes": [],
+  "images": [],
+  "colors": [],
+  "cta": {
+    "quote": false,
+    "testRide": false,
+    "whatsapp": false,
+    "dealer": false
+  },
+  "verification": {
+    "status": "needsReview",
+    "source": {
+      "label": "Phase 0 content audit",
+      "market": "Uruguay"
+    },
+    "note": "CLIENT VALIDATION REQUIRED; identity-only schema fixture."
+  },
+  "locale": "es-UY"
+}

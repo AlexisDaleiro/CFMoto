@@ -1,0 +1,42 @@
+---
+interface Props {
+  variant?: "informational" | "capability" | "commercial" | "status";
+  class?: string;
+}
+
+const { variant = "informational", class: className } = Astro.props;
+---
+
+<span class:list={["badge", "type-caption", `badge--${variant}`, className]}>
+  <slot />
+</span>
+
+<style>
+  .badge {
+    display: inline-flex;
+    min-height: 1.75rem;
+    padding: var(--space-1) var(--space-2);
+    align-items: center;
+    border: var(--border-hairline) solid var(--color-border-subtle);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-subtle);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+  }
+
+  .badge--capability {
+    border-radius: var(--radius-sm);
+    background: transparent;
+  }
+
+  .badge--commercial {
+    border-color: var(--color-brand-cyan-active);
+    color: var(--color-text-primary);
+  }
+
+  .badge--status {
+    border-radius: var(--radius-md);
+    background: var(--color-neutral-800);
+    color: var(--color-text-inverted);
+  }
+</style>

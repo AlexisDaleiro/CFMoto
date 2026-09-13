@@ -1,0 +1,144 @@
+# Content Model
+
+Stable Phase 4 model aligned with `src/content/schemas.ts`. Astro Content Layer validates local entries through `src/content.config.ts`; the first collection is `products`. Future collections reuse the governance primitives here rather than inventing parallel shapes.
+
+## Conventions
+
+- Internal enum/key values use stable English camelCase or kebab-case IDs; UI labels remain Spanish Uruguay.
+- Content slugs are lowercase kebab-case.
+- Public technical/commercial facts require source, verification status and date when verified.
+- Absence is modeled explicitly; no empty string or unexplained dash stands in for unknown/unavailable/not applicable.
+- Collection data is not automatically publishable. Route queries must filter `publicationStatus` and verification eligibility.
+
+## Verification
+
+```text
+status: verified | needsReview | unverified | deprecated
+source:
+  label: string
+  url?: valid URL
+  market?: string
+verifiedAt?: date
+note?: string
+```
+
+Rules:
+
+- `verified` public facts need `verifiedAt` before production publication policy accepts them.
+- `needsReview` can validate a draft/test record but is never treated as commercial truth.
+- `unverified` is retained for research/migration only.
+- `deprecated` remains traceable but must not feed current product claims.
+
+## Product collection
+
+Location: `src/content/products/*.json`; loader: Astro `glob()`; schema: `productSchema`.
+
+### Identity and publication
+
+- `productId`: stable cross-system ID.
+- `slug`: canonical product slug.
+- `name`: official local model name.
+- `category`: `motorcycle | atv | side-by-side`.
+- `family`: SR, MT, CFORCE, UFORCE, etc., as validated.
+- `modelYear?`: explicit integer when known.
+- `publicationStatus`: `draft | active | unlisted | legacy | discontinued`.
+- `locale`: currently `es-UY`.
+
+### Discovery and narrative
+
+- `descriptor?`: short decision-oriented description.
+- `description?`: longer product introduction.
+- `compareGroup`: stable compatibility group; Phase 1 still prohibits cross-category comparison.
+- `availability`: `available | onRequest | temporarilyUnavailable | unknown`.
+
+Discovery tags, primary uses, features and editorial relationships are deferred until a real page/content need proves their exact shape. They are not placed in an arbitrary metadata bag.
+
+### Key stats and specifications
+
+`keyStats` (maximum five), `specifications` and `compareAttributes` share a structured specification value:
+
+```text
+key: camelCase identifier
+label: Spanish display label
+group: engine | chassis | dimensions | electronics | capacities
+status: available | notInformed | notAvailable | notApplicable
+value: string | number | boolean       # only when available
+unit?: string                          # only when available
+displayValue?: string                  # approved exceptional presentation
+note?: string                          # unavailable states
+verification: Verification
+```
+
+This remains flexible across motorcycles, ATV and Side-by-Side while preserving controlled groups, keys, states and units. Category-specific dictionaries can narrow allowed keys later without replacing the base.
+
+### Price
+
+Discriminated by `type`:
+
+- `fixed`: numeric `amount`, `currency`, optional tax/validity/disclaimer and verification.
+- `startingAt`: same structure, explicitly a starting price.
+- `enquire`: no numeric amount; optional note and verification.
+- `unavailable`: no numeric amount; optional note and verification.
+
+Currencies currently validate `USD | UYU`. Formatting such as `USD 7.990` belongs to a locale-aware formatter, not stored presentation text. No FX conversion exists.
+
+### Images
+
+Every image records:
+
+- stable `id` and role: `hero | cutout | gallery | feature | thumbnail`;
+- `src`, required `alt`, optional dimensions/aspect/focal point;
+- optional `colorRef`;
+- rights status: `unknown | reference | proposal | production`, with optional owner, allowed use and expiry.
+
+Optimizable content media belongs under `src/assets` and is imported/used with `astro:assets`. `public` is reserved for exact-URL assets such as verified logos, manifest or robots resources. Production cannot publish unknown/reference-only rights.
+
+### Color variants
+
+Each color contains `id`, official `name`, optional `visualReference`, related `imageRefs` and availability (`available | onRequest | unavailable | unknown`). A flat hex is never the only identity because commercial finishes may not map to one color.
+
+### CTA availability
+
+`cta.quote`, `cta.testRide`, `cta.whatsapp` and `cta.dealer` are explicit booleans. Content validity alone does not enable a CTA; operations/dealer eligibility must also be true.
+
+## Current fixtures
+
+- `450sr.json`
+- `cforce-450l.json`
+- `uforce-800.json`
+
+All are `draft`, `needsReview`, unavailable/unknown for public commerce and have CTAs disabled. They exist solely to validate category breadth and schema. No technical specification has been invented or marked verified.
+
+## Publication gate
+
+A later route may publish a product only when all required conditions are enforced centrally:
+
+1. `publicationStatus === active` (or explicitly approved unlisted route behavior).
+2. identity/category/family/market verified.
+3. public claims/key stats/specs individually verified.
+4. hero/cutout relationship and production rights confirmed.
+5. price/availability valid when displayed.
+6. CTA flags consistent with current operations and Locations.
+
+Phase 4 does not yet implement publishing routes; fixtures never appear on `/` or the development preview.
+
+## Future collection boundaries
+
+### Locations
+
+Next schema should include slug, NAP, department/locality/address, contacts, optional coordinates/hours, capabilities (`sales`, `service`, `parts`, `testRide`), category scope and Verification. No collection was added without real nonfiction data. Dealer and Service remain views of one Location collection.
+
+### Experiences and articles
+
+Add only when Phase 5/editorial implementation needs entries. Experience type is Racing, Adventure, Technology or Community; every proof/relationship retains source and local applicability. Articles need dates, rights and related products/experiences.
+
+### Campaigns and lead context
+
+Campaigns require lifecycle, approval, asset rights, product relations and tracking. Lead context is application data—not editorial content—and belongs behind a validated server/CRM boundary later.
+
+## Schema evolution
+
+- Add fields for a demonstrated content/UI/query need.
+- Prefer explicit optional/discriminated fields over `metadata: unknown`.
+- Breaking enum/key changes need migration and ADR if they affect URLs, comparison or integrations.
+- `src/content/schemas.ts` is executable truth; this document explains contract and publication rules.

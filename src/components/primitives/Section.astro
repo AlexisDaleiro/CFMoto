@@ -1,0 +1,32 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"section"> {
+  as?: "section" | "article";
+  density?: "immersive" | "editorial" | "functional";
+  surface?: "page" | "light" | "dark";
+}
+
+const {
+  as: Tag = "section",
+  density = "editorial",
+  surface = "page",
+  class: className,
+  ...attributes
+} = Astro.props;
+
+const surfaceClass = surface === "page" ? undefined : `surface-${surface}`;
+---
+
+<Tag
+  class:list={[
+    "section",
+    density !== "editorial" && `section--${density}`,
+    surfaceClass,
+    className,
+  ]}
+  data-surface={surface === "dark" ? "dark" : undefined}
+  {...attributes}
+>
+  <slot />
+</Tag>

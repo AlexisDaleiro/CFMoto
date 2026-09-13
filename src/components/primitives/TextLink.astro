@@ -1,0 +1,61 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"a"> {
+  href: string;
+  directional?: boolean;
+}
+
+const {
+  href,
+  directional = false,
+  class: className,
+  ...attributes
+} = Astro.props;
+---
+
+<a
+  class:list={["text-link", directional && "text-link--directional", className]}
+  href={href}
+  {...attributes}
+>
+  <slot />
+  {directional && <span aria-hidden="true">→</span>}
+</a>
+
+<style>
+  .text-link {
+    color: var(--color-link-on-light);
+    font-weight: 600;
+    text-underline-offset: 0.22em;
+  }
+
+  .text-link--directional {
+    display: inline-flex;
+    min-height: var(--target-minimum);
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .text-link--directional span {
+    transition: transform var(--motion-fast) var(--ease-standard);
+  }
+
+  .text-link--directional:hover span {
+    transform: translateX(2px);
+  }
+
+  :global([data-surface="dark"]) .text-link {
+    color: var(--color-link-on-dark);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .text-link--directional span {
+      transition: none;
+    }
+
+    .text-link--directional:hover span {
+      transform: none;
+    }
+  }
+</style>

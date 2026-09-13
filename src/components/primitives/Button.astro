@@ -1,0 +1,141 @@
+---
+interface Props {
+  href?: string;
+  variant?: "primary" | "secondary" | "tertiary" | "ghost";
+  size?: "default" | "large";
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  loading?: boolean;
+  class?: string;
+  target?: "_self" | "_blank";
+  rel?: string;
+}
+
+const {
+  href,
+  variant = "primary",
+  size = "default",
+  type = "button",
+  disabled = false,
+  loading = false,
+  class: className,
+  target,
+  rel,
+} = Astro.props;
+
+const classes = [
+  "button",
+  "type-button",
+  `button--${variant}`,
+  `button--${size}`,
+  className,
+];
+---
+
+{href ? (
+  <a
+    class:list={classes}
+    href={disabled ? undefined : href}
+    target={target}
+    rel={rel}
+    aria-disabled={disabled ? "true" : undefined}
+    aria-busy={loading ? "true" : undefined}
+  >
+    <slot />
+  </a>
+) : (
+  <button
+    class:list={classes}
+    type={type}
+    disabled={disabled || loading}
+    aria-busy={loading ? "true" : undefined}
+  >
+    <slot />
+  </button>
+)}
+
+<style>
+  .button {
+    display: inline-flex;
+    min-height: var(--control-height-default);
+    padding-inline: var(--space-5);
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    border: var(--border-strong) solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition:
+      background-color var(--motion-fast) var(--ease-standard),
+      border-color var(--motion-fast) var(--ease-standard),
+      color var(--motion-fast) var(--ease-standard),
+      transform var(--motion-fast) var(--ease-standard);
+  }
+
+  .button:hover:not([aria-disabled="true"]):not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  .button:active:not([aria-disabled="true"]):not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .button--large {
+    min-height: var(--control-height-large);
+    padding-inline: var(--space-6);
+  }
+
+  .button--primary {
+    background: var(--color-action-primary-background);
+    color: var(--color-on-brand);
+  }
+
+  .button--primary:hover {
+    background: var(--color-action-primary-hover);
+  }
+
+  .button--primary:active {
+    background: var(--color-action-primary-active);
+  }
+
+  .button--secondary {
+    border-color: currentColor;
+    background: transparent;
+    color: var(--color-text-primary);
+  }
+
+  :global([data-surface="dark"]) .button--secondary,
+  .button--ghost {
+    border-color: currentColor;
+    background: transparent;
+    color: var(--color-text-inverted);
+  }
+
+  .button--tertiary {
+    padding-inline: var(--space-3);
+    border-color: transparent;
+    background: transparent;
+    color: var(--color-link-on-light);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .button[aria-disabled="true"],
+  .button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .button {
+      transition-property: background-color, border-color, color;
+    }
+
+    .button:hover:not([aria-disabled="true"]):not(:disabled) {
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,103 @@
+.type-display-xl,
+.type-display-l,
+.type-heading-1,
+.type-heading-2,
+.type-heading-3,
+.type-stat-xl,
+.type-stat-m {
+  font-family: var(--font-family-display);
+  font-variation-settings: "wght" 700;
+}
+
+.type-display-xl {
+  max-width: 14ch;
+  font-size: var(--font-size-display-xl);
+  line-height: var(--line-height-display-xl);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.type-display-l {
+  max-width: 18ch;
+  font-size: var(--font-size-display-l);
+  line-height: var(--line-height-display-l);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.type-heading-1 {
+  font-size: var(--font-size-heading-1);
+  line-height: var(--line-height-heading-1);
+  text-wrap: balance;
+}
+
+.type-heading-2 {
+  font-size: var(--font-size-heading-2);
+  line-height: var(--line-height-heading-2);
+  text-wrap: balance;
+}
+
+.type-heading-3 {
+  font-size: var(--font-size-heading-3);
+  line-height: var(--line-height-heading-3);
+}
+
+.type-heading-4 {
+  font-size: var(--font-size-heading-4);
+  font-weight: 650;
+  line-height: var(--line-height-heading-4);
+}
+
+.type-body-l {
+  font-size: var(--font-size-body-l);
+  line-height: var(--line-height-body-l);
+}
+
+.type-body-m {
+  font-size: var(--font-size-body-m);
+  line-height: var(--line-height-body-m);
+}
+
+.type-body-s {
+  font-size: var(--font-size-body-s);
+  line-height: var(--line-height-body-s);
+}
+
+.type-label {
+  font-size: var(--font-size-label);
+  font-weight: 600;
+  line-height: var(--line-height-label);
+  letter-spacing: 0.01em;
+}
+
+.type-caption {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+.type-stat-xl,
+.type-stat-m {
+  line-height: 0.92;
+  letter-spacing: -0.015em;
+  font-variant-numeric: tabular-nums;
+}
+
+.type-stat-xl {
+  font-size: var(--font-size-stat-xl);
+}
+
+.type-stat-m {
+  font-size: var(--font-size-stat-m);
+}
+
+.type-button {
+  font-size: var(--font-size-button);
+  font-weight: 650;
+  line-height: 1;
+}
+
+.type-navigation {
+  font-size: var(--font-size-navigation);
+  font-weight: 600;
+  line-height: 1.2;
+}

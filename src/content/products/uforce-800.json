@@ -1,0 +1,30 @@
+{
+  "productId": "side-by-side-uforce-800",
+  "slug": "uforce-800",
+  "name": "UFORCE 800",
+  "category": "side-by-side",
+  "family": "UFORCE",
+  "publicationStatus": "draft",
+  "compareGroup": "side-by-side",
+  "availability": "unknown",
+  "keyStats": [],
+  "specifications": [],
+  "compareAttributes": [],
+  "images": [],
+  "colors": [],
+  "cta": {
+    "quote": false,
+    "testRide": false,
+    "whatsapp": false,
+    "dealer": false
+  },
+  "verification": {
+    "status": "needsReview",
+    "source": {
+      "label": "Phase 0 content audit",
+      "market": "Uruguay"
+    },
+    "note": "CLIENT VALIDATION REQUIRED; identity-only schema fixture."
+  },
+  "locale": "es-UY"
+}

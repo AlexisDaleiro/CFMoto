@@ -1,0 +1,50 @@
+---
+import { siteConfig } from "@/config/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string | URL;
+  robots?: string;
+  image?: string;
+  type?: "website" | "article";
+}
+
+const {
+  title = siteConfig.defaultTitle,
+  description = siteConfig.defaultDescription,
+  canonical,
+  robots = siteConfig.allowIndexing ? "index, follow" : "noindex, nofollow",
+  image,
+  type = "website",
+} = Astro.props;
+
+const documentTitle =
+  title === siteConfig.name ? title : `${title} | ${siteConfig.name}`;
+
+const resolveCanonical = (
+  value: string | URL | undefined,
+): string | undefined => {
+  if (value instanceof URL) return value.toString();
+  if (value?.startsWith("https://") || value?.startsWith("http://"))
+    return value;
+  if (value && siteConfig.baseUrl)
+    return new URL(value, siteConfig.baseUrl).toString();
+  return undefined;
+};
+
+const canonicalUrl = resolveCanonical(canonical);
+---
+
+<title>{documentTitle}</title>
+<meta name="description" content={description} />
+<meta name="robots" content={robots} />
+{canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+
+<meta property="og:site_name" content={siteConfig.name} />
+<meta property="og:locale" content={siteConfig.locale.replace("-", "_")} />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={documentTitle} />
+<meta property="og:description" content={description} />
+{canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+{image && <meta property="og:image" content={image} />}

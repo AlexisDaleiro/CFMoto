@@ -1,0 +1,43 @@
+{
+  "productId": "motorcycle-450sr",
+  "slug": "450sr",
+  "name": "450SR",
+  "category": "motorcycle",
+  "family": "SR",
+  "publicationStatus": "draft",
+  "descriptor": "Registro mínimo para validar el schema; no es contenido comercial publicable.",
+  "compareGroup": "motorcycle",
+  "availability": "unknown",
+  "keyStats": [],
+  "specifications": [],
+  "compareAttributes": [],
+  "images": [],
+  "colors": [],
+  "price": {
+    "type": "enquire",
+    "note": "Precio local pendiente de validación comercial.",
+    "verification": {
+      "status": "needsReview",
+      "source": {
+        "label": "Phase 0 content audit",
+        "market": "Uruguay"
+      },
+      "note": "No publicar automáticamente."
+    }
+  },
+  "cta": {
+    "quote": false,
+    "testRide": false,
+    "whatsapp": false,
+    "dealer": false
+  },
+  "verification": {
+    "status": "needsReview",
+    "source": {
+      "label": "Phase 0 content audit",
+      "market": "Uruguay"
+    },
+    "note": "Identity-only sample for schema validation."
+  },
+  "locale": "es-UY"
+}

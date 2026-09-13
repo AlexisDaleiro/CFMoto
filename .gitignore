@@ -1,0 +1,23 @@
+# dependencies and generated output
+node_modules/
+dist/
+.astro/
+
+# local environment
+.env
+.env.*
+!.env.example
+
+# logs and coverage
+*.log
+coverage/
+
+# editors and operating systems
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# legacy discovery output
+.graphify/
+

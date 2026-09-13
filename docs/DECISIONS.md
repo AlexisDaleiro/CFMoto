@@ -1,0 +1,71 @@
+# Decisions
+
+Registro compacto de decisiones aprobadas o inferidas con bajo riesgo. Cambios deben añadir fecha, razón y estado; no reescribir historia silenciosamente.
+
+- **ADR-001 — Astro es el framework principal.** Estado: APPROVED. Razón: contenido-first, estático e islands.
+- **ADR-002 — TypeScript y validación de contenido son obligatorios.** APPROVED.
+- **ADR-003 — JavaScript de cliente debe justificarse.** APPROVED. No se adopta framework UI por defecto.
+- **ADR-004 — Content Collections es el baseline inicial.** APPROVED; CMS queda por decidir según workflow.
+- **ADR-005 — Cilindrada no es navegación primaria.** APPROVED. Será atributo/filtro/comparación.
+- **ADR-006 — URLs canónicas de producto son simples y estables.** APPROVED: `/motos/[slug]`, `/atv/[slug]`, `/side-by-side/[slug]`; familia/uso no anidan el producto.
+- **ADR-007 — Precios viven principalmente en ficha.** APPROVED. Modelo admite available/from/USD/UYU/on-request/unavailable.
+- **ADR-008 — Conversiones centrales son cotización, test ride, WhatsApp, dealer, service y comparar.** APPROVED.
+- **ADR-009 — Los leads preservan contexto de producto/dealer/campaña/origen.** APPROVED.
+- **ADR-010 — La demo inicial usa aproximadamente seis vehículos representativos.** APPROVED.
+- **ADR-011 — La selección propuesta no se sustituye automáticamente.** APPROVED. 450L y UFORCE 800 quedan bloqueados por validación, no reemplazados.
+- **ADR-012 — Comparación admite máximo tres y solo categorías compatibles.** APPROVED: moto/moto, ATV/ATV, SxS/SxS; cross-category deshabilitado.
+- **ADR-013 — Dealer y Service son experiencias distintas sobre Location compartida.** APPROVED.
+- **ADR-014 — El mapa es mejora progresiva.** APPROVED. Siempre habrá lista/búsqueda accesible.
+- **ADR-015 — Racing, Adventure, Technology y Community son pilares editoriales prioritarios.** APPROVED y relacionados explícitamente con productos/CTAs.
+- **ADR-016 — Noticias es contenido secundario.** APPROVED.
+- **ADR-017 — Mobile tiene patrones específicos por tarea.** APPROVED; no simple stacking.
+- **ADR-018 — Performance, WCAG 2.2 AA y SEO son requisitos arquitectónicos.** APPROVED; Lighthouse 95+ es objetivo futuro.
+- **ADR-019 — Datos actuales no se migran sin estados de verificación.** APPROVED por hallazgos críticos.
+- **ADR-020 — Datos técnicos/comerciales requieren source, verificationStatus y verifiedAt.** APPROVED. Un dato dudoso no se publica como hecho.
+- **ADR-021 — Assets requieren alt, derechos y asociación a variante/modelo.** APPROVED.
+- **ADR-022 — Contenido global inspira marca pero no prueba disponibilidad local.** APPROVED.
+- **ADR-023 — No se implementa UI ni se agregan dependencias en Phase 0.** APPROVED/CUMPLIDO.
+- **ADR-024 — La documentación en `/docs` es memoria del proyecto.** APPROVED; evitar duplicación y registrar aquí nuevas decisiones.
+- **ADR-025 — Lead válido y assisted conversion son métricas distintas.** APPROVED. Submit aceptado con contacto/intención/antispam es lead; WhatsApp/teléfono/directions son asistencias.
+- **ADR-026 — Las páginas filtradas no se indexan automáticamente.** APPROVED; solo landings curadas con demanda y contenido suficiente.
+- **ADR-027 — Redirect legacy exige equivalente semántico real.** APPROVED. Prioridad: sucesor confirmado → familia → categoría → legacy útil; nunca redirección masiva al Home.
+- **ADR-028 — Formularios se validan server-side y minimizan PII.** APPROVED como principio; proveedor pendiente.
+- **ADR-029 — “Motos” es la nomenclatura canónica.** APPROVED. `/motocicletas/` no será una segunda URL indexable.
+- **ADR-030 — La ruta canónica de una ubicación es `/ubicaciones/[slug]`.** APPROVED. Solo indexable con NAP verificado y contenido suficiente.
+- **ADR-031 — Búsqueda global se difiere.** APPROVED para v1; categorías, familias y filtros cubren el alcance inicial. Revisar con catálogo/editorial mayores o evidencia de necesidad.
+- **ADR-032 — Header separa primary navigation de utility actions.** APPROVED. Primary: Motos, ATV, Side-by-Side, Experiencia, Concesionarios, Service. Utility: Comparar, Test ride, Cotizar.
+- **ADR-033 — Mobile navigation usa drill-down de máximo dos niveles.** APPROVED. Panel modal con scroll lock, focus trap, Escape y restauración.
+- **ADR-034 — Cotizar es CTA comercial primario.** APPROVED. Test ride secundario; WhatsApp/dealer/compare son contextuales según tarea.
+- **ADR-035 — No habrá botón flotante global invasivo de WhatsApp en v1.** APPROVED. WhatsApp vive en contextos comerciales y se mide como assisted conversion.
+- **ADR-036 — Precio no usa conversión FX automática.** APPROVED. USD/UYU provienen de fuente comercial confiable y se muestran como estados estructurados.
+- **ADR-037 — Listings usan orden editorial estable y filtros mínimos.** APPROVED. Sort por precio solo con cobertura suficiente; filtros no se agregan sin utilidad.
+- **ADR-038 — Compare mobile muestra uno o dos modelos, no tres columnas comprimidas.** APPROVED. Navegación horizontal explícita conserva atributo y headers comprensibles.
+- **ADR-039 — Locator siempre ofrece lista accesible.** APPROVED. Mapa/geolocalización son mejoras progresivas y manual search permanece disponible.
+- **ADR-040 — Formularios piden un contacto válido y el mínimo para routing.** APPROVED. Dealer/mensaje son opcionales salvo necesidad operativa validada.
+- **ADR-041 — Product modules se omiten si falta contenido verificado.** APPROVED. No se rellenan secciones con placeholders o copy genérico.
+- **ADR-042 — Page priority queda P0/P1/P2 según `INFORMATION_ARCHITECTURE.md`.** APPROVED. La demo representa las tres categorías sin exigir catálogo completo.
+- **ADR-043 — La experiencia combina ambientes light, dark y fotográficos.** APPROVED. La alternancia responde al ritmo narrativo y la tarea; no es dark mode permanente ni patrón mecánico por sección.
+- **ADR-044 — El vehículo es protagonista visual.** APPROVED. Producto primero, interfaz segundo; overlays, decoración y contenedores no compiten con la silueta o la fotografía.
+- **ADR-045 — CFMOTO Cyan se usa estratégicamente.** APPROVED. Acción, selección, estado, dato relevante y momentos de marca; no grandes fondos constantes, texto largo, todos los bordes ni glow indiscriminado.
+- **ADR-046 — UI funcional más tranquila que contenido de marca.** APPROVED. Catálogo, compare, specs, formularios y red priorizan claridad; Racing/Adventure/Technology pueden elevar expresión.
+- **ADR-047 — Fotografía crítica requiere crops intencionales por breakpoint.** APPROVED. Un único `cover` para desktop/tablet/mobile no es estrategia suficiente; cada asset mantiene derechos, focal point y relación exacta con producto.
+- **ADR-048 — Motion es breve, opcional y funcional.** APPROVED. Refuerza continuidad, velocidad o feedback; no scroll hijacking, cursor custom, autoplay esencial ni información dependiente de animación. Reduced motion conserva experiencia completa.
+- **ADR-049 — La dirección creativa final requiere decisión humana.** APPROVED. Phase 2 compara Apex, Engineered Clarity y Open Terrain, pero no selecciona una ni autoriza híbrido automáticamente.
+- **ADR-050 — Hybrid Apex + Engineered Clarity es la dirección creativa oficial.** APPROVED 2026-09-13 por selección humana. Apex / Performance Editorial es la capa expresiva principal para Home, campañas, aperturas de producto, Racing, Adventure y momentos de deseo/impacto. Engineered Clarity / Precision Tech es la capa funcional para catálogo, filtros, Technology, especificaciones, comparación, formularios, concesionarios, Service y tareas de análisis/decisión. No son dos sistemas independientes: Phase 3 debe unificarlos mediante una sola tipografía, color/cyan, grid, spacing, containers, geometría, botones, componentes, iconografía, estados, motion y comportamiento responsive. Principio rector: **Expressive where emotion matters. Precise where decisions matter.**
+- **ADR-051 — El híbrido se implementa como un solo sistema semántico.** APPROVED. Expressive y Precision comparten tokens, tipografías, componentes, estados, accesibilidad y motion; se diferencian mediante escala, densidad, composición, fotografía y espacio. No existen temas Apex/Engineered ni sets de componentes paralelos.
+- **ADR-052 — Cyan y tipografías de Phase 3 son provisionales y reemplazables por tokens.** APPROVED. `#00B7E5` es working cyan con estado **CLIENT BRAND VALIDATION REQUIRED**; no se declara oficial. Barlow Condensed Variable + Inter Variable son candidatas OFL para display/UI, no tipografías oficiales. Brand book/licencia aprobada puede reemplazarlas centralmente tras validación de contraste, glyphs, métricas y performance.
+- **ADR-053 — El sistema responsive usa breakpoints por cambio de comportamiento.** APPROVED. Baseline 4/8/12 columnas y rangos iniciales 480/768/1024/1280/1600px; los containers readable/standard/wide/product/full controlan longitud y expansión. Mobile se valida desde 320px y el contenido se limita en ultrawide.
+- **ADR-054 — El contrato de interacción adopta 44×44px y foco diseñado.** APPROVED. Targets táctiles mínimos del proyecto 44×44px; focus ring 2px con offset 2px, contraste adaptado a superficie, nunca eliminado/recortado. Color, swipe, mapa y motion nunca son la única vía.
+- **ADR-055 — Motion utiliza una escala única y reduced motion completo.** APPROVED. Duraciones 0/120/220/420ms para instant/fast/standard/expressive; máximo ordinario 500ms. Precision usa fast/standard y Apex puede usar expressive; reduced motion elimina movimiento espacial, escala y stagger sin perder contenido/estado.
+- **ADR-056 — Phase 4 puede implementar el foundation técnico desde Phase 3.** APPROVED/READY. Puede crear Astro foundation, tokens y componentes aislados respetando estados provisionales. No autoriza páginas completas, datos ficticios ni bifurcar el Design System.
+- **ADR-057 — El foundation usa Astro 7.3.2 con npm y TypeScript estricto.** APPROVED/CUMPLIDO 2026-09-13. El output inicial es estático; Node.js `>=22.12.0` y npm `>=9.6.5` siguen los requisitos de Astro 7. Existe un único `package-lock.json`.
+- **ADR-058 — CSS nativo y cero hidratación son el baseline.** APPROVED/CUMPLIDO. No se incorporan Tailwind, framework UI ni runtime de cliente. Una dependencia o island futura deberá responder a una interacción concreta y registrar su coste.
+- **ADR-059 — La Content Layer actual de Astro gobierna contenido local.** APPROVED/CUMPLIDO. `src/content.config.ts`, loaders y schemas Zod tipados reemplazan APIs históricas. `products` es la única colección inicial; locations, experiences y articles se incorporarán cuando exista contenido o una plantilla que los consuma.
+- **ADR-060 — Las fuentes provisionales se sirven localmente mediante Astro Fonts.** APPROVED/CUMPLIDO. Barlow Condensed Variable e Inter Variable se obtienen en build desde Fontsource, se cachean/emiten como assets locales y usan fallback de sistema; solo UI se precarga. Siguen siendo candidatas OFL, no tipografías oficiales.
+- **ADR-061 — SEO parte de defaults seguros sin canonical ficticia.** APPROVED/CUMPLIDO. `baseUrl` permanece `null` y el indexing desactivado hasta verificar dominio/entorno; sitemap se difiere por la misma razón. Producción deberá definir URL, robots y headers en infraestructura.
+- **ADR-062 — Imágenes usan la API nativa de Astro sin wrapper prematuro.** APPROVED/CUMPLIDO. Imágenes optimizables vivirán en `src/assets`; `public` se reserva para archivos que requieren URL exacta. Art direction, focal points y roles ya están previstos en contenido, pero un componente propio llegará solo cuando agregue conducta real.
+- **ADR-063 — Phase 4 queda cerrada y habilita el prototipo visual acotado.** APPROVED/READY 2026-09-13. Build, type/content check, formato, HTML/CSS sin hidratación, foco/teclado y responsive foundation fueron validados. Phase 5 puede construir Header + Home Prototype + 450SR Visual Prototype sin ampliar datos no verificados.
+
+## Dependencias humanas restantes
+
+Las decisiones estructurales de Phase 1, la dirección creativa de Phase 2, el Design System de Phase 3 y el foundation técnico de Phase 4 están aprobados. Phase 5 está READY bajo ADR-050–063. Cliente/ventas aún deben aportar catálogo y specs autorizados, datos de Location, workflows/SLA, fuente de precios, CRM, branding y derechos; ver `OPEN_QUESTIONS.md`. El tratamiento final de cada URL legacy se valida con tráfico/backlinks y status del modelo, sin reabrir ADR-027.

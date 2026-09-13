@@ -1,0 +1,19 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"div"> {
+  as?: "div" | "ul" | "ol";
+  gap?: "2" | "3" | "4" | "6" | "8" | "12";
+}
+
+const {
+  as: Tag = "div",
+  gap = "4",
+  class: className,
+  ...attributes
+} = Astro.props;
+---
+
+<Tag class:list={["stack", `stack--${gap}`, className]} {...attributes}>
+  <slot />
+</Tag>

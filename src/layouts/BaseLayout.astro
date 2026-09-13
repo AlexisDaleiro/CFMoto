@@ -1,0 +1,39 @@
+---
+import { Font } from "astro:assets";
+
+import SEO from "@/components/seo/SEO.astro";
+import { siteConfig } from "@/config/site";
+import "@/styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string | URL;
+  robots?: string;
+  image?: string;
+  type?: "website" | "article";
+}
+
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang={siteConfig.locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <Font cssVariable="--font-display-loaded" />
+    <Font cssVariable="--font-ui-loaded" preload />
+    <SEO {...props} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">
+      Saltar al contenido
+    </a>
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+  </body>
+</html>
