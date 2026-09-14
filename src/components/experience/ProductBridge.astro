@@ -31,7 +31,7 @@ const stats = getVerifiedStats(product, maximumStats);
   data-surface={surface}
   aria-labelledby={`bridge-${product.data.slug}`}
 >
-  <div class="product-bridge__identity" data-family={product.data.family}>
+  <div class="product-bridge__identity">
     <p class="product-bridge__eyebrow">{eyebrow}</p>
     <p class="product-bridge__family">{product.data.family}</p>
     <h2 id={`bridge-${product.data.slug}`}>{product.data.name}</h2>
@@ -93,11 +93,11 @@ const stats = getVerifiedStats(product, maximumStats);
   .product-bridge__identity::after {
     position: absolute;
     inset: auto -0.1em -0.28em auto;
-    color: var(--color-border-subtle);
-    content: attr(data-family);
-    font-family: var(--font-family-display);
-    font-size: 13rem;
-    font-weight: 800;
+    width: 14rem;
+    height: 14rem;
+    border: var(--border-hairline) solid var(--color-border-subtle);
+    border-radius: 50%;
+    content: "";
   }
   .product-bridge__eyebrow,
   .product-bridge__family {

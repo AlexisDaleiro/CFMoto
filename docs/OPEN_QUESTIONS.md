@@ -44,3 +44,11 @@ Phase 7B ya demuestra locator list-first y formularios accesibles sin transmitir
 10. Plan de cutover, rollback, backups, monitoreo y soporte mensual.
 
 La URL/infraestructura y los masters oficiales de marca siguen pendientes, pero no bloquean Phase 5: el prototipo continuará no indexable, sin canonical ficticia y con valores provisionales centralizados. Sí bloquean declarar el prototipo producción-ready.
+
+## Needed to replace Phase 8 editorial fallbacks
+
+1. ¿Qué credenciales, temporadas, equipos, pilotos y resultados de Racing pueden publicarse, con fuente, fecha y derechos? ¿Cuál es la relación aprobada con SR/450SR sin sugerir transferencia tecnológica no demostrada?
+2. ¿Qué fotografía/video de 800MT Touring está aprobado para Uruguay y qué rutas, destinos, eventos o capacidades pueden nombrarse con evidencia?
+3. ¿Qué features de motor, electrónica, display/conectividad, frenos/seguridad y suspensión tienen documentación oficial por modelo y mercado?
+4. ¿Qué eventos, owners y rides locales cuentan con historia, caption, permiso de participantes y licencia de medios? ¿Quién modera y retira contenido vencido?
+5. ¿Quién es owner editorial de cada vertical y qué cadencia/frescura debe disparar revisión o retiro?

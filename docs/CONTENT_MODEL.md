@@ -152,9 +152,24 @@ Location: `src/content/locations/*.json`; loader: Astro `glob()`; schema: `locat
 
 Phase 7B contains ten Service records transcribed from the current public CFMOTO Uruguay Service page on 2026-09-14. Their `source.type` is `publicCurrentSite` and their `verificationStatus` is `needsClientValidation`. Only `service: true` is asserted. Dealer, parts, test ride, WhatsApp, hours and exact coordinates are not inferred. Dealer and Service remain two views over this single Location collection.
 
-### Experiences and articles
+## Experience collection
 
-Add only when Phase 5/editorial implementation needs entries. Experience type is Racing, Adventure, Technology or Community; every proof/relationship retains source and local applicability. Articles need dates, rights and related products/experiences.
+Location: `src/content/experiences/*.json`; loader: Astro `glob()`; schema: `experienceSchema`.
+
+- `slug`: controlled public segment (`racing | adventure | tecnologia | comunidad`).
+- `title` and `descriptor`: hub/metadata identity.
+- `mode`: stable internal mode (`racing | adventure | technology | community`).
+- `hero`: eyebrow, statement, supporting text, visual mode and source status.
+- `sections[]`: explicit editorial sections with id, title, body, optional emphasis/items and their own source status.
+- `relatedProducts[]`: existing product slugs, maximum four. Pages resolve them against `products`; facts are never copied into Experience content.
+- `sourceStatus`: `official | publicOfficial | proposal | needsClientValidation`.
+- `sourceReferences[]`: optional source labels/URLs when official public material is used.
+
+Phase 8 uses `proposal` for all new narrative copy. The UI does not expose that internal label, but production governance can distinguish creative positioning from an approved claim. Product values shown in Experience pages are projected through the existing verified-specification guard. No Racing result, route, event, owner story or Technology feature exists in the collection without a suitable source.
+
+### Articles
+
+Add only when an approved story needs a reusable detail route. Articles require dates, rights, authorship/source and related products/experiences; Experience sections are not an unbounded page-builder replacement.
 
 ### Campaigns and lead context
 

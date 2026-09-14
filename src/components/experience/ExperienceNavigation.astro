@@ -37,6 +37,8 @@ const items = [
 <style>
   .experience-nav {
     display: flex;
+    width: 100%;
+    max-width: 100%;
     min-width: 0;
     align-items: center;
     justify-content: space-between;
@@ -61,6 +63,8 @@ const items = [
   }
   .experience-nav ul {
     display: flex;
+    width: 100%;
+    max-width: 100%;
     min-width: 0;
     margin: 0;
     padding: 0;
@@ -83,6 +87,7 @@ const items = [
   @media (max-width: 47.99rem) {
     .experience-nav {
       display: block;
+      overflow: hidden;
     }
     .experience-nav__home {
       display: none;

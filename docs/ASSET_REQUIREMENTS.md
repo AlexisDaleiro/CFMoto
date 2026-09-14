@@ -70,6 +70,15 @@ Para evaluar dirección sin fingir un catálogo completo:
 - Datos key facts validados y disclaimer de propuesta.
 - Documento de derechos que marque `reference only`, `proposal-cleared` o `production-cleared`.
 
+### Phase 8 production replacements
+
+- Racing: approved current competition or controlled track material, with subject/event/date, result/claim source, relationship to street product and territorial/digital rights.
+- Adventure: approved 800MT Touring media with exact model/variant, Uruguay or applicable-market context, desktop/mobile crops and no implied route or capability without evidence.
+- Technology: official per-model diagrams or macro imagery tied to a verified feature; decorative dashboards and generic component renders do not qualify.
+- Community: local event, owner and ride material with participant releases, captions, date/location, moderation/expiry owner and usage scope.
+
+Phase 8 currently introduces no new photographic asset. CSS geometry and typography are the intentional fallback until the items above are approved; the Phase 5 450SR proposal imagery remains restricted to its recorded use.
+
 ## Production package
 
 Además del demo: todas las variantes activas, crops finales, galería, documentación/manuales, OG/social, ubicaciones, legal, campañas con expiración, metadata/alt, transcript/captions y owner/cadencia. Un asset sin derecho o relación correcta con producto falla el content gate.

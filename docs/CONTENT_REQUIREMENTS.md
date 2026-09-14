@@ -116,6 +116,8 @@ Every technical/commercial field needs `source`, `verificationStatus` and `verif
 - Hero/story assets with rights and localized context.
 - Proof points with source/date and explicit related products/families.
 - CTA per vertical and content freshness owner.
+- Narrative copy uses `official | publicOfficial | proposal | needsClientValidation`; proposal positioning is never promoted to an official claim by presentation alone.
+- Related product facts remain references to verified Product data, not duplicated editorial values.
 
 ### Racing
 
