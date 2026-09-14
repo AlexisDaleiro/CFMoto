@@ -2,6 +2,7 @@ import { z } from "astro/zod";
 
 export const verificationStatusSchema = z.enum([
   "verified",
+  "needsClientValidation",
   "needsReview",
   "unverified",
   "deprecated",
@@ -191,3 +192,100 @@ export const productSchema = z.object({
 
 export type Product = z.infer<typeof productSchema>;
 export type Verification = z.infer<typeof verificationSchema>;
+
+export const experienceSourceStatusSchema = z.enum([
+  "official",
+  "publicOfficial",
+  "proposal",
+  "needsClientValidation",
+]);
+
+const experienceSectionSchema = z.object({
+  id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  eyebrow: z.string().min(1).optional(),
+  title: z.string().min(1),
+  body: z.string().min(1),
+  emphasis: z.string().min(1).optional(),
+  items: z
+    .array(
+      z.object({
+        title: z.string().min(1),
+        body: z.string().min(1),
+      }),
+    )
+    .max(6)
+    .default([]),
+  sourceStatus: experienceSourceStatusSchema,
+});
+
+export const experienceSchema = z.object({
+  slug: z.enum(["racing", "adventure", "tecnologia", "comunidad"]),
+  title: z.string().min(1),
+  descriptor: z.string().min(1),
+  mode: z.enum(["racing", "adventure", "technology", "community"]),
+  hero: z.object({
+    eyebrow: z.string().min(1),
+    statement: z.string().min(1),
+    supportingText: z.string().min(1),
+    visualMode: z.enum(["velocity", "terrain", "precision", "human"]),
+    sourceStatus: experienceSourceStatusSchema,
+  }),
+  sections: z.array(experienceSectionSchema).min(1),
+  relatedProducts: z.array(z.string().min(1)).max(4).default([]),
+  sourceStatus: experienceSourceStatusSchema,
+  sourceReferences: z
+    .array(
+      z.object({
+        label: z.string().min(1),
+        url: z.url().optional(),
+      }),
+    )
+    .default([]),
+});
+
+export type Experience = z.infer<typeof experienceSchema>;
+
+const locationContactSchema = z.object({
+  display: z.string().min(1),
+  hrefValue: z.string().regex(/^\+?[0-9]+$/),
+});
+
+export const locationSchema = z.object({
+  name: z.string().min(1),
+  slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  department: z.string().min(1),
+  locality: z.string().min(1),
+  address: z.string().min(1),
+  phone: locationContactSchema,
+  whatsapp: locationContactSchema.optional(),
+  coordinates: z
+    .object({
+      latitude: z.number().min(-90).max(90),
+      longitude: z.number().min(-180).max(180),
+    })
+    .optional(),
+  hours: z
+    .array(
+      z.object({
+        days: z.string().min(1),
+        schedule: z.string().min(1),
+      }),
+    )
+    .optional(),
+  capabilities: z.object({
+    sales: z.literal(true).optional(),
+    service: z.literal(true).optional(),
+    parts: z.literal(true).optional(),
+    testRide: z.literal(true).optional(),
+  }),
+  source: z.object({
+    type: z.literal("publicCurrentSite"),
+    url: z.url(),
+    capturedAt: z.coerce.date(),
+  }),
+  verificationStatus: verificationStatusSchema,
+  verifiedAt: z.coerce.date().optional(),
+  sourceNote: z.string().min(1).optional(),
+});
+
+export type Location = z.infer<typeof locationSchema>;

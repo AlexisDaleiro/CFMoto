@@ -1,0 +1,694 @@
+---
+import type { ProductEntry } from "@/lib/products";
+import { categoryMeta } from "@/lib/products";
+import { uruguayDepartments } from "@/lib/departments";
+
+interface Props {
+  kind: "quote" | "testRide";
+  products: ProductEntry[];
+}
+
+const { kind, products } = Astro.props;
+const idPrefix = kind === "quote" ? "quote" : "test-ride";
+const isTestRide = kind === "testRide";
+const sortedProducts = [...products].sort((a, b) =>
+  a.data.name.localeCompare(b.data.name, "es-UY"),
+);
+---
+
+<div class="lead-experience" data-lead-experience data-kind={kind}>
+  <aside class="demo-notice" id={`${idPrefix}-demo-note`}>
+    <strong>MODO DEMO — SIN ENVÍO REAL.</strong>
+    <span>
+      Este formulario valida la experiencia frontend, pero no transmite datos a
+      CFMOTO Uruguay ni a terceros.
+    </span>
+  </aside>
+
+  <p class="context-notice" data-context-notice hidden></p>
+
+  <form
+    class="lead-form"
+    data-lead-form
+    aria-describedby={`${idPrefix}-demo-note ${idPrefix}-required-note`}
+    novalidate
+  >
+    <p id={`${idPrefix}-required-note`} class="required-note">
+      Los campos marcados con <span aria-hidden="true">*</span> son
+      obligatorios.
+    </p>
+
+    <div
+      class="error-summary"
+      data-error-summary
+      role="alert"
+      tabindex="-1"
+      hidden
+    >
+      <h2>Revisá estos datos</h2>
+      <ul data-error-summary-list></ul>
+    </div>
+
+    <div class="form-section">
+      <div class="field">
+        <label for={`${idPrefix}-product`}>
+          Modelo <span aria-hidden="true">*</span>
+        </label>
+        <select
+          id={`${idPrefix}-product`}
+          name="product"
+          required
+          data-product-select
+          aria-describedby={`${isTestRide ? `${idPrefix}-product-hint ` : ""}${idPrefix}-product-error`}
+        >
+          <option value="">Elegí un modelo</option>
+          {sortedProducts.map((product) => (
+            <option value={product.data.slug}>
+              {product.data.name} · {categoryMeta[product.data.category].label}
+            </option>
+          ))}
+        </select>
+        {isTestRide && (
+          <p class="field-hint" id={`${idPrefix}-product-hint`}>
+            Selección demostrativa. La elegibilidad, unidad y ubicación
+            requieren confirmación comercial.
+          </p>
+        )}
+        <p
+          class="field-error"
+          id={`${idPrefix}-product-error`}
+          data-error-for="product"
+          hidden
+        ></p>
+      </div>
+
+      <div class="field">
+        <label for={`${idPrefix}-name`}>
+          Nombre <span aria-hidden="true">*</span>
+        </label>
+        <input
+          id={`${idPrefix}-name`}
+          name="name"
+          type="text"
+          autocomplete="name"
+          maxlength="80"
+          required
+          aria-describedby={`${idPrefix}-name-error`}
+        />
+        <p
+          class="field-error"
+          id={`${idPrefix}-name-error`}
+          data-error-for="name"
+          hidden
+        ></p>
+      </div>
+
+      <fieldset class="contact-fields">
+        <legend>
+          Datos de contacto <span aria-hidden="true">*</span>
+        </legend>
+        <p class="field-hint">Ingresá al menos un teléfono o un email.</p>
+        <div class="contact-grid">
+          <div class="field">
+            <label for={`${idPrefix}-phone`}>Teléfono</label>
+            <input
+              id={`${idPrefix}-phone`}
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              inputmode="tel"
+              maxlength="30"
+              aria-describedby={`${idPrefix}-contact-error`}
+            />
+          </div>
+          <div class="field">
+            <label for={`${idPrefix}-email`}>Email</label>
+            <input
+              id={`${idPrefix}-email`}
+              name="email"
+              type="email"
+              autocomplete="email"
+              inputmode="email"
+              maxlength="120"
+              aria-describedby={`${idPrefix}-contact-error`}
+            />
+          </div>
+        </div>
+        <p
+          class="field-error"
+          id={`${idPrefix}-contact-error`}
+          data-error-for="contact"
+          hidden
+        ></p>
+      </fieldset>
+
+      <div class="field">
+        <label for={`${idPrefix}-preferred-contact`}>
+          Preferencia de contacto <span aria-hidden="true">*</span>
+        </label>
+        <select
+          id={`${idPrefix}-preferred-contact`}
+          name="preferredContact"
+          required
+          aria-describedby={`${idPrefix}-preferred-contact-error`}
+        >
+          <option value="">Elegí una opción</option>
+          <option value="phone">Teléfono</option>
+          <option value="email">Email</option>
+        </select>
+        <p
+          class="field-error"
+          id={`${idPrefix}-preferred-contact-error`}
+          data-error-for="preferredContact"
+          hidden
+        ></p>
+      </div>
+
+      <div class="field">
+        <label for={`${idPrefix}-department`}>
+          Departamento <span aria-hidden="true">*</span>
+        </label>
+        <select
+          id={`${idPrefix}-department`}
+          name="department"
+          autocomplete="address-level1"
+          required
+          aria-describedby={`${idPrefix}-department-error`}
+        >
+          <option value="">Elegí un departamento</option>
+          {uruguayDepartments.map((department) => (
+            <option value={department}>{department}</option>
+          ))}
+        </select>
+        <p
+          class="field-error"
+          id={`${idPrefix}-department-error`}
+          data-error-for="department"
+          hidden
+        ></p>
+      </div>
+
+      <div class="field field--wide">
+        <label for={`${idPrefix}-message`}>
+          {isTestRide ? "Preferencias o comentario" : "Mensaje"}{" "}
+          <span>(opcional)</span>
+        </label>
+        <textarea
+          id={`${idPrefix}-message`}
+          name="message"
+          rows="4"
+          maxlength="800"
+        ></textarea>
+      </div>
+
+      <div class="consent field--wide">
+        <input
+          id={`${idPrefix}-consent`}
+          name="consent"
+          type="checkbox"
+          required
+          aria-describedby={`${idPrefix}-consent-error`}
+        />
+        <label for={`${idPrefix}-consent`}>
+          Acepto que mis datos sean utilizados para responder esta solicitud.
+          <strong>LEGAL COPY — CLIENT VALIDATION REQUIRED.</strong>
+        </label>
+        <p
+          class="field-error"
+          id={`${idPrefix}-consent-error`}
+          data-error-for="consent"
+          hidden
+        ></p>
+      </div>
+    </div>
+
+    <button class="submit-button" type="submit" data-demo-submit disabled>
+      {isTestRide
+        ? "Validar solicitud de test ride"
+        : "Validar solicitud de cotización"}
+    </button>
+    <p class="submit-note">
+      La validación del navegador no sustituye la validación segura del futuro
+      backend.
+    </p>
+  </form>
+
+  <section
+    class="demo-success"
+    data-demo-success
+    tabindex="-1"
+    hidden
+    aria-live="polite"
+  >
+    <p class="type-label">EXPERIENCIA VALIDADA</p>
+    <h2>
+      {isTestRide
+        ? "Solicitud de test ride validada en demo"
+        : "Solicitud de cotización validada en demo"}
+    </h2>
+    <p>
+      No se envió información. La conexión real se habilitará cuando CFMOTO
+      Uruguay defina proveedor, routing, privacidad y responsables.
+    </p>
+    {isTestRide && (
+      <p>Esto no reserva una fecha ni confirma disponibilidad de una unidad.</p>
+    )}
+    <a href={isTestRide ? "/test-ride/" : "/cotizar/"}>
+      Completar otra demostración
+    </a>
+  </section>
+
+  <noscript>
+    <p class="no-script-note">
+      El formulario permanece visible para revisión, pero el botón está
+      desactivado porque esta demo no debe enviar ni incluir datos personales en
+      una URL.
+    </p>
+  </noscript>
+</div>
+
+<script>
+  document
+    .querySelectorAll<HTMLElement>("[data-lead-experience]")
+    .forEach((experience) => {
+      const form =
+        experience.querySelector<HTMLFormElement>("[data-lead-form]");
+      const submit =
+        experience.querySelector<HTMLButtonElement>("[data-demo-submit]");
+      const summary = experience.querySelector<HTMLElement>(
+        "[data-error-summary]",
+      );
+      const summaryList = experience.querySelector<HTMLElement>(
+        "[data-error-summary-list]",
+      );
+      const success = experience.querySelector<HTMLElement>(
+        "[data-demo-success]",
+      );
+      const product = experience.querySelector<HTMLSelectElement>(
+        "[data-product-select]",
+      );
+      const contextNotice = experience.querySelector<HTMLElement>(
+        "[data-context-notice]",
+      );
+      if (!form || !submit || !summary || !summaryList || !success || !product)
+        return;
+
+      submit.disabled = false;
+      const queryProduct = new URLSearchParams(location.search).get("product");
+      if (queryProduct) {
+        const option = [...product.options].find(
+          (item) => item.value === queryProduct,
+        );
+        if (option) {
+          product.value = queryProduct;
+          if (contextNotice) {
+            contextNotice.hidden = false;
+            contextNotice.textContent = `${option.textContent?.trim()} preseleccionado desde el contexto anterior.`;
+          }
+        } else if (contextNotice) {
+          contextNotice.hidden = false;
+          contextNotice.textContent =
+            "Se ignoró un modelo no reconocido. Elegí una opción válida.";
+        }
+      }
+
+      const named = <
+        T extends HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+      >(
+        name: string,
+      ) => form.elements.namedItem(name) as T;
+      const fields = {
+        product,
+        name: named<HTMLInputElement>("name"),
+        phone: named<HTMLInputElement>("phone"),
+        email: named<HTMLInputElement>("email"),
+        preferredContact: named<HTMLSelectElement>("preferredContact"),
+        department: named<HTMLSelectElement>("department"),
+        consent: named<HTMLInputElement>("consent"),
+      };
+
+      const clearErrors = () => {
+        form
+          .querySelectorAll<HTMLElement>("[data-error-for]")
+          .forEach((error) => {
+            error.hidden = true;
+            error.textContent = "";
+          });
+        form
+          .querySelectorAll<HTMLElement>("[aria-invalid]")
+          .forEach((field) => field.removeAttribute("aria-invalid"));
+        summary.hidden = true;
+        summaryList.replaceChildren();
+      };
+      const setInlineError = (
+        key: string,
+        target: HTMLElement,
+        message?: string,
+      ) => {
+        const inline = form.querySelector<HTMLElement>(
+          `[data-error-for="${key}"]`,
+        );
+        if (inline) {
+          inline.hidden = !message;
+          inline.textContent = message ?? "";
+        }
+        if (message) target.setAttribute("aria-invalid", "true");
+        else target.removeAttribute("aria-invalid");
+      };
+      const validate = () => {
+        clearErrors();
+        const errors: Array<{
+          key: string;
+          target: HTMLElement;
+          message: string;
+        }> = [];
+        if (!fields.product.value)
+          errors.push({
+            key: "product",
+            target: fields.product,
+            message: "Elegí un modelo.",
+          });
+        if (fields.name.value.trim().length < 2)
+          errors.push({
+            key: "name",
+            target: fields.name,
+            message: "Ingresá tu nombre.",
+          });
+        const phoneDigits = fields.phone.value.replace(/\D/g, "");
+        const phoneValid = phoneDigits.length >= 7;
+        const emailValid =
+          fields.email.value.trim() !== "" && fields.email.validity.valid;
+        if (!phoneValid && !emailValid)
+          errors.push({
+            key: "contact",
+            target: fields.phone,
+            message:
+              "Ingresá un teléfono o un email válido para poder responderte.",
+          });
+        if (!fields.preferredContact.value)
+          errors.push({
+            key: "preferredContact",
+            target: fields.preferredContact,
+            message: "Elegí cómo preferís que te contacten.",
+          });
+        else if (fields.preferredContact.value === "phone" && !phoneValid)
+          errors.push({
+            key: "contact",
+            target: fields.phone,
+            message:
+              "Elegiste teléfono como contacto; ingresá un número válido.",
+          });
+        else if (fields.preferredContact.value === "email" && !emailValid)
+          errors.push({
+            key: "contact",
+            target: fields.email,
+            message:
+              "Elegiste email como contacto; ingresá una dirección válida.",
+          });
+        if (!fields.department.value)
+          errors.push({
+            key: "department",
+            target: fields.department,
+            message: "Elegí tu departamento.",
+          });
+        if (!fields.consent.checked)
+          errors.push({
+            key: "consent",
+            target: fields.consent,
+            message: "Necesitamos tu aceptación para validar esta experiencia.",
+          });
+
+        const uniqueErrors = errors.filter(
+          (error, index) =>
+            errors.findIndex((candidate) => candidate.key === error.key) ===
+            index,
+        );
+        uniqueErrors.forEach((error) => {
+          const inline = form.querySelector<HTMLElement>(
+            `[data-error-for="${error.key}"]`,
+          );
+          if (inline) {
+            inline.hidden = false;
+            inline.textContent = error.message;
+          }
+          error.target.setAttribute("aria-invalid", "true");
+          const item = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = `#${error.target.id}`;
+          link.textContent = error.message;
+          item.append(link);
+          summaryList.append(item);
+        });
+        summary.hidden = uniqueErrors.length === 0;
+        return uniqueErrors;
+      };
+
+      fields.product.addEventListener("change", () =>
+        setInlineError(
+          "product",
+          fields.product,
+          fields.product.value ? undefined : "Elegí un modelo.",
+        ),
+      );
+      fields.name.addEventListener("blur", () =>
+        setInlineError(
+          "name",
+          fields.name,
+          fields.name.value.trim().length >= 2
+            ? undefined
+            : "Ingresá tu nombre.",
+        ),
+      );
+      const validateContactInline = () => {
+        const phoneValid = fields.phone.value.replace(/\D/g, "").length >= 7;
+        const emailValid =
+          fields.email.value.trim() !== "" && fields.email.validity.valid;
+        const preferred = fields.preferredContact.value;
+        const message =
+          preferred === "phone" && !phoneValid
+            ? "Elegiste teléfono como contacto; ingresá un número válido."
+            : preferred === "email" && !emailValid
+              ? "Elegiste email como contacto; ingresá una dirección válida."
+              : fields.phone.value || fields.email.value
+                ? phoneValid || emailValid
+                  ? undefined
+                  : "Ingresá un teléfono o un email válido para poder responderte."
+                : undefined;
+        setInlineError(
+          "contact",
+          preferred === "email" ? fields.email : fields.phone,
+          message,
+        );
+      };
+      fields.phone.addEventListener("blur", validateContactInline);
+      fields.email.addEventListener("blur", validateContactInline);
+      fields.preferredContact.addEventListener("change", () => {
+        setInlineError(
+          "preferredContact",
+          fields.preferredContact,
+          fields.preferredContact.value
+            ? undefined
+            : "Elegí cómo preferís que te contacten.",
+        );
+        validateContactInline();
+      });
+      fields.department.addEventListener("change", () =>
+        setInlineError(
+          "department",
+          fields.department,
+          fields.department.value ? undefined : "Elegí tu departamento.",
+        ),
+      );
+      fields.consent.addEventListener("change", () =>
+        setInlineError(
+          "consent",
+          fields.consent,
+          fields.consent.checked
+            ? undefined
+            : "Necesitamos tu aceptación para validar esta experiencia.",
+        ),
+      );
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const errors = validate();
+        if (errors.length) {
+          errors[0].target.focus();
+          return;
+        }
+        form.reset();
+        form.hidden = true;
+        success.hidden = false;
+        success.focus();
+      });
+    });
+</script>
+
+<style>
+  .lead-experience {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .demo-notice,
+  .context-notice,
+  .no-script-note {
+    padding: var(--space-4);
+    border-inline-start: var(--border-accent) solid var(--color-brand-cyan);
+    background: var(--color-surface-subtle);
+  }
+  .demo-notice {
+    display: grid;
+    gap: var(--space-1);
+  }
+  .demo-notice strong {
+    color: var(--color-info);
+  }
+  .context-notice[hidden] {
+    display: none;
+  }
+  .lead-form {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .lead-form[hidden] {
+    display: none;
+  }
+  .required-note,
+  .submit-note,
+  .field-hint {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-body-s);
+  }
+  .form-section {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .field,
+  .contact-fields {
+    display: grid;
+    min-width: 0;
+    gap: var(--space-2);
+  }
+  .field label,
+  .contact-fields legend {
+    font-weight: 700;
+  }
+  .field label span {
+    color: var(--color-text-secondary);
+    font-weight: 400;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: var(--control-height-default);
+    padding: var(--space-3);
+    border: var(--border-strong) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-primary);
+    color: var(--color-text-primary);
+  }
+  .field textarea {
+    resize: vertical;
+  }
+  .field [aria-invalid="true"],
+  .consent [aria-invalid="true"] {
+    border-color: var(--color-error);
+  }
+  .contact-fields {
+    padding: 0;
+    border: 0;
+  }
+  .contact-grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .field-error {
+    color: var(--color-error);
+    font-size: var(--font-size-body-s);
+    font-weight: 650;
+  }
+  .field-error[hidden] {
+    display: none;
+  }
+  .consent {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-2) var(--space-3);
+    align-items: start;
+  }
+  .consent input {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-block-start: 0.15rem;
+  }
+  .consent strong {
+    display: block;
+    margin-block-start: var(--space-2);
+    color: var(--color-error);
+    font-size: var(--font-size-caption);
+  }
+  .consent .field-error {
+    grid-column: 2;
+  }
+  .submit-button {
+    min-height: var(--control-height-large);
+    padding-inline: var(--space-6);
+    justify-self: start;
+    border: var(--border-strong) solid var(--color-brand-cyan);
+    border-radius: var(--radius-sm);
+    background: var(--color-brand-cyan);
+    color: var(--color-on-brand);
+    font-weight: 750;
+  }
+  .submit-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+  .error-summary {
+    padding: var(--space-5);
+    border-inline-start: var(--border-accent) solid var(--color-error);
+    background: #fff1f0;
+  }
+  .error-summary[hidden] {
+    display: none;
+  }
+  .error-summary h2 {
+    margin-block-end: var(--space-2);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-4);
+  }
+  .error-summary ul {
+    padding-inline-start: var(--space-5);
+  }
+  .demo-success {
+    display: grid;
+    padding: var(--space-8);
+    gap: var(--space-4);
+    border-inline-start: var(--border-accent) solid var(--color-success);
+    background: var(--color-surface-primary);
+  }
+  .demo-success[hidden] {
+    display: none;
+  }
+  .demo-success .type-label {
+    color: var(--color-success);
+  }
+  .demo-success h2 {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-1);
+    line-height: var(--line-height-heading-1);
+  }
+  @media (min-width: 48rem) {
+    .form-section {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .contact-fields,
+    .field--wide {
+      grid-column: 1 / -1;
+    }
+    .contact-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

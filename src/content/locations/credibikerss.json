@@ -1,0 +1,16 @@
+{
+  "name": "CREDIBIKERSS",
+  "slug": "credibikerss",
+  "department": "Montevideo",
+  "locality": "Montevideo",
+  "address": "Mercedes 1789",
+  "phone": { "display": "097 530 690", "hrefValue": "097530690" },
+  "capabilities": { "service": true },
+  "source": {
+    "type": "publicCurrentSite",
+    "url": "https://cfmotouruguay.com/service/",
+    "capturedAt": "2026-09-14"
+  },
+  "verificationStatus": "needsClientValidation",
+  "sourceNote": "Nombre, dirección y teléfono transcritos del listado público vigente; requieren validación como master data."
+}

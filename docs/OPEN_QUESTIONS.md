@@ -16,17 +16,19 @@ Solo dependencias que requieren cliente, ventas, marketing, infraestructura, CRM
 
 La elección humana y la especificación de Phase 3 están resueltas: **Hybrid — Apex + Engineered Clarity**, un único sistema. Brand book, tipografía/licencia, logo, cyan y derechos no bloquean Phase 4 Technical Foundation porque tienen sustitutos/tokens provisionales responsables; sí bloquean declarar esos elementos finales/oficiales. Placeholders solo pueden ser low-fidelity y claramente etiquetados, nunca datos o productos ficticios.
 
-## Before feature integration
+## Before production commercial integration
 
 1. ¿Cuál es la fuente maestra y owner de catálogo, specs, colores, precio, disponibilidad y fecha de verificación?
-2. ¿Qué CRM/correo/WhatsApp Business recibe cada tipo de lead y cómo se enruta por categoría/departamento/dealer?
+2. ¿Qué CRM/proveedor recibe Quote y Test Ride, quién es owner y cómo se enruta por categoría, departamento y ubicación?
 3. ¿Cuál es el workflow/SLA real de cotización y test ride? ¿Qué modelos y ubicaciones son elegibles?
 4. ¿Quién mantendrá producto, campañas, experiencias y ubicaciones; Content Collections/Git es viable o se necesita CMS?
 5. ¿Qué texto legal, consentimiento, retención y campos finales requieren Quote, Test ride y Contact?
-6. ¿Qué proveedor de mapas/geocoding se autoriza y existen coordenadas/NAP/capacidades verificadas?
+6. ¿Cuál es la lista maestra de venta y Service? Confirmar nombre legal/comercial, NAP, capacidades, teléfonos, WhatsApp, horarios, coordenadas, excepciones y owner de actualización. Los diez registros públicos importados siguen `needsClientValidation`.
 7. ¿Precios/stock son por modelo, variante o dealer? ¿USD/UYU, impuestos, vigencia y frecuencia de actualización?
 8. ¿Qué stack/accesos de analytics existen y qué integración CRM/offline outcomes será posible?
 9. ¿El lanzamiento es solo español o debe prepararse contenido localizado adicional?
+
+Phase 7B ya demuestra locator list-first y formularios accesibles sin transmitir datos. Estas preguntas bloquean activación real, LocalBusiness schema, WhatsApp y promesas de atención; no bloquean la arquitectura frontend ni Phase 8.
 
 ## Before Production
 

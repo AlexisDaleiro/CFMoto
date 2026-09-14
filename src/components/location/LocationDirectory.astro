@@ -1,0 +1,257 @@
+---
+import LocationCard from "@/components/location/LocationCard.astro";
+import type { LocationEntry } from "@/lib/locations";
+
+interface Props {
+  locations: LocationEntry[];
+  noun?: string;
+}
+
+const { locations, noun = "puntos" } = Astro.props;
+const departments = [
+  ...new Set(locations.map((location) => location.data.department)),
+].sort((a, b) => a.localeCompare(b, "es-UY"));
+---
+
+<section
+  class="directory"
+  data-location-directory
+  aria-labelledby="directory-title"
+>
+  <div class="directory__heading">
+    <div>
+      <p class="type-label">DIRECTORIO</p>
+      <h2 id="directory-title">Puntos publicados</h2>
+    </div>
+    <p class="directory__count" aria-live="polite" data-result-count>
+      {locations.length} {noun}
+    </p>
+  </div>
+
+  <form class="directory__filters" data-location-filters novalidate>
+    <div class="field">
+      <label for="location-search">Buscar</label>
+      <input
+        id="location-search"
+        name="q"
+        type="search"
+        autocomplete="off"
+        placeholder="Nombre, ciudad o dirección"
+        data-location-search
+      />
+    </div>
+    {departments.length > 1 && (
+      <div class="field">
+        <label for="location-department">Departamento</label>
+        <select
+          id="location-department"
+          name="department"
+          data-location-department
+        >
+          <option value="">Todos</option>
+          {departments.map((department) => (
+            <option value={department}>{department}</option>
+          ))}
+        </select>
+      </div>
+    )}
+    <button type="reset" data-location-clear>
+      Limpiar filtros
+    </button>
+  </form>
+
+  <div class="directory__results" data-location-results>
+    {locations.map((location) => (
+      <LocationCard location={location} />
+    ))}
+  </div>
+
+  <div class="directory__empty" data-location-empty hidden>
+    <h3>No encontramos puntos con esos filtros.</h3>
+    <p>Probá otra búsqueda o volvé a ver todos los departamentos.</p>
+    <button type="button" data-location-empty-clear>
+      Limpiar filtros
+    </button>
+  </div>
+
+  <noscript>
+    <p class="directory__no-script">
+      La búsqueda necesita JavaScript, pero la lista completa permanece
+      disponible.
+    </p>
+  </noscript>
+</section>
+
+<script>
+  const directories = document.querySelectorAll<HTMLElement>(
+    "[data-location-directory]",
+  );
+  const normalize = (value: string) =>
+    value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLocaleLowerCase("es-UY")
+      .trim();
+
+  directories.forEach((directory) => {
+    const form = directory.querySelector<HTMLFormElement>(
+      "[data-location-filters]",
+    );
+    const search = directory.querySelector<HTMLInputElement>(
+      "[data-location-search]",
+    );
+    const department = directory.querySelector<HTMLSelectElement>(
+      "[data-location-department]",
+    );
+    const cards = [
+      ...directory.querySelectorAll<HTMLElement>("[data-location-card]"),
+    ];
+    const count = directory.querySelector<HTMLElement>("[data-result-count]");
+    const empty = directory.querySelector<HTMLElement>("[data-location-empty]");
+
+    const apply = () => {
+      const query = normalize(search?.value ?? "");
+      const selectedDepartment = department?.value ?? "";
+      let visible = 0;
+      cards.forEach((card) => {
+        const matchesSearch = normalize(card.dataset.search ?? "").includes(
+          query,
+        );
+        const matchesDepartment =
+          !selectedDepartment || card.dataset.department === selectedDepartment;
+        card.hidden = !(matchesSearch && matchesDepartment);
+        if (!card.hidden) visible += 1;
+      });
+      if (count)
+        count.textContent = `${visible} ${visible === 1 ? "punto" : "puntos"}`;
+      if (empty) empty.hidden = visible !== 0;
+
+      const params = new URLSearchParams();
+      if (search?.value.trim()) params.set("q", search.value.trim());
+      if (selectedDepartment) params.set("department", selectedDepartment);
+      const queryString = params.toString();
+      history.replaceState(
+        {},
+        "",
+        `${location.pathname}${queryString ? `?${queryString}` : ""}`,
+      );
+    };
+    const clear = () => {
+      if (search) search.value = "";
+      if (department) department.value = "";
+      apply();
+      search?.focus();
+    };
+
+    const params = new URLSearchParams(location.search);
+    if (search) search.value = params.get("q") ?? "";
+    if (
+      department &&
+      [...department.options].some(
+        (option) => option.value === params.get("department"),
+      )
+    )
+      department.value = params.get("department") ?? "";
+
+    search?.addEventListener("input", apply);
+    department?.addEventListener("change", apply);
+    form?.addEventListener("reset", () => requestAnimationFrame(apply));
+    directory
+      .querySelector<HTMLButtonElement>("[data-location-empty-clear]")
+      ?.addEventListener("click", clear);
+    apply();
+  });
+</script>
+
+<style>
+  .directory {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .directory__heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  .directory__heading .type-label {
+    color: var(--color-link-on-light);
+  }
+  .directory__heading h2 {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-1);
+    line-height: var(--line-height-heading-1);
+  }
+  .directory__count {
+    color: var(--color-text-secondary);
+    font-weight: 700;
+  }
+  .directory__filters {
+    display: grid;
+    padding: var(--space-5);
+    gap: var(--space-4);
+    border: var(--border-hairline) solid var(--color-border-subtle);
+    background: var(--color-surface-subtle);
+  }
+  .field {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .field label {
+    font-size: var(--font-size-label);
+    font-weight: 700;
+  }
+  .field input,
+  .field select {
+    min-height: var(--control-height-default);
+    width: 100%;
+    padding-inline: var(--space-3);
+    border: var(--border-strong) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-primary);
+    color: var(--color-text-primary);
+  }
+  .directory__filters button,
+  .directory__empty button {
+    min-height: var(--target-minimum);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-link-on-light);
+    font-weight: 750;
+    text-decoration: underline;
+    justify-self: start;
+  }
+  .directory__results {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .directory__empty,
+  .directory__no-script {
+    padding: var(--space-6);
+    border-inline-start: var(--border-accent) solid var(--color-brand-cyan);
+    background: var(--color-surface-subtle);
+  }
+  .directory__empty[hidden] {
+    display: none;
+  }
+  .directory__empty p {
+    margin-block: var(--space-2) var(--space-4);
+    color: var(--color-text-secondary);
+  }
+  @media (min-width: 48rem) {
+    .directory__filters {
+      grid-template-columns: minmax(16rem, 1fr) minmax(12rem, 0.5fr) auto;
+      align-items: end;
+    }
+    .directory__results {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 80rem) {
+    .directory__results {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

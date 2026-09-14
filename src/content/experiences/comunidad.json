@@ -1,0 +1,39 @@
+{
+  "slug": "comunidad",
+  "title": "Comunidad",
+  "descriptor": "Una base editorial preparada para historias locales reales y autorizadas.",
+  "mode": "community",
+  "hero": {
+    "eyebrow": "COMMUNITY FOUNDATION",
+    "statement": "Las historias reales necesitan tiempo y permiso.",
+    "supportingText": "La estructura está lista. Los eventos, propietarios y recorridos se publicarán cuando existan material local, contexto y derechos confirmados.",
+    "visualMode": "human",
+    "sourceStatus": "proposal"
+  },
+  "sections": [
+    {
+      "id": "criterio",
+      "eyebrow": "PUBLICACIÓN RESPONSABLE",
+      "title": "Primero la historia. Después el módulo.",
+      "body": "No usamos un feed social como sustituto de una comunidad. Cada pieza deberá tener protagonista, lugar, fecha, permiso y una relación auténtica con CFMOTO Uruguay.",
+      "items": [
+        {
+          "title": "Encuentros",
+          "body": "Fecha, organizador y material autorizado."
+        },
+        {
+          "title": "Propietarios",
+          "body": "Consentimiento, contexto y voz real."
+        },
+        {
+          "title": "Recorridos",
+          "body": "Información local útil y derechos de publicación."
+        }
+      ],
+      "sourceStatus": "proposal"
+    }
+  ],
+  "relatedProducts": [],
+  "sourceStatus": "proposal",
+  "sourceReferences": []
+}

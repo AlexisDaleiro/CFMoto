@@ -1,0 +1,269 @@
+---
+import { getEntry } from "astro:content";
+
+import ExperienceFooter from "@/components/experience/ExperienceFooter.astro";
+import ExperienceHero from "@/components/experience/ExperienceHero.astro";
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Container from "@/components/primitives/Container.astro";
+import TextLink from "@/components/primitives/TextLink.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {
+  formatSpecification,
+  getProductHref,
+  getVerifiedStats,
+} from "@/lib/products";
+
+const experience = await getEntry("experiences", "tecnologia");
+if (!experience) throw new Error("Technology content is incomplete.");
+
+const products = (
+  await Promise.all(
+    experience.data.relatedProducts.map((slug) => getEntry("products", slug)),
+  )
+).filter((product) => product !== undefined);
+const engine = experience.data.sections[0]!;
+const mass = experience.data.sections[1]!;
+const engineKeys = new Set(["displacement", "maximumPower", "maximumTorque"]);
+const facts = products.map((product) => ({
+  product,
+  engine: getVerifiedStats(product, 5).filter((stat) =>
+    engineKeys.has(stat.key),
+  ),
+  mass: getVerifiedStats(product, 5).filter(
+    (stat) => stat.key === "curbWeight",
+  ),
+}));
+---
+
+<BaseLayout
+  title="Tecnología | Experiencia CFMOTO Uruguay"
+  description={experience.data.descriptor}
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" />
+  <ExperienceHero experience={experience} sequence="03" />
+
+  <section class="technology-intro" aria-labelledby="technology-intro-title">
+    <Container size="standard">
+      <p>WHAT / WHY / WHERE</p>
+      <h2 id="technology-intro-title">
+        Un concepto solo sirve cuando puede leerse en contexto.
+      </h2>
+      <p>
+        Esta primera versión usa únicamente atributos técnicos auditados.
+        Frenos, suspensión, electrónica, displays y conectividad quedan fuera
+        hasta contar con evidencia por modelo.
+      </p>
+    </Container>
+  </section>
+
+  <section class="technology-block" aria-labelledby="engine-title">
+    <Container size="wide">
+      <header>
+        <p>{engine.eyebrow}</p>
+        <h2 id="engine-title">{engine.title}</h2>
+        <p>{engine.body}</p>
+      </header>
+      <div
+        class="technology-table"
+        role="region"
+        aria-label="Datos verificados de motor"
+        tabindex="0"
+      >
+        {facts.map(
+          ({ product, engine: productFacts }) =>
+            productFacts.length > 0 && (
+              <article>
+                <div>
+                  <p>{product.data.family}</p>
+                  <h3>
+                    <a href={getProductHref(product)}>{product.data.name}</a>
+                  </h3>
+                </div>
+                <dl>
+                  {productFacts.map((stat) => (
+                    <div>
+                      <dt>{stat.label}</dt>
+                      <dd>{formatSpecification(stat)}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </article>
+            ),
+        )}
+      </div>
+    </Container>
+  </section>
+
+  <section
+    class="technology-block technology-block--mass"
+    aria-labelledby="mass-title"
+  >
+    <Container size="wide">
+      <header>
+        <p>{mass.eyebrow}</p>
+        <h2 id="mass-title">{mass.title}</h2>
+        <p>{mass.body}</p>
+      </header>
+      <div class="mass-grid">
+        {facts.map(({ product, mass: productFacts }) =>
+          productFacts.map((stat) => (
+            <article>
+              <p>{product.data.name}</p>
+              <strong>{formatSpecification(stat)}</strong>
+              <span>{stat.label}</span>
+              <TextLink href={getProductHref(product)} directional>
+                Ver producto
+              </TextLink>
+            </article>
+          )),
+        )}
+      </div>
+    </Container>
+  </section>
+
+  <section
+    class="technology-exit"
+    data-surface="dark"
+    aria-labelledby="technology-exit-title"
+  >
+    <Container size="standard">
+      <div>
+        <p>DECIDIR CON CONTEXTO</p>
+        <h2 id="technology-exit-title">Poné los datos uno al lado del otro.</h2>
+      </div>
+      <TextLink href="/comparar/" directional>
+        Ir al comparador
+      </TextLink>
+    </Container>
+  </section>
+
+  <ExperienceFooter slot="footer" />
+</BaseLayout>
+
+<style>
+  .technology-intro,
+  .technology-block,
+  .technology-exit {
+    padding-block: var(--section-space-editorial);
+  }
+  .technology-intro > :global(.container) {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .technology-intro > :global(.container) > p:first-child,
+  .technology-block header > p:first-child,
+  .technology-exit p,
+  .technology-table article > div > p {
+    color: var(--color-brand-cyan);
+    font-size: var(--font-size-label);
+    font-weight: 750;
+    letter-spacing: 0.08em;
+  }
+  .technology-intro h2,
+  .technology-block h2,
+  .technology-exit h2 {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-1);
+    line-height: 0.9;
+  }
+  .technology-intro > :global(.container) > p:last-child,
+  .technology-block header > p:last-child {
+    max-width: 45rem;
+    color: var(--color-text-secondary);
+  }
+  .technology-block {
+    border-block-start: var(--border-hairline) solid var(--color-border-subtle);
+  }
+  .technology-block header {
+    display: grid;
+    max-width: 58rem;
+    gap: var(--space-4);
+  }
+  .technology-table {
+    margin-block-start: var(--space-10);
+    overflow-x: auto;
+    outline-offset: var(--space-2);
+  }
+  .technology-table article {
+    display: grid;
+    min-width: 42rem;
+    padding-block: var(--space-5);
+    gap: var(--space-5);
+    border-block-start: var(--border-hairline) solid var(--color-border-strong);
+  }
+  .technology-table h3 {
+    margin-block-start: var(--space-2);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-3);
+  }
+  .technology-table h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .technology-table dl {
+    display: grid;
+    margin: 0;
+    grid-template-columns: repeat(3, minmax(8rem, 1fr));
+    gap: var(--space-3);
+  }
+  .technology-table dl div {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .technology-table dt {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-caption);
+  }
+  .technology-table dd {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-stat-m);
+    font-weight: 750;
+  }
+  .technology-block--mass {
+    background: var(--color-surface-subtle);
+  }
+  .mass-grid {
+    display: grid;
+    margin-block-start: var(--space-10);
+    gap: var(--space-4);
+  }
+  .mass-grid article {
+    display: grid;
+    min-height: 18rem;
+    padding: var(--space-6);
+    align-content: space-between;
+    gap: var(--space-3);
+    border: var(--border-hairline) solid var(--color-border-subtle);
+    background: var(--color-surface-primary);
+  }
+  .mass-grid strong {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-stat-xl);
+    line-height: 0.85;
+  }
+  .mass-grid span {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-caption);
+  }
+  .technology-exit {
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+  .technology-exit > :global(.container) {
+    display: grid;
+    align-items: end;
+    gap: var(--space-7);
+  }
+  @media (min-width: 48rem) {
+    .technology-table article {
+      grid-template-columns: minmax(13rem, 0.7fr) minmax(0, 1.3fr);
+    }
+    .mass-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .technology-exit > :global(.container) {
+      grid-template-columns: 1fr auto;
+    }
+  }
+</style>

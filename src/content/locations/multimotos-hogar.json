@@ -1,0 +1,16 @@
+{
+  "name": "MULTIMOTOS HOGAR",
+  "slug": "multimotos-hogar",
+  "department": "Cerro Largo",
+  "locality": "Melo",
+  "address": "Aparicio Saravia 675",
+  "phone": { "display": "091 367 598", "hrefValue": "091367598" },
+  "capabilities": { "service": true },
+  "source": {
+    "type": "publicCurrentSite",
+    "url": "https://cfmotouruguay.com/service/",
+    "capturedAt": "2026-09-14"
+  },
+  "verificationStatus": "needsClientValidation",
+  "sourceNote": "Datos públicos actuales; no se infieren WhatsApp, horarios ni otras capacidades."
+}

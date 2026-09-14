@@ -1,0 +1,16 @@
+{
+  "name": "ALLROAD",
+  "slug": "allroad",
+  "department": "Montevideo",
+  "locality": "Montevideo",
+  "address": "Avenida Italia 4001",
+  "phone": { "display": "2618 1180", "hrefValue": "26181180" },
+  "capabilities": { "service": true },
+  "source": {
+    "type": "publicCurrentSite",
+    "url": "https://cfmotouruguay.com/service/",
+    "capturedAt": "2026-09-14"
+  },
+  "verificationStatus": "needsClientValidation",
+  "sourceNote": "Datos públicos actuales; no se infieren WhatsApp, horarios ni otras capacidades."
+}

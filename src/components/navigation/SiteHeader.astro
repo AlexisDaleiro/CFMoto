@@ -37,14 +37,27 @@ const isCurrent = (href: string) =>
     </nav>
 
     <nav class="desktop-utilities" aria-label="Acciones">
-      <a href="/comparar/" aria-current={isCurrent("/comparar/") ? "page" : undefined}>Comparar</a>
-      <a class="header-cta" href="/cotizar/">
+      <a
+        href="/comparar/"
+        aria-current={isCurrent("/comparar/") ? "page" : undefined}
+      >
+        Comparar
+      </a>
+      <a
+        class="header-cta"
+        href="/cotizar/"
+        aria-current={isCurrent("/cotizar/") ? "page" : undefined}
+      >
         Cotizar
       </a>
     </nav>
 
     <div class="mobile-actions">
-      <a class="mobile-compare" href="/comparar/" aria-current={isCurrent("/comparar/") ? "page" : undefined}>
+      <a
+        class="mobile-compare"
+        href="/comparar/"
+        aria-current={isCurrent("/comparar/") ? "page" : undefined}
+      >
         Comparar
       </a>
       <button
@@ -116,7 +129,8 @@ const isCurrent = (href: string) =>
           <a href="/experiencia/">Explorar experiencia</a>
           <a href="/experiencia/racing/">Racing</a>
           <a href="/experiencia/adventure/">Adventure</a>
-          <a href="/experiencia/technology/">Technology</a>
+          <a href="/experiencia/tecnologia/">Tecnología</a>
+          <a href="/experiencia/comunidad/">Comunidad</a>
         </div>
       </details>
       <a href="/concesionarios/">Concesionarios</a>
@@ -124,9 +138,23 @@ const isCurrent = (href: string) =>
     </nav>
 
     <div class="mobile-menu__utilities">
-      <a href="/comparar/" aria-current={isCurrent("/comparar/") ? "page" : undefined}>Comparar</a>
-      <a href="/test-ride/">Solicitar test ride</a>
-      <a class="header-cta" href="/cotizar/">
+      <a
+        href="/comparar/"
+        aria-current={isCurrent("/comparar/") ? "page" : undefined}
+      >
+        Comparar
+      </a>
+      <a
+        href="/test-ride/"
+        aria-current={isCurrent("/test-ride/") ? "page" : undefined}
+      >
+        Solicitar test ride
+      </a>
+      <a
+        class="header-cta"
+        href="/cotizar/"
+        aria-current={isCurrent("/cotizar/") ? "page" : undefined}
+      >
         Cotizar
       </a>
     </div>

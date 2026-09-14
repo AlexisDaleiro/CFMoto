@@ -1,0 +1,16 @@
+{
+  "name": "BIKEUP",
+  "slug": "bikeup",
+  "department": "Montevideo",
+  "locality": "Montevideo",
+  "address": "Comercio 1950",
+  "phone": { "display": "2508 818", "hrefValue": "2508818" },
+  "capabilities": { "service": true },
+  "source": {
+    "type": "publicCurrentSite",
+    "url": "https://cfmotouruguay.com/service/",
+    "capturedAt": "2026-09-14"
+  },
+  "verificationStatus": "needsClientValidation",
+  "sourceNote": "El número publicado tiene siete dígitos; se conserva sin corregir y requiere validación prioritaria."
+}

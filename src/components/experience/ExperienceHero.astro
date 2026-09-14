@@ -1,0 +1,221 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import Container from "@/components/primitives/Container.astro";
+import ExperienceNavigation from "./ExperienceNavigation.astro";
+
+interface Props {
+  experience: CollectionEntry<"experiences">;
+  sequence: string;
+}
+
+const { experience, sequence } = Astro.props;
+const { data } = experience;
+const dark = data.mode === "racing" || data.mode === "technology";
+---
+
+<section
+  class:list={["experience-hero", `experience-hero--${data.mode}`]}
+  data-surface={dark ? "dark" : "light"}
+  aria-labelledby="experience-title"
+>
+  <Container size="wide" class="experience-hero__container">
+    <ExperienceNavigation
+      current={data.slug}
+      surface={dark ? "dark" : "light"}
+    />
+    <div class="experience-hero__composition">
+      <div class="experience-hero__copy">
+        <p class="experience-hero__eyebrow">{data.hero.eyebrow}</p>
+        <h1 id="experience-title">{data.title}</h1>
+        <p class="experience-hero__statement">{data.hero.statement}</p>
+        <p class="experience-hero__support">{data.hero.supportingText}</p>
+      </div>
+      <div class="experience-hero__graphic" aria-hidden="true">
+        <span>{sequence}</span>
+        <strong>{data.mode === "technology" ? "SYSTEM" : data.title}</strong>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .experience-hero {
+    position: relative;
+    min-height: clamp(39rem, 82svh, 56rem);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .experience-hero__container {
+    position: relative;
+    z-index: 1;
+  }
+  .experience-hero__composition {
+    display: grid;
+    min-height: clamp(34rem, 72svh, 50rem);
+    padding-block: var(--space-10);
+    align-items: center;
+    gap: var(--space-8);
+  }
+  .experience-hero__copy {
+    display: grid;
+    max-width: 52rem;
+    gap: var(--space-4);
+  }
+  .experience-hero__eyebrow {
+    color: var(--color-brand-cyan);
+    font-size: var(--font-size-label);
+    font-weight: 750;
+    letter-spacing: 0.09em;
+  }
+  .experience-hero h1 {
+    font-family: var(--font-family-display);
+    font-size: clamp(5rem, 18vw, 13rem);
+    font-weight: 800;
+    line-height: 0.68;
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+  }
+  .experience-hero__statement {
+    max-width: 24ch;
+    font-family: var(--font-family-display);
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 650;
+    line-height: 0.92;
+  }
+  .experience-hero__support {
+    max-width: 43rem;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-body-l);
+  }
+  .experience-hero__graphic {
+    position: absolute;
+    z-index: -1;
+    inset: 14% -12% auto auto;
+    display: grid;
+    width: clamp(17rem, 41vw, 45rem);
+    aspect-ratio: 1;
+    padding: var(--space-6);
+    align-content: space-between;
+    border: var(--border-hairline) solid currentColor;
+    color: var(--color-border-subtle);
+    transform: rotate(-8deg);
+  }
+  .experience-hero__graphic span,
+  .experience-hero__graphic strong {
+    font-family: var(--font-family-display);
+    font-size: clamp(4rem, 12vw, 11rem);
+    font-weight: 800;
+    line-height: 0.7;
+  }
+  .experience-hero__graphic strong {
+    overflow-wrap: anywhere;
+    font-size: clamp(2rem, 5vw, 5rem);
+    text-align: end;
+  }
+  .experience-hero--racing,
+  .experience-hero--technology {
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+  .experience-hero--racing::before {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        116deg,
+        transparent 57%,
+        rgb(0 183 229 / 14%) 57% 62%,
+        transparent 62%
+      ),
+      repeating-linear-gradient(
+        118deg,
+        transparent 0 8rem,
+        rgb(255 255 255 / 3%) 8rem 8.08rem
+      );
+    content: "";
+  }
+  .experience-hero--racing .experience-hero__support,
+  .experience-hero--technology .experience-hero__support {
+    color: var(--color-text-inverted-secondary);
+  }
+  .experience-hero--racing .experience-hero__graphic,
+  .experience-hero--technology .experience-hero__graphic {
+    color: var(--color-border-on-dark);
+  }
+  .experience-hero--adventure {
+    background:
+      linear-gradient(
+        168deg,
+        transparent 48%,
+        rgb(0 183 229 / 12%) 48% 51%,
+        transparent 51%
+      ),
+      linear-gradient(
+        180deg,
+        var(--color-surface-primary),
+        var(--color-neutral-100)
+      );
+  }
+  .experience-hero--adventure .experience-hero__graphic {
+    inset: auto -6% -26% auto;
+    border-radius: 50%;
+    transform: none;
+  }
+  .experience-hero--technology::before {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgb(255 255 255 / 4%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 4%) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    content: "";
+    mask-image: linear-gradient(90deg, transparent, black);
+  }
+  .experience-hero--technology h1 {
+    font-size: clamp(4rem, 14vw, 10rem);
+  }
+  .experience-hero--technology .experience-hero__graphic {
+    transform: none;
+  }
+  .experience-hero--community {
+    min-height: 34rem;
+    background: var(--color-surface-subtle);
+  }
+  .experience-hero--community .experience-hero__composition {
+    min-height: 30rem;
+  }
+  .experience-hero--community h1 {
+    font-size: clamp(4.5rem, 15vw, 10rem);
+  }
+  .experience-hero--community .experience-hero__graphic {
+    border-radius: 50%;
+    transform: none;
+  }
+  @media (min-width: 64rem) {
+    .experience-hero__composition {
+      grid-template-columns: minmax(0, 1.25fr) minmax(15rem, 0.75fr);
+    }
+  }
+  @media (max-width: 47.99rem) {
+    .experience-hero h1 {
+      font-size: clamp(4rem, 22vw, 7rem);
+    }
+    .experience-hero__graphic {
+      inset: auto -28% 3% auto;
+      opacity: 0.65;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .experience-hero__copy {
+      animation: experience-enter var(--motion-expressive) var(--ease-enter)
+        both;
+    }
+    @keyframes experience-enter {
+      from {
+        transform: translateY(var(--space-4));
+        opacity: 0;
+      }
+    }
+  }
+</style>

@@ -1,0 +1,245 @@
+---
+import { getCollection } from "astro:content";
+
+import ExperienceFooter from "@/components/experience/ExperienceFooter.astro";
+import ExperienceNavigation from "@/components/experience/ExperienceNavigation.astro";
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Container from "@/components/primitives/Container.astro";
+import TextLink from "@/components/primitives/TextLink.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const experiences = await getCollection("experiences");
+const order = ["racing", "adventure", "tecnologia", "comunidad"];
+const ordered = experiences.sort(
+  (a, b) => order.indexOf(a.data.slug) - order.indexOf(b.data.slug),
+);
+---
+
+<BaseLayout
+  title="Experiencia CFMOTO | CFMOTO Uruguay"
+  description="Racing, Adventure, Tecnología y Comunidad conectados con productos y decisiones reales."
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" />
+
+  <section class="hub-hero" data-surface="dark" aria-labelledby="hub-title">
+    <Container size="wide">
+      <ExperienceNavigation surface="dark" />
+      <div class="hub-hero__grid">
+        <div>
+          <p class="hub-kicker">EXPERIENCIA CFMOTO</p>
+          <h1 id="hub-title">CUATRO FORMAS DE ENTRAR.</h1>
+        </div>
+        <p>
+          Emoción donde importa el deseo. Precisión donde empieza la decisión.
+          Un mismo sistema conecta marca, vehículos y acciones.
+        </p>
+      </div>
+    </Container>
+  </section>
+
+  <section class="experience-directory" aria-labelledby="directory-title">
+    <Container size="wide">
+      <h2 id="directory-title" class="visually-hidden">
+        Verticales de experiencia
+      </h2>
+      <div class="experience-directory__grid">
+        {ordered.map((experience, index) => (
+          <article
+            class:list={[
+              "experience-panel",
+              `experience-panel--${experience.data.mode}`,
+            ]}
+          >
+            <span class="experience-panel__index" aria-hidden="true">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <div>
+              <p class="experience-panel__mode">
+                {experience.data.hero.eyebrow}
+              </p>
+              <h3>{experience.data.title}</h3>
+              <p>{experience.data.descriptor}</p>
+            </div>
+            <TextLink
+              href={`/experiencia/${experience.data.slug}/`}
+              directional
+            >
+              Explorar {experience.data.title}
+            </TextLink>
+          </article>
+        ))}
+      </div>
+    </Container>
+  </section>
+
+  <section class="hub-close" aria-labelledby="hub-close-title">
+    <Container size="standard">
+      <p class="hub-kicker">DEL RELATO AL PRODUCTO</p>
+      <h2 id="hub-close-title">Cada historia tiene una salida útil.</h2>
+      <p>
+        Las verticales conducen a fichas, comparación y puntos de atención sin
+        convertir la experiencia de marca en un callejón editorial.
+      </p>
+      <TextLink href="/motos/" directional>
+        Explorar vehículos
+      </TextLink>
+    </Container>
+  </section>
+
+  <ExperienceFooter slot="footer" />
+</BaseLayout>
+
+<style>
+  .hub-hero {
+    min-height: clamp(32rem, 68svh, 48rem);
+    overflow: hidden;
+    background:
+      linear-gradient(
+        128deg,
+        transparent 58%,
+        rgb(0 183 229 / 17%) 58% 61%,
+        transparent 61%
+      ),
+      var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+  .hub-hero__grid {
+    display: grid;
+    padding-block: var(--section-space-immersive);
+    gap: var(--space-8);
+    align-items: end;
+  }
+  .hub-kicker,
+  .experience-panel__mode {
+    color: var(--color-brand-cyan);
+    font-size: var(--font-size-label);
+    font-weight: 750;
+    letter-spacing: 0.08em;
+  }
+  .hub-hero h1 {
+    max-width: 8ch;
+    margin-block-start: var(--space-4);
+    font-family: var(--font-family-display);
+    font-size: clamp(4.5rem, 15vw, 11rem);
+    font-weight: 800;
+    line-height: 0.7;
+    letter-spacing: -0.055em;
+  }
+  .hub-hero__grid > p {
+    max-width: 36rem;
+    color: var(--color-text-inverted-secondary);
+    font-size: var(--font-size-body-l);
+  }
+  .experience-directory {
+    padding-block: var(--section-space-editorial);
+  }
+  .experience-directory__grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .experience-panel {
+    position: relative;
+    display: grid;
+    min-height: 24rem;
+    padding: clamp(var(--space-5), 5vw, var(--space-9));
+    align-content: space-between;
+    gap: var(--space-8);
+    overflow: hidden;
+    border: var(--border-hairline) solid var(--color-border-subtle);
+  }
+  .experience-panel::before {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(142deg, transparent 55%, rgb(0 183 229 / 16%));
+    content: "";
+    pointer-events: none;
+  }
+  .experience-panel > * {
+    position: relative;
+  }
+  .experience-panel__index {
+    color: var(--color-border-strong);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-stat-m);
+    font-weight: 700;
+  }
+  .experience-panel h3 {
+    margin-block: var(--space-3);
+    font-family: var(--font-family-display);
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    line-height: 0.72;
+    text-transform: uppercase;
+  }
+  .experience-panel--racing {
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+  .experience-panel--racing p:not(.experience-panel__mode) {
+    color: var(--color-text-inverted-secondary);
+  }
+  .experience-panel--adventure {
+    min-height: 30rem;
+    background: linear-gradient(
+      165deg,
+      var(--color-surface-primary),
+      var(--color-neutral-100)
+    );
+  }
+  .experience-panel--technology {
+    background-image:
+      linear-gradient(var(--color-border-subtle) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px);
+    background-size: 3rem 3rem;
+  }
+  .experience-panel--community {
+    min-height: 19rem;
+    background: var(--color-surface-subtle);
+  }
+  .hub-close {
+    padding-block: var(--section-space-editorial);
+    background: var(--color-surface-subtle);
+  }
+  .hub-close h2 {
+    max-width: 15ch;
+    margin-block: var(--space-4);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-1);
+    line-height: 0.9;
+  }
+  .hub-close > :global(.container) > p:not(.hub-kicker) {
+    max-width: 40rem;
+    margin-block-end: var(--space-5);
+    color: var(--color-text-secondary);
+  }
+  @media (min-width: 48rem) {
+    .experience-directory__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .experience-panel--racing {
+      grid-row: span 2;
+      min-height: 52rem;
+    }
+    .experience-panel--adventure {
+      grid-column: 2;
+    }
+    .experience-panel--technology,
+    .experience-panel--community {
+      min-height: 23rem;
+    }
+  }
+  @media (min-width: 64rem) {
+    .hub-hero__grid {
+      grid-template-columns: minmax(0, 1.35fr) minmax(20rem, 0.65fr);
+    }
+    .experience-directory__grid {
+      grid-template-columns: 1.25fr 0.85fr 0.85fr;
+    }
+    .experience-panel--racing {
+      grid-row: 1 / span 2;
+    }
+    .experience-panel--adventure {
+      grid-column: 2 / span 2;
+    }
+  }
+</style>

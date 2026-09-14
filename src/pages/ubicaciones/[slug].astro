@@ -1,0 +1,144 @@
+---
+import { getCollection } from "astro:content";
+
+import Breadcrumbs from "@/components/navigation/Breadcrumbs.astro";
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Button from "@/components/primitives/Button.astro";
+import Container from "@/components/primitives/Container.astro";
+import Section from "@/components/primitives/Section.astro";
+import Stack from "@/components/primitives/Stack.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {
+  capabilityLabels,
+  getDirectionsHref,
+  type LocationEntry,
+} from "@/lib/locations";
+
+export async function getStaticPaths() {
+  const locations = await getCollection("locations");
+  return locations.map((location) => ({
+    params: { slug: location.data.slug },
+    props: { location },
+  }));
+}
+
+const { location } = Astro.props as { location: LocationEntry };
+const capabilities = Object.entries(location.data.capabilities).filter(
+  ([, enabled]) => enabled,
+) as Array<[keyof typeof capabilityLabels, true]>;
+---
+
+<BaseLayout
+  title={`${location.data.name} — CFMOTO Uruguay`}
+  description={`${location.data.name}, ${location.data.locality}. Información de contacto publicada por CFMOTO Uruguay y pendiente de validación final.`}
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" />
+  <Section density="editorial" surface="light" aria-labelledby="location-title">
+    <Container size="standard">
+      <Breadcrumbs
+        items={[
+          { label: "Inicio", href: "/" },
+          { label: "Service", href: "/service/" },
+          { label: location.data.name },
+        ]}
+      />
+      <div class="location-detail">
+        <Stack gap="6">
+          <p class="type-label">{location.data.department}</p>
+          <h1 id="location-title" class="type-display-l">
+            {location.data.name}
+          </h1>
+          <address class="type-body-l">
+            {location.data.address}
+            <br />
+            {location.data.locality}, {location.data.department}
+          </address>
+          <ul aria-label="Servicios publicados">
+            {capabilities.map(([capability]) => (
+              <li>{capabilityLabels[capability]}</li>
+            ))}
+          </ul>
+        </Stack>
+        <aside class="contact-panel" aria-label="Contacto de la ubicación">
+          <p class="type-label">TELÉFONO PUBLICADO</p>
+          <a class="phone" href={`tel:${location.data.phone.hrefValue}`}>
+            {location.data.phone.display}
+          </a>
+          <div class="contact-panel__actions">
+            <Button href={`tel:${location.data.phone.hrefValue}`}>
+              Llamar
+            </Button>
+            <Button
+              href={getDirectionsHref(location)}
+              variant="secondary"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Cómo llegar
+            </Button>
+          </div>
+          <p class="validation-note">
+            Confirmá disponibilidad y horario antes de trasladarte.
+          </p>
+        </aside>
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>
+
+<style>
+  .location-detail {
+    display: grid;
+    gap: var(--space-8);
+    margin-block-start: var(--space-8);
+    align-items: start;
+  }
+  .location-detail .type-label,
+  .contact-panel .type-label {
+    color: var(--color-link-on-light);
+  }
+  .location-detail address {
+    color: var(--color-text-secondary);
+    font-style: normal;
+  }
+  .location-detail ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+  }
+  .location-detail li {
+    padding: var(--space-2) var(--space-3);
+    border-inline-start: var(--border-accent) solid var(--color-brand-cyan);
+    background: var(--color-surface-subtle);
+    font-weight: 700;
+  }
+  .contact-panel {
+    display: grid;
+    padding: var(--space-6);
+    gap: var(--space-4);
+    border: var(--border-hairline) solid var(--color-border-subtle);
+    background: var(--color-surface-subtle);
+  }
+  .phone {
+    width: fit-content;
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-2);
+    font-weight: 750;
+  }
+  .contact-panel__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .validation-note {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-body-s);
+  }
+  @media (min-width: 48rem) {
+    .location-detail {
+      grid-template-columns: minmax(0, 1.3fr) minmax(19rem, 0.7fr);
+    }
+  }
+</style>

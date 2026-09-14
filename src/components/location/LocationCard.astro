@@ -1,0 +1,128 @@
+---
+import Button from "@/components/primitives/Button.astro";
+import {
+  capabilityLabels,
+  getDirectionsHref,
+  type LocationEntry,
+} from "@/lib/locations";
+
+interface Props {
+  location: LocationEntry;
+}
+
+const { location } = Astro.props;
+const capabilities = Object.entries(location.data.capabilities).filter(
+  ([, enabled]) => enabled,
+) as Array<[keyof typeof capabilityLabels, true]>;
+---
+
+<article
+  class="location-card"
+  data-location-card
+  data-search={`${location.data.name} ${location.data.address} ${location.data.locality} ${location.data.department}`}
+  data-department={location.data.department}
+>
+  <div class="location-card__identity">
+    <p class="type-label">{location.data.department}</p>
+    <h3>{location.data.name}</h3>
+    <address>
+      {location.data.address}
+      <br />
+      {location.data.locality}, {location.data.department}
+    </address>
+  </div>
+
+  <ul class="location-card__capabilities" aria-label="Servicios publicados">
+    {capabilities.map(([capability]) => (
+      <li>{capabilityLabels[capability]}</li>
+    ))}
+  </ul>
+
+  <p class="location-card__phone">
+    <span>Teléfono publicado</span>
+    <a
+      href={`tel:${location.data.phone.hrefValue}`}
+      data-analytics-event="location_phone_click"
+    >
+      {location.data.phone.display}
+    </a>
+  </p>
+
+  <div class="location-card__actions">
+    <Button href={`/ubicaciones/${location.data.slug}/`} variant="secondary">
+      Ver detalle
+    </Button>
+    <Button
+      href={getDirectionsHref(location)}
+      variant="tertiary"
+      target="_blank"
+      rel="noreferrer"
+    >
+      Cómo llegar
+    </Button>
+  </div>
+</article>
+
+<style>
+  .location-card {
+    display: grid;
+    min-width: 0;
+    padding: var(--space-6);
+    gap: var(--space-5);
+    border: var(--border-hairline) solid var(--color-border-subtle);
+    background: var(--color-surface-primary);
+  }
+  .location-card[hidden] {
+    display: none;
+  }
+  .location-card__identity {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .location-card .type-label {
+    color: var(--color-link-on-light);
+    text-transform: uppercase;
+  }
+  .location-card h3 {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-3);
+    line-height: var(--line-height-heading-3);
+  }
+  .location-card address {
+    color: var(--color-text-secondary);
+    font-style: normal;
+  }
+  .location-card__capabilities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+  }
+  .location-card__capabilities li {
+    padding: var(--space-1) var(--space-3);
+    border-inline-start: var(--border-accent) solid var(--color-brand-cyan);
+    background: var(--color-surface-subtle);
+    font-size: var(--font-size-body-s);
+    font-weight: 700;
+  }
+  .location-card__phone {
+    display: grid;
+    gap: var(--space-1);
+  }
+  .location-card__phone span {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-caption);
+  }
+  .location-card__phone a {
+    width: fit-content;
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-4);
+    font-weight: 750;
+  }
+  .location-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block-start: auto;
+  }
+</style>

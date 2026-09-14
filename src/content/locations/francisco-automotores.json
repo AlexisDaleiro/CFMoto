@@ -1,0 +1,16 @@
+{
+  "name": "FRANCISCO AUTOMOTORES",
+  "slug": "francisco-automotores",
+  "department": "Paysandú",
+  "locality": "Paysandú",
+  "address": "Bulevar Artigas esquina Uruguay",
+  "phone": { "display": "4723 4844", "hrefValue": "47234844" },
+  "capabilities": { "service": true },
+  "source": {
+    "type": "publicCurrentSite",
+    "url": "https://cfmotouruguay.com/service/",
+    "capturedAt": "2026-09-14"
+  },
+  "verificationStatus": "needsClientValidation",
+  "sourceNote": "Datos públicos actuales; no se infieren WhatsApp, horarios ni otras capacidades."
+}

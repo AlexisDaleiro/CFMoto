@@ -1,0 +1,211 @@
+---
+import { getEntry } from "astro:content";
+
+import ExperienceFooter from "@/components/experience/ExperienceFooter.astro";
+import ExperienceHero from "@/components/experience/ExperienceHero.astro";
+import ProductBridge from "@/components/experience/ProductBridge.astro";
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Container from "@/components/primitives/Container.astro";
+import TextLink from "@/components/primitives/TextLink.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const experience = await getEntry("experiences", "adventure");
+const product = await getEntry("products", "800mt-touring");
+if (!experience || !product)
+  throw new Error("Adventure content is incomplete.");
+const horizon = experience.data.sections[0]!;
+const preparation = experience.data.sections[1]!;
+---
+
+<BaseLayout
+  title="Adventure | Experiencia CFMOTO Uruguay"
+  description={experience.data.descriptor}
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" />
+  <ExperienceHero experience={experience} sequence="02" />
+
+  <section class="horizon" aria-labelledby="horizon-title">
+    <Container size="wide">
+      <div class="horizon__marker" aria-hidden="true">
+        N — 02
+      </div>
+      <div class="horizon__copy">
+        <p>{horizon.eyebrow}</p>
+        <h2 id="horizon-title">{horizon.title}</h2>
+        <p>{horizon.body}</p>
+      </div>
+      <p class="horizon__words">{horizon.emphasis}</p>
+    </Container>
+  </section>
+
+  <section class="preparation" aria-labelledby="preparation-title">
+    <Container size="standard">
+      <div class="preparation__heading">
+        <p>{preparation.eyebrow}</p>
+        <h2 id="preparation-title">{preparation.title}</h2>
+        <p>{preparation.body}</p>
+      </div>
+      <div class="preparation__list">
+        {preparation.items.map((item, index) => (
+          <article>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </article>
+        ))}
+      </div>
+    </Container>
+  </section>
+
+  <Container size="wide" class="bridge-wrap">
+    <ProductBridge
+      product={product}
+      eyebrow="ADVENTURE → MT"
+      introduction="La 800MT Touring convierte la intención de explorar en una ficha con datos auditados y opciones concretas para seguir evaluando."
+      maximumStats={4}
+    />
+  </Container>
+
+  <section
+    class="adventure-exit"
+    data-surface="dark"
+    aria-labelledby="adventure-exit-title"
+  >
+    <Container size="standard">
+      <p>PRÓXIMO PASO</p>
+      <h2 id="adventure-exit-title">Elegí con contexto.</h2>
+      <div>
+        <TextLink href="/motos/800mt-touring/" directional>
+          Ver 800MT Touring
+        </TextLink>
+        <TextLink href="/comparar/?add=800mt-touring" directional>
+          Comparar
+        </TextLink>
+        <TextLink href="/concesionarios/" directional>
+          Ver puntos de atención
+        </TextLink>
+      </div>
+    </Container>
+  </section>
+
+  <ExperienceFooter slot="footer" />
+</BaseLayout>
+
+<style>
+  .horizon {
+    position: relative;
+    padding-block: var(--section-space-immersive);
+    overflow: hidden;
+  }
+  .horizon::after {
+    position: absolute;
+    inset: auto -5% 12% 38%;
+    height: 1px;
+    background: var(--color-brand-cyan);
+    content: "";
+    transform: rotate(-7deg);
+  }
+  .horizon > :global(.container) {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .horizon__marker {
+    color: var(--color-brand-cyan);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-stat-m);
+    font-weight: 750;
+  }
+  .horizon__copy {
+    display: grid;
+    max-width: 51rem;
+    gap: var(--space-4);
+  }
+  .horizon__copy > p:first-child,
+  .preparation__heading > p:first-child,
+  .adventure-exit > :global(.container) > p {
+    color: var(--color-brand-cyan);
+    font-size: var(--font-size-label);
+    font-weight: 750;
+    letter-spacing: 0.08em;
+  }
+  .horizon h2,
+  .preparation h2,
+  .adventure-exit h2 {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-1);
+    line-height: 0.9;
+  }
+  .horizon__copy > p:last-child,
+  .preparation__heading > p:last-child {
+    max-width: 43rem;
+    color: var(--color-text-secondary);
+  }
+  .horizon__words {
+    color: var(--color-border-strong);
+    font-family: var(--font-family-display);
+    font-size: clamp(2rem, 7vw, 6rem);
+    font-weight: 700;
+    line-height: 0.85;
+  }
+  .preparation {
+    padding-block: var(--section-space-editorial);
+    background: var(--color-surface-subtle);
+  }
+  .preparation > :global(.container) {
+    display: grid;
+    gap: var(--space-10);
+  }
+  .preparation__heading {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .preparation__list {
+    display: grid;
+    border-block-start: var(--border-hairline) solid var(--color-border-strong);
+  }
+  .preparation__list article {
+    display: grid;
+    padding-block: var(--space-6);
+    gap: var(--space-3);
+    border-block-end: var(--border-hairline) solid var(--color-border-subtle);
+  }
+  .preparation__list span {
+    color: var(--color-brand-cyan);
+    font-weight: 750;
+  }
+  .preparation__list h3 {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-3);
+  }
+  .preparation__list p {
+    color: var(--color-text-secondary);
+  }
+  :global(.bridge-wrap) {
+    padding-block: var(--section-space-editorial);
+  }
+  .adventure-exit {
+    padding-block: var(--section-space-editorial);
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+  .adventure-exit h2 {
+    margin-block: var(--space-4) var(--space-6);
+  }
+  .adventure-exit div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+  }
+  @media (min-width: 48rem) {
+    .horizon > :global(.container) {
+      grid-template-columns: 0.35fr 1.65fr;
+    }
+    .horizon__words {
+      grid-column: 2;
+    }
+    .preparation > :global(.container) {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+  }
+</style>

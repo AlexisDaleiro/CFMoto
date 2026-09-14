@@ -1,0 +1,40 @@
+---
+import Container from "@/components/primitives/Container.astro";
+---
+
+<footer class="experience-footer" data-surface="dark">
+  <Container size="wide">
+    <div>
+      <p>
+        <strong>CFMOTO</strong> <span>URUGUAY</span>
+      </p>
+      <p>Experiencia de demostración · No indexable.</p>
+    </div>
+  </Container>
+</footer>
+
+<style>
+  .experience-footer {
+    padding-block: var(--space-8);
+    border-block-start: var(--border-hairline) solid var(--color-border-on-dark);
+    background: var(--color-surface-dark);
+    color: var(--color-text-inverted-secondary);
+    font-size: var(--font-size-body-s);
+  }
+  .experience-footer div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+  .experience-footer strong {
+    color: var(--color-text-inverted);
+  }
+  .experience-footer span {
+    margin-inline-start: var(--space-2);
+    color: var(--color-brand-cyan);
+    font-size: 0.75em;
+    font-weight: 750;
+    letter-spacing: 0.1em;
+  }
+</style>

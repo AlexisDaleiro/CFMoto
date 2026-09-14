@@ -1,0 +1,16 @@
+{
+  "name": "YELTON MOTOS",
+  "slug": "yelton-motos",
+  "department": "Cerro Largo",
+  "locality": "Melo",
+  "address": "Mata 300, esquina Oribe",
+  "phone": { "display": "099 591 074", "hrefValue": "099591074" },
+  "capabilities": { "service": true },
+  "source": {
+    "type": "publicCurrentSite",
+    "url": "https://cfmotouruguay.com/service/",
+    "capturedAt": "2026-09-14"
+  },
+  "verificationStatus": "needsClientValidation",
+  "sourceNote": "Datos públicos actuales; no se infieren WhatsApp, horarios ni otras capacidades."
+}

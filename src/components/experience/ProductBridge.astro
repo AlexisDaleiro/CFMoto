@@ -1,0 +1,194 @@
+---
+import Button from "@/components/primitives/Button.astro";
+import TextLink from "@/components/primitives/TextLink.astro";
+import {
+  formatSpecification,
+  getProductHref,
+  getVerifiedStats,
+  type ProductEntry,
+} from "@/lib/products";
+
+interface Props {
+  product: ProductEntry;
+  eyebrow: string;
+  introduction: string;
+  surface?: "light" | "dark";
+  maximumStats?: number;
+}
+
+const {
+  product,
+  eyebrow,
+  introduction,
+  surface = "light",
+  maximumStats = 3,
+} = Astro.props;
+const stats = getVerifiedStats(product, maximumStats);
+---
+
+<section
+  class:list={["product-bridge", `product-bridge--${surface}`]}
+  data-surface={surface}
+  aria-labelledby={`bridge-${product.data.slug}`}
+>
+  <div class="product-bridge__identity" data-family={product.data.family}>
+    <p class="product-bridge__eyebrow">{eyebrow}</p>
+    <p class="product-bridge__family">{product.data.family}</p>
+    <h2 id={`bridge-${product.data.slug}`}>{product.data.name}</h2>
+    <p class="product-bridge__introduction">{introduction}</p>
+  </div>
+  <div class="product-bridge__decision">
+    {stats.length > 0 && (
+      <dl>
+        {stats.map((stat) => (
+          <div>
+            <dt>{stat.label}</dt>
+            <dd>{formatSpecification(stat)}</dd>
+          </div>
+        ))}
+      </dl>
+    )}
+    <div class="product-bridge__actions">
+      <Button href={getProductHref(product)}>Ver {product.data.name}</Button>
+      <TextLink href={`/comparar/?add=${product.data.slug}`} directional>
+        Comparar modelo
+      </TextLink>
+      <TextLink href={`/cotizar/?product=${product.data.slug}`} directional>
+        Preparar cotización
+      </TextLink>
+    </div>
+    <p class="product-bridge__note">
+      Datos técnicos mostrados únicamente cuando su estado es verificado. La
+      cotización funciona en modo demo y no envía información.
+    </p>
+  </div>
+</section>
+
+<style>
+  .product-bridge {
+    display: grid;
+    min-width: 0;
+    border-block: var(--border-hairline) solid var(--color-border-subtle);
+  }
+  .product-bridge__identity,
+  .product-bridge__decision {
+    display: grid;
+    min-width: 0;
+    padding: clamp(var(--space-6), 6vw, var(--space-10));
+    align-content: center;
+  }
+  .product-bridge__identity {
+    position: relative;
+    min-height: 26rem;
+    overflow: hidden;
+    background:
+      linear-gradient(
+        138deg,
+        transparent 48%,
+        rgb(0 183 229 / 18%) 48% 51%,
+        transparent 51%
+      ),
+      var(--color-surface-subtle);
+  }
+  .product-bridge__identity::after {
+    position: absolute;
+    inset: auto -0.1em -0.28em auto;
+    color: var(--color-border-subtle);
+    content: attr(data-family);
+    font-family: var(--font-family-display);
+    font-size: 13rem;
+    font-weight: 800;
+  }
+  .product-bridge__eyebrow,
+  .product-bridge__family {
+    position: relative;
+    z-index: 1;
+    color: var(--color-link-on-light);
+    font-size: var(--font-size-label);
+    font-weight: 750;
+    letter-spacing: 0.08em;
+  }
+  .product-bridge__family {
+    margin-block-start: var(--space-8);
+  }
+  .product-bridge h2 {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-family-display);
+    font-size: clamp(4rem, 11vw, 8.5rem);
+    line-height: 0.76;
+    letter-spacing: -0.045em;
+  }
+  .product-bridge__introduction {
+    position: relative;
+    z-index: 1;
+    max-width: 38rem;
+    margin-block-start: var(--space-5);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-body-l);
+  }
+  .product-bridge__decision {
+    gap: var(--space-7);
+  }
+  .product-bridge dl {
+    display: grid;
+    margin: 0;
+    border-block-start: var(--border-hairline) solid var(--color-border-subtle);
+  }
+  .product-bridge dl div {
+    display: flex;
+    min-height: 4.5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    border-block-end: var(--border-hairline) solid var(--color-border-subtle);
+  }
+  .product-bridge dt {
+    color: var(--color-text-secondary);
+  }
+  .product-bridge dd {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-stat-m);
+    font-weight: 750;
+  }
+  .product-bridge__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-5);
+  }
+  .product-bridge__note {
+    max-width: 42rem;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-caption);
+  }
+  .product-bridge--dark {
+    color: var(--color-on-dark);
+    border-color: var(--color-border-on-dark);
+    background: var(--color-surface-dark);
+  }
+  .product-bridge--dark .product-bridge__identity {
+    background:
+      linear-gradient(
+        138deg,
+        transparent 48%,
+        rgb(0 183 229 / 20%) 48% 51%,
+        transparent 51%
+      ),
+      var(--color-neutral-900);
+  }
+  .product-bridge--dark .product-bridge__introduction,
+  .product-bridge--dark .product-bridge__note,
+  .product-bridge--dark dt {
+    color: var(--color-text-inverted-secondary);
+  }
+  .product-bridge--dark dl,
+  .product-bridge--dark dl div {
+    border-color: var(--color-border-on-dark);
+  }
+  @media (min-width: 64rem) {
+    .product-bridge {
+      grid-template-columns: minmax(0, 1.2fr) minmax(22rem, 0.8fr);
+    }
+  }
+</style>

@@ -1,0 +1,32 @@
+{
+  "slug": "tecnologia",
+  "title": "Tecnología",
+  "descriptor": "Conceptos verificables explicados por su utilidad para comparar.",
+  "mode": "technology",
+  "hero": {
+    "eyebrow": "ENGINEERED CLARITY",
+    "statement": "Entender también es avanzar.",
+    "supportingText": "Tecnología conecta cada concepto con datos verificados y productos concretos. Sin HUD decorativo ni equipamiento supuesto.",
+    "visualMode": "precision",
+    "sourceStatus": "proposal"
+  },
+  "sections": [
+    {
+      "id": "lectura",
+      "eyebrow": "MOTOR",
+      "title": "Cilindrada, potencia y torque no dicen lo mismo.",
+      "body": "Cada valor responde una pregunta distinta. La comparación mantiene etiqueta, unidad y producto juntos para evitar números sin contexto.",
+      "sourceStatus": "proposal"
+    },
+    {
+      "id": "masa",
+      "eyebrow": "DIMENSIONES",
+      "title": "El peso necesita una definición clara.",
+      "body": "El sistema publica únicamente el valor auditado y conserva la denominación de la fuente. Si el dato no está verificado, se omite.",
+      "sourceStatus": "proposal"
+    }
+  ],
+  "relatedProducts": ["450sr", "800mt-touring", "zforce-1000-sport"],
+  "sourceStatus": "proposal",
+  "sourceReferences": []
+}

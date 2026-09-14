@@ -1,0 +1,69 @@
+---
+import { getCollection } from "astro:content";
+
+import LocationDirectory from "@/components/location/LocationDirectory.astro";
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Container from "@/components/primitives/Container.astro";
+import Section from "@/components/primitives/Section.astro";
+import Stack from "@/components/primitives/Stack.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { hasLocationCapability } from "@/lib/locations";
+
+const locations = (await getCollection("locations"))
+  .filter((location) => hasLocationCapability(location, "service"))
+  .sort((a, b) => a.data.name.localeCompare(b.data.name, "es-UY"));
+---
+
+<BaseLayout
+  title="Service CFMOTO Uruguay"
+  description="Consultá los puntos de Service publicados actualmente por CFMOTO Uruguay."
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" />
+  <Section density="editorial" surface="light" aria-labelledby="service-title">
+    <Container size="standard">
+      <Stack gap="6">
+        <p class="page-kicker type-label">RESPALDO LOCAL</p>
+        <h1 id="service-title" class="type-display-l">
+          Service
+        </h1>
+        <p class="page-intro type-body-l">
+          Encontrá los puntos publicados para consultas de taller y atención
+          técnica. Llamá antes de visitar: horarios, repuestos y alcance de cada
+          servicio todavía requieren confirmación.
+        </p>
+        <div class="task-list" aria-label="Tareas de Service">
+          <span>Necesito service</span>
+          <span>Busco un punto cercano</span>
+          <span>Quiero llamar antes de ir</span>
+        </div>
+      </Stack>
+    </Container>
+  </Section>
+  <Section density="functional" aria-label="Puntos de Service">
+    <Container size="wide">
+      <LocationDirectory locations={locations} noun="puntos de Service" />
+    </Container>
+  </Section>
+</BaseLayout>
+
+<style>
+  .page-kicker {
+    color: var(--color-link-on-light);
+  }
+  .page-intro {
+    max-width: 48rem;
+    color: var(--color-text-secondary);
+  }
+  .task-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .task-list span {
+    padding: var(--space-2) var(--space-3);
+    border-inline-start: var(--border-accent) solid var(--color-brand-cyan);
+    background: var(--color-surface-subtle);
+    font-weight: 650;
+  }
+</style>

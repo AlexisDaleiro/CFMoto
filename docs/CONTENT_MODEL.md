@@ -13,7 +13,7 @@ Stable Phase 4 model aligned with `src/content/schemas.ts`. Astro Content Layer 
 ## Verification
 
 ```text
-status: verified | needsReview | unverified | deprecated
+status: verified | needsClientValidation | needsReview | unverified | deprecated
 source:
   label: string
   url?: valid URL
@@ -25,6 +25,7 @@ note?: string
 Rules:
 
 - `verified` public facts need `verifiedAt` before production publication policy accepts them.
+- `needsClientValidation` identifies public-source operational data that is useful for a demo but is not authoritative master data.
 - `needsReview` can validate a draft/test record but is never treated as commercial truth.
 - `unverified` is retained for research/migration only.
 - `deprecated` remains traceable but must not feed current product claims.
@@ -59,7 +60,7 @@ These fields were added for the Phase 6 listing and modular product page. They r
 
 ### Key stats and specifications
 
-`keyStats` (maximum five), `specifications` and `compareAttributes` share a structured specification value:
+`keyStats` (maximum five) and `specifications` share a structured specification value:
 
 ```text
 key: camelCase identifier
@@ -74,6 +75,15 @@ verification: Verification
 ```
 
 This remains flexible across motorcycles, ATV and Side-by-Side while preserving controlled groups, keys, states and units. Category-specific dictionaries can narrow allowed keys later without replacing the base.
+
+`compareAttributes` does not duplicate technical values. It is an ordered list of references into `specifications`:
+
+```text
+key: camelCase specification key
+priority: integer 1..100
+```
+
+The compare projection resolves these references at build time and includes only specifications whose own verification status is `verified`. A missing, unknown or unverified specification therefore cannot become a comparison claim accidentally.
 
 ### Price
 
@@ -129,11 +139,18 @@ A later route may publish a product only when all required conditions are enforc
 
 Phase 6 renders these fixtures only in a `noindex` prototype environment. This validates templates but does not satisfy the production publication gate above.
 
-## Future collection boundaries
+## Location collection
 
-### Locations
+Location: `src/content/locations/*.json`; loader: Astro `glob()`; schema: `locationSchema`.
 
-Next schema should include slug, NAP, department/locality/address, contacts, optional coordinates/hours, capabilities (`sales`, `service`, `parts`, `testRide`), category scope and Verification. No collection was added without real nonfiction data. Dealer and Service remain views of one Location collection.
+- `name`, `slug`, `department`, `locality` and `address` establish identity and textual location.
+- `phone` and optional `whatsapp` separate visible formatting from the safe link value. A mobile number is not promoted automatically to WhatsApp.
+- Optional `coordinates` and `hours` remain absent until a reliable source exists.
+- `capabilities` may explicitly assert `sales`, `service`, `parts` or `testRide`; omitted capabilities are unknown, not false.
+- `source` records `type`, URL and capture date.
+- `verificationStatus` and optional `verifiedAt` govern publication and future structured data.
+
+Phase 7B contains ten Service records transcribed from the current public CFMOTO Uruguay Service page on 2026-09-14. Their `source.type` is `publicCurrentSite` and their `verificationStatus` is `needsClientValidation`. Only `service: true` is asserted. Dealer, parts, test ride, WhatsApp, hours and exact coordinates are not inferred. Dealer and Service remain two views over this single Location collection.
 
 ### Experiences and articles
 

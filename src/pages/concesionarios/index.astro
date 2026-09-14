@@ -1,0 +1,98 @@
+---
+import { getCollection } from "astro:content";
+
+import LocationDirectory from "@/components/location/LocationDirectory.astro";
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Button from "@/components/primitives/Button.astro";
+import Container from "@/components/primitives/Container.astro";
+import Section from "@/components/primitives/Section.astro";
+import Stack from "@/components/primitives/Stack.astro";
+import TextLink from "@/components/primitives/TextLink.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { hasLocationCapability } from "@/lib/locations";
+
+const salesLocations = (await getCollection("locations")).filter((location) =>
+  hasLocationCapability(location, "sales"),
+);
+---
+
+<BaseLayout
+  title="Puntos CFMOTO Uruguay"
+  description="Encontrá información comercial de CFMOTO Uruguay."
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" />
+  <Section density="editorial" surface="light" aria-labelledby="dealer-title">
+    <Container size="standard">
+      <Stack gap="6">
+        <p class="page-kicker type-label">RED CFMOTO</p>
+        <h1 id="dealer-title" class="type-display-l">
+          Puntos comerciales
+        </h1>
+        <p class="page-intro type-body-l">
+          La red oficial de venta y sus capacidades todavía debe ser validada
+          por CFMOTO Uruguay. No convertimos automáticamente los puntos de
+          Service en concesionarios.
+        </p>
+      </Stack>
+    </Container>
+  </Section>
+  <Section density="functional" aria-label="Red comercial">
+    <Container size="wide">
+      {salesLocations.length > 0 ? (
+        <LocationDirectory
+          locations={salesLocations}
+          noun="puntos comerciales"
+        />
+      ) : (
+        <div class="network-pending">
+          <p class="type-label">DATOS COMERCIALES PENDIENTES</p>
+          <h2>La lista de concesionarios aún no está validada.</h2>
+          <p>
+            Podés explorar una solicitud de cotización en modo demo o consultar
+            los puntos publicados específicamente como Service.
+          </p>
+          <div class="network-pending__actions">
+            <Button href="/cotizar/">Cotizar en demo</Button>
+            <TextLink href="/service/" directional>
+              Ver puntos de Service
+            </TextLink>
+          </div>
+        </div>
+      )}
+    </Container>
+  </Section>
+</BaseLayout>
+
+<style>
+  .page-kicker,
+  .network-pending .type-label {
+    color: var(--color-link-on-light);
+  }
+  .page-intro {
+    max-width: 48rem;
+    color: var(--color-text-secondary);
+  }
+  .network-pending {
+    display: grid;
+    max-width: 52rem;
+    padding: var(--space-8);
+    gap: var(--space-4);
+    border-inline-start: var(--border-accent) solid var(--color-brand-cyan);
+    background: var(--color-surface-primary);
+  }
+  .network-pending h2 {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-1);
+    line-height: var(--line-height-heading-1);
+  }
+  .network-pending > p:not(.type-label) {
+    color: var(--color-text-secondary);
+  }
+  .network-pending__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+  }
+</style>

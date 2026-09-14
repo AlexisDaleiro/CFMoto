@@ -6,6 +6,7 @@ import Section from "@/components/primitives/Section.astro";
 import Stack from "@/components/primitives/Stack.astro";
 import FeatureSection from "@/components/product/FeatureSection.astro";
 import KeyStats from "@/components/product/KeyStats.astro";
+import ProductCommercialActions from "@/components/product/ProductCommercialActions.astro";
 import ProductHero from "@/components/product/ProductHero.astro";
 import RelatedProducts from "@/components/product/RelatedProducts.astro";
 import Specifications from "@/components/product/Specifications.astro";
@@ -37,6 +38,7 @@ const description = product.data.description;
 >
   <SiteHeader slot="header" />
   <ProductHero product={product} />
+  <ProductCommercialActions product={product} />
   <KeyStats stats={stats} />
   <CompareProductAction product={product} />
   {description && (
@@ -63,7 +65,7 @@ const description = product.data.description;
   <RelatedProducts products={related} />
   <footer slot="footer" class="product-footer" data-surface="dark">
     <Container size="wide">
-      <p>Catálogo Phase 6 · Datos y assets sujetos a validación.</p>
+      <p>Catálogo prototipo · Datos y assets sujetos a validación.</p>
     </Container>
   </footer>
 </BaseLayout>

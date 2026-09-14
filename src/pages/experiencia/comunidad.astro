@@ -1,0 +1,159 @@
+---
+import { getEntry } from "astro:content";
+
+import ExperienceFooter from "@/components/experience/ExperienceFooter.astro";
+import ExperienceHero from "@/components/experience/ExperienceHero.astro";
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Container from "@/components/primitives/Container.astro";
+import TextLink from "@/components/primitives/TextLink.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const experience = await getEntry("experiences", "comunidad");
+if (!experience) throw new Error("Community content is incomplete.");
+const foundation = experience.data.sections[0]!;
+---
+
+<BaseLayout
+  title="Comunidad | Experiencia CFMOTO Uruguay"
+  description={experience.data.descriptor}
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" />
+  <ExperienceHero experience={experience} sequence="04" />
+
+  <section class="community-foundation" aria-labelledby="community-title">
+    <Container size="standard">
+      <div class="community-foundation__heading">
+        <p>{foundation.eyebrow}</p>
+        <h2 id="community-title">{foundation.title}</h2>
+        <p>{foundation.body}</p>
+      </div>
+      <ol>
+        {foundation.items.map((item, index) => (
+          <li>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <div>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </Container>
+  </section>
+
+  <section
+    class="community-status"
+    data-surface="dark"
+    aria-labelledby="community-status-title"
+  >
+    <Container size="standard">
+      <p>ESTADO EDITORIAL</p>
+      <h2 id="community-status-title">
+        La estructura está lista. Las historias todavía no.
+      </h2>
+      <p>
+        No publicamos eventos, testimonios ni contenido social de demostración.
+        Esta sección crecerá cuando CFMOTO Uruguay entregue material local con
+        permisos y contexto verificable.
+      </p>
+      <div>
+        <TextLink href="/experiencia/adventure/" directional>
+          Explorar Adventure
+        </TextLink>
+        <TextLink href="/motos/" directional>
+          Ver vehículos
+        </TextLink>
+        <TextLink href="/service/" directional>
+          Encontrar service
+        </TextLink>
+      </div>
+    </Container>
+  </section>
+
+  <ExperienceFooter slot="footer" />
+</BaseLayout>
+
+<style>
+  .community-foundation,
+  .community-status {
+    padding-block: var(--section-space-editorial);
+  }
+  .community-foundation > :global(.container) {
+    display: grid;
+    gap: var(--space-10);
+  }
+  .community-foundation__heading {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .community-foundation__heading > p:first-child,
+  .community-status > :global(.container) > p:first-child {
+    color: var(--color-brand-cyan);
+    font-size: var(--font-size-label);
+    font-weight: 750;
+    letter-spacing: 0.08em;
+  }
+  .community-foundation h2,
+  .community-status h2 {
+    max-width: 18ch;
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-1);
+    line-height: 0.9;
+  }
+  .community-foundation__heading > p:last-child,
+  .community-status > :global(.container) > p:nth-child(3) {
+    max-width: 45rem;
+    color: var(--color-text-secondary);
+  }
+  .community-foundation ol {
+    margin: 0;
+    padding: 0;
+    border-block-start: var(--border-hairline) solid var(--color-border-strong);
+    list-style: none;
+  }
+  .community-foundation li {
+    display: grid;
+    padding-block: var(--space-6);
+    grid-template-columns: 3rem 1fr;
+    gap: var(--space-4);
+    border-block-end: var(--border-hairline) solid var(--color-border-subtle);
+  }
+  .community-foundation li > span {
+    color: var(--color-brand-cyan);
+    font-weight: 750;
+  }
+  .community-foundation li div {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .community-foundation h3 {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-3);
+  }
+  .community-foundation li p {
+    color: var(--color-text-secondary);
+  }
+  .community-status {
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+  .community-status > :global(.container) {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .community-status > :global(.container) > p:nth-child(3) {
+    color: var(--color-text-inverted-secondary);
+  }
+  .community-status div {
+    display: flex;
+    margin-block-start: var(--space-3);
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+  }
+  @media (min-width: 48rem) {
+    .community-foundation > :global(.container) {
+      grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+    }
+  }
+</style>

@@ -1,0 +1,16 @@
+{
+  "name": "MOTOS PUNTA",
+  "slug": "motos-punta",
+  "department": "Maldonado",
+  "locality": "Maldonado",
+  "address": "Arturo Santana esquina 19 de Abril",
+  "phone": { "display": "4224 5163", "hrefValue": "42245163" },
+  "capabilities": { "service": true },
+  "source": {
+    "type": "publicCurrentSite",
+    "url": "https://cfmotouruguay.com/service/",
+    "capturedAt": "2026-09-14"
+  },
+  "verificationStatus": "needsClientValidation",
+  "sourceNote": "La fuente identifica el punto como Service; las demás capacidades no están afirmadas."
+}

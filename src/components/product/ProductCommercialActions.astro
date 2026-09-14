@@ -1,0 +1,98 @@
+---
+import Button from "@/components/primitives/Button.astro";
+import Container from "@/components/primitives/Container.astro";
+import type { ProductEntry } from "@/lib/products";
+
+interface Props {
+  product: ProductEntry;
+}
+
+const { product } = Astro.props;
+const productParam = encodeURIComponent(product.data.slug);
+---
+
+<aside
+  class="commercial-actions"
+  data-surface="dark"
+  aria-labelledby="commercial-actions-title"
+>
+  <Container size="product">
+    <div class="commercial-actions__inner">
+      <div>
+        <p class="type-label">SIGUIENTE PASO</p>
+        <h2 id="commercial-actions-title">Consultá por {product.data.name}</h2>
+        <p>
+          Las solicitudes funcionan en modo demo y todavía no se envían a un
+          canal comercial.
+        </p>
+      </div>
+      <div class="commercial-actions__links">
+        <Button href={`/cotizar/?product=${productParam}`} size="large">
+          Cotizar
+        </Button>
+        {product.data.cta.testRide && (
+          <Button
+            href={`/test-ride/?product=${productParam}`}
+            variant="secondary"
+            size="large"
+          >
+            Solicitar test ride
+          </Button>
+        )}
+        <a href="/concesionarios/">Encontrar punto CFMOTO</a>
+      </div>
+    </div>
+  </Container>
+</aside>
+
+<style>
+  .commercial-actions {
+    padding-block: var(--space-6);
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+  .commercial-actions__inner {
+    display: grid;
+    gap: var(--space-5);
+    align-items: center;
+  }
+  .commercial-actions__inner > div:first-child {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .commercial-actions .type-label {
+    color: var(--color-brand-cyan);
+  }
+  .commercial-actions h2 {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-3);
+    line-height: var(--line-height-heading-3);
+  }
+  .commercial-actions p:not(.type-label) {
+    max-width: 42rem;
+    color: var(--color-text-inverted-secondary);
+  }
+  .commercial-actions__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+  }
+  .commercial-actions__links > a:last-child {
+    display: inline-flex;
+    min-height: var(--target-minimum);
+    align-items: center;
+    color: var(--color-link-on-dark);
+    font-weight: 700;
+  }
+  @media (min-width: 64rem) {
+    .commercial-actions__inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+  @media (max-width: 29.99rem) {
+    .commercial-actions__links {
+      display: grid;
+    }
+  }
+</style>

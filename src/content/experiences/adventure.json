@@ -1,0 +1,43 @@
+{
+  "slug": "adventure",
+  "title": "Adventure",
+  "descriptor": "Exploración y touring con el producto como punto de partida.",
+  "mode": "adventure",
+  "hero": {
+    "eyebrow": "OPEN TERRAIN",
+    "statement": "Más horizonte. La misma claridad.",
+    "supportingText": "Una dirección editorial para imaginar el recorrido y volver, en el momento justo, a los datos que ayudan a elegir.",
+    "visualMode": "terrain",
+    "sourceStatus": "proposal"
+  },
+  "sections": [
+    {
+      "id": "horizonte",
+      "eyebrow": "01 — HORIZONTE",
+      "title": "El viaje empieza con una intención.",
+      "body": "La narrativa propone amplitud, pausa y orientación. No inventa rutas, autonomías ni capacidades que aún no estén verificadas.",
+      "emphasis": "DISTANCIA / PAUSA / DIRECCIÓN",
+      "sourceStatus": "proposal"
+    },
+    {
+      "id": "preparacion",
+      "eyebrow": "02 — PREPARACIÓN",
+      "title": "Explorar también es decidir con información.",
+      "body": "El paso editorial conduce hacia la 800MT Touring, su ficha y la comparación con otros modelos de la categoría.",
+      "items": [
+        {
+          "title": "Contexto",
+          "body": "Una atmósfera de touring sin afirmar un destino real."
+        },
+        {
+          "title": "Producto",
+          "body": "Datos auditados y rutas comerciales sin disponibilidad prometida."
+        }
+      ],
+      "sourceStatus": "proposal"
+    }
+  ],
+  "relatedProducts": ["800mt-touring"],
+  "sourceStatus": "proposal",
+  "sourceReferences": []
+}

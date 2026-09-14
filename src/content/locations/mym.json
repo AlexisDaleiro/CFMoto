@@ -1,0 +1,16 @@
+{
+  "name": "MYM",
+  "slug": "mym",
+  "department": "Salto",
+  "locality": "Salto",
+  "address": "Av. Gobernador de Viana 675",
+  "phone": { "display": "2508 8185", "hrefValue": "25088185" },
+  "capabilities": { "service": true },
+  "source": {
+    "type": "publicCurrentSite",
+    "url": "https://cfmotouruguay.com/service/",
+    "capturedAt": "2026-09-14"
+  },
+  "verificationStatus": "needsClientValidation",
+  "sourceNote": "El teléfono comparte una secuencia llamativa con BIKEUP pese a corresponder a otro departamento; requiere validación prioritaria."
+}

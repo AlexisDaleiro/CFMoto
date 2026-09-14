@@ -1,23 +1,17 @@
----
-const isComparePage = Astro.url.pathname.startsWith("/comparar");
----
-
-{!isComparePage && (
-  <aside
-    class="compare-bar"
-    data-compare-bar
-    hidden
-    aria-label="Comparación actual"
-  >
-    <p>
-      <strong>Comparar vehículos</strong>
-      <span data-compare-bar-count></span>
-    </p>
-    <a href="/comparar/" data-compare-bar-link>
-      Ver comparación
-    </a>
-  </aside>
-)}
+<aside
+  class="compare-bar"
+  data-compare-bar
+  hidden
+  aria-label="Comparación actual"
+>
+  <p>
+    <strong>Comparar vehículos</strong>
+    <span data-compare-bar-count></span>
+  </p>
+  <a href="/comparar/" data-compare-bar-link>
+    Ver comparación
+  </a>
+</aside>
 
 <script>
   const compareStorageKey = "cfmoto.compare.v1";

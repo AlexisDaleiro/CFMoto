@@ -1,0 +1,207 @@
+---
+import { getEntry } from "astro:content";
+
+import ExperienceFooter from "@/components/experience/ExperienceFooter.astro";
+import ExperienceHero from "@/components/experience/ExperienceHero.astro";
+import ProductBridge from "@/components/experience/ProductBridge.astro";
+import SiteHeader from "@/components/navigation/SiteHeader.astro";
+import Container from "@/components/primitives/Container.astro";
+import TextLink from "@/components/primitives/TextLink.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const experience = await getEntry("experiences", "racing");
+const product = await getEntry("products", "450sr");
+if (!experience || !product) throw new Error("Racing content is incomplete.");
+const rhythm = experience.data.sections[0]!;
+const control = experience.data.sections[1]!;
+---
+
+<BaseLayout
+  title="Racing | Experiencia CFMOTO Uruguay"
+  description={experience.data.descriptor}
+  robots="noindex, nofollow"
+>
+  <SiteHeader slot="header" />
+  <ExperienceHero experience={experience} sequence="01" />
+
+  <section
+    class="racing-sequence"
+    data-surface="dark"
+    aria-labelledby="rhythm-title"
+  >
+    <Container size="wide">
+      <div class="racing-sequence__lead">
+        <p>{rhythm.eyebrow}</p>
+        <h2 id="rhythm-title">{rhythm.title}</h2>
+        <p>{rhythm.body}</p>
+      </div>
+      <ol aria-label="Secuencia editorial Racing">
+        {rhythm.emphasis?.split(" / ").map((word, index) => (
+          <li>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <strong>{word}</strong>
+          </li>
+        ))}
+      </ol>
+    </Container>
+  </section>
+
+  <section class="racing-control" aria-labelledby="control-title">
+    <Container size="standard">
+      <div class="racing-control__copy">
+        <p>{control.eyebrow}</p>
+        <h2 id="control-title">{control.title}</h2>
+        <p>{control.body}</p>
+      </div>
+      <div class="racing-control__principles">
+        {control.items.map((item) => (
+          <article>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </article>
+        ))}
+      </div>
+    </Container>
+  </section>
+
+  <Container size="wide" class="bridge-wrap">
+    <ProductBridge
+      product={product}
+      eyebrow="RACING → SR"
+      introduction="La 450SR es el puente concreto entre este lenguaje editorial y una decisión de producto."
+      surface="dark"
+    />
+  </Container>
+
+  <section class="experience-exit" aria-labelledby="racing-exit-title">
+    <Container size="standard">
+      <h2 id="racing-exit-title">Seguí con información, no con promesas.</h2>
+      <div>
+        <TextLink href="/motos/450sr/" directional>
+          Ver ficha 450SR
+        </TextLink>
+        <TextLink href="/comparar/?add=450sr" directional>
+          Iniciar comparación
+        </TextLink>
+        <TextLink href="/concesionarios/" directional>
+          Explorar puntos de atención
+        </TextLink>
+      </div>
+    </Container>
+  </section>
+
+  <ExperienceFooter slot="footer" />
+</BaseLayout>
+
+<style>
+  .racing-sequence {
+    padding-block: var(--section-space-immersive);
+    background: var(--color-surface-dark);
+    color: var(--color-on-dark);
+  }
+  .racing-sequence__lead {
+    display: grid;
+    max-width: 57rem;
+    gap: var(--space-4);
+  }
+  .racing-sequence__lead > p:first-child,
+  .racing-control__copy > p:first-child {
+    color: var(--color-brand-cyan);
+    font-size: var(--font-size-label);
+    font-weight: 750;
+    letter-spacing: 0.08em;
+  }
+  .racing-sequence h2,
+  .racing-control h2,
+  .experience-exit h2 {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-1);
+    line-height: 0.88;
+  }
+  .racing-sequence__lead > p:last-child {
+    max-width: 43rem;
+    color: var(--color-text-inverted-secondary);
+  }
+  .racing-sequence ol {
+    display: grid;
+    margin: var(--space-12) 0 0;
+    padding: 0;
+    border-block-start: var(--border-hairline) solid var(--color-border-on-dark);
+    list-style: none;
+  }
+  .racing-sequence li {
+    display: grid;
+    min-height: clamp(10rem, 19vw, 18rem);
+    padding-block: var(--space-5);
+    align-items: center;
+    border-block-end: var(--border-hairline) solid var(--color-border-on-dark);
+  }
+  .racing-sequence li span {
+    color: var(--color-brand-cyan);
+    font-weight: 750;
+  }
+  .racing-sequence li strong {
+    font-family: var(--font-family-display);
+    font-size: clamp(4rem, 14vw, 11rem);
+    line-height: 0.7;
+  }
+  .racing-control {
+    padding-block: var(--section-space-editorial);
+  }
+  .racing-control > :global(.container) {
+    display: grid;
+    gap: var(--space-10);
+  }
+  .racing-control__copy {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .racing-control__copy > p:last-child {
+    max-width: 43rem;
+    color: var(--color-text-secondary);
+  }
+  .racing-control__principles {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .racing-control__principles article {
+    padding: var(--space-6);
+    border-block-start: var(--border-accent) solid var(--color-brand-cyan);
+    background: var(--color-surface-subtle);
+  }
+  .racing-control__principles h3 {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-heading-3);
+  }
+  .racing-control__principles p {
+    margin-block-start: var(--space-3);
+    color: var(--color-text-secondary);
+  }
+  :global(.bridge-wrap) {
+    padding-block-end: var(--section-space-editorial);
+  }
+  .experience-exit {
+    padding-block: var(--section-space-editorial);
+    background: var(--color-surface-subtle);
+  }
+  .experience-exit h2 {
+    max-width: 18ch;
+  }
+  .experience-exit div {
+    display: flex;
+    margin-block-start: var(--space-6);
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+  }
+  @media (min-width: 48rem) {
+    .racing-sequence li {
+      grid-template-columns: 5rem 1fr;
+    }
+    .racing-control > :global(.container) {
+      grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr);
+    }
+    .racing-control__principles {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

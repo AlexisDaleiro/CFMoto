@@ -1,0 +1,91 @@
+---
+interface Props {
+  current?: string;
+  surface?: "light" | "dark";
+}
+
+const { current, surface = "light" } = Astro.props;
+const items = [
+  { label: "Racing", href: "/experiencia/racing/", slug: "racing" },
+  { label: "Adventure", href: "/experiencia/adventure/", slug: "adventure" },
+  { label: "Tecnología", href: "/experiencia/tecnologia/", slug: "tecnologia" },
+  { label: "Comunidad", href: "/experiencia/comunidad/", slug: "comunidad" },
+] as const;
+---
+
+<nav
+  class:list={["experience-nav", `experience-nav--${surface}`]}
+  aria-label="Secciones de Experiencia CFMOTO"
+>
+  <a class="experience-nav__home" href="/experiencia/">
+    Experiencia
+  </a>
+  <ul>
+    {items.map((item) => (
+      <li>
+        <a
+          href={item.href}
+          aria-current={current === item.slug ? "page" : undefined}
+        >
+          {item.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .experience-nav {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    border-block-end: var(--border-hairline) solid var(--color-border-subtle);
+  }
+  .experience-nav__home,
+  .experience-nav a {
+    display: inline-flex;
+    min-height: var(--target-minimum);
+    align-items: center;
+    color: inherit;
+    font-size: var(--font-size-caption);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .experience-nav__home {
+    color: var(--color-link-on-light);
+  }
+  .experience-nav ul {
+    display: flex;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    gap: var(--space-5);
+    list-style: none;
+    scrollbar-width: thin;
+  }
+  .experience-nav a[aria-current="page"] {
+    box-shadow: inset 0 -0.1875rem var(--color-brand-cyan);
+  }
+  .experience-nav--dark {
+    border-color: var(--color-border-on-dark);
+    color: var(--color-text-inverted-secondary);
+  }
+  .experience-nav--dark .experience-nav__home,
+  .experience-nav--dark a[aria-current="page"] {
+    color: var(--color-text-inverted);
+  }
+  @media (max-width: 47.99rem) {
+    .experience-nav {
+      display: block;
+    }
+    .experience-nav__home {
+      display: none;
+    }
+  }
+</style>

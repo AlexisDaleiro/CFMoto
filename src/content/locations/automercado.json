@@ -1,0 +1,16 @@
+{
+  "name": "AUTOMERCADO",
+  "slug": "automercado",
+  "department": "Colonia",
+  "locality": "Rosario",
+  "address": "Ruta 1 km 128.500, Radial Rosario",
+  "phone": { "display": "4552 1483", "hrefValue": "45521483" },
+  "capabilities": { "service": true },
+  "source": {
+    "type": "publicCurrentSite",
+    "url": "https://cfmotouruguay.com/service/",
+    "capturedAt": "2026-09-14"
+  },
+  "verificationStatus": "needsClientValidation",
+  "sourceNote": "Datos públicos actuales; la dirección textual se usa para indicaciones sin inferir coordenadas."
+}

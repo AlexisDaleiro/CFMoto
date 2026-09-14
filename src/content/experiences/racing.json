@@ -1,0 +1,43 @@
+{
+  "slug": "racing",
+  "title": "Racing",
+  "descriptor": "Precisión, ritmo y decisión aplicados a una experiencia de producto.",
+  "mode": "racing",
+  "hero": {
+    "eyebrow": "PERFORMANCE EDITORIAL",
+    "statement": "La línea correcta cambia todo.",
+    "supportingText": "Una lectura de Racing construida desde el control, la concentración y la respuesta. Sin confundir competición con producto de calle.",
+    "visualMode": "velocity",
+    "sourceStatus": "proposal"
+  },
+  "sections": [
+    {
+      "id": "ritmo",
+      "eyebrow": "01 — RITMO",
+      "title": "Ver antes. Elegir antes.",
+      "body": "La composición conduce la mirada como una secuencia: referencia, punto de giro y salida. Es una metáfora creativa, no una afirmación técnica.",
+      "emphasis": "REFERENCIA / TRAZADA / SALIDA",
+      "sourceStatus": "proposal"
+    },
+    {
+      "id": "control",
+      "eyebrow": "02 — CONTROL",
+      "title": "La emoción necesita información precisa.",
+      "body": "El lenguaje Racing abre el deseo; la ficha, las especificaciones verificadas y la comparación sostienen la decisión.",
+      "items": [
+        {
+          "title": "Expresión",
+          "body": "Escala, contraste y dirección visual."
+        },
+        {
+          "title": "Decisión",
+          "body": "Datos verificados, producto y acciones claras."
+        }
+      ],
+      "sourceStatus": "proposal"
+    }
+  ],
+  "relatedProducts": ["450sr"],
+  "sourceStatus": "proposal",
+  "sourceReferences": []
+}

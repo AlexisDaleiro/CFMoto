@@ -1,0 +1,16 @@
+{
+  "name": "CAFE RACE",
+  "slug": "cafe-race",
+  "department": "Montevideo",
+  "locality": "Montevideo",
+  "address": "Av. Rivera 4406 esq. Abrosio Velazco",
+  "phone": { "display": "093 947 771", "hrefValue": "093947771" },
+  "capabilities": { "service": true },
+  "source": {
+    "type": "publicCurrentSite",
+    "url": "https://cfmotouruguay.com/service/",
+    "capturedAt": "2026-09-14"
+  },
+  "verificationStatus": "needsClientValidation",
+  "sourceNote": "La calle se conserva exactamente como aparece en la fuente pública; la posible grafía dudosa requiere confirmación del cliente."
+}
