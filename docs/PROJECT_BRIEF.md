@@ -1,6 +1,6 @@
 # CFMOTO Uruguay — Project Brief
 
-**Fase:** Phase 0–5 completadas; siguiente fase pendiente de brief
+**Fase:** Phase 0–10 documentadas; propuesta lista para demo comercial, no para producción
 **Corte de investigación:** 2026-09-13  
 **Estado:** borrador de trabajo para validación comercial
 
