@@ -72,7 +72,7 @@ const categories = Object.entries(categoryMeta).map(([id, meta]) => ({
         >
           <div class="current-heading">
             <div>
-              <h2 id="current-title" class="type-heading-2">
+              <h2 id="current-title" class="type-heading-2" tabindex="-1">
                 Comparación actual
               </h2>
               <p data-selected-count></p>
@@ -115,7 +115,7 @@ const categories = Object.entries(categoryMeta).map(([id, meta]) => ({
           data-compare-zero
           aria-labelledby="zero-title"
         >
-          <h2 id="zero-title" class="type-heading-2">
+          <h2 id="zero-title" class="type-heading-2" tabindex="-1">
             Elegí el primer vehículo.
           </h2>
           <p>
@@ -148,6 +148,7 @@ const categories = Object.entries(categoryMeta).map(([id, meta]) => ({
                       type="button"
                       data-select-product={product.slug}
                       data-product-category={product.category}
+                      aria-label={`Añadir ${product.name} a la comparación`}
                       data-analytics-event="compare_add"
                     >
                       Añadir
@@ -266,6 +267,7 @@ const categories = Object.entries(categoryMeta).map(([id, meta]) => ({
       mode: "push" | "replace" = "push",
       message?: string,
     ) => {
+      const restoreAfterConflict = conflict ? !conflict.hidden : false;
       selected = validated(slugs).slice(0, 3);
       try {
         localStorage.setItem(storageKey, JSON.stringify(selected));
@@ -277,6 +279,15 @@ const categories = Object.entries(categoryMeta).map(([id, meta]) => ({
       render();
       dispatchEvent(new Event("compare:updated"));
       if (message) announce(message);
+      if (restoreAfterConflict) {
+        requestAnimationFrame(() =>
+          compareRoot
+            .querySelector<HTMLElement>(
+              selected.length ? "#current-title" : "#zero-title",
+            )
+            ?.focus(),
+        );
+      }
     };
     const createAction = (
       label: string,
@@ -428,6 +439,14 @@ const categories = Object.entries(categoryMeta).map(([id, meta]) => ({
           button.disabled = isSelected;
           button.textContent = isSelected ? "Añadido" : "Añadir";
           button.setAttribute("aria-pressed", String(isSelected));
+          const product = productBySlug.get(button.dataset.selectProduct ?? "");
+          if (product)
+            button.setAttribute(
+              "aria-label",
+              isSelected
+                ? `${product.name} añadido a la comparación`
+                : `Añadir ${product.name} a la comparación`,
+            );
         });
       renderMatrix(chosen);
     };
@@ -501,9 +520,12 @@ const categories = Object.entries(categoryMeta).map(([id, meta]) => ({
       );
     compareRoot
       .querySelector<HTMLButtonElement>("[data-clear-compare]")
-      ?.addEventListener("click", () =>
-        writeState([], "push", "Comparación vaciada."),
-      );
+      ?.addEventListener("click", () => {
+        writeState([], "push", "Comparación vaciada.");
+        requestAnimationFrame(() =>
+          compareRoot.querySelector<HTMLElement>("#zero-title")?.focus(),
+        );
+      });
     compareRoot
       .querySelector<HTMLButtonElement>("[data-matrix-previous]")
       ?.addEventListener("click", () =>

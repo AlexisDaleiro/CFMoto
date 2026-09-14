@@ -87,6 +87,7 @@ const displacement = getVerifiedDisplacement(product);
       <a
         class="product-card__compare"
         href={`/comparar/?add=${product.data.slug}`}
+        aria-label={`Comparar ${product.data.name}`}
         data-analytics-event="compare_add"
       >
         Comparar

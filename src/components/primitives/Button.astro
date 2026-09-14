@@ -9,6 +9,7 @@ interface Props {
   class?: string;
   target?: "_self" | "_blank";
   rel?: string;
+  ariaLabel?: string;
 }
 
 const {
@@ -21,6 +22,7 @@ const {
   class: className,
   target,
   rel,
+  ariaLabel,
 } = Astro.props;
 
 const classes = [
@@ -38,6 +40,7 @@ const classes = [
     href={disabled ? undefined : href}
     target={target}
     rel={rel}
+    aria-label={ariaLabel}
     aria-disabled={disabled ? "true" : undefined}
     aria-busy={loading ? "true" : undefined}
   >
@@ -48,6 +51,7 @@ const classes = [
     class:list={classes}
     type={type}
     disabled={disabled || loading}
+    aria-label={ariaLabel}
     aria-busy={loading ? "true" : undefined}
   >
     <slot />

@@ -1,6 +1,16 @@
+---
+import { getCollection } from "astro:content";
+
+const products = await getCollection("products");
+const productCategories = Object.fromEntries(
+  products.map((product) => [product.data.slug, product.data.category]),
+);
+---
+
 <aside
   class="compare-bar"
   data-compare-bar
+  data-product-categories={JSON.stringify(productCategories)}
   hidden
   aria-label="Comparación actual"
 >
@@ -19,16 +29,27 @@
   const readCompareStorage = () => {
     try {
       const value = JSON.parse(localStorage.getItem(compareStorageKey) ?? "[]");
-      return Array.isArray(value)
-        ? [
-            ...new Set(
-              value.filter(
-                (item) =>
-                  typeof item === "string" && validCompareSlug.test(item),
-              ),
-            ),
-          ].slice(0, 3)
-        : [];
+      const bar = document.querySelector<HTMLElement>("[data-compare-bar]");
+      const categories = JSON.parse(bar?.dataset.productCategories ?? "{}");
+      if (!Array.isArray(value)) return [];
+      const known = [
+        ...new Set(
+          value.filter(
+            (item) =>
+              typeof item === "string" &&
+              validCompareSlug.test(item) &&
+              typeof categories[item] === "string",
+          ),
+        ),
+      ];
+      const category = known.length > 0 ? categories[known[0]] : undefined;
+      const sanitized = known
+        .filter((slug) => categories[slug] === category)
+        .slice(0, 3);
+      if (JSON.stringify(sanitized) !== JSON.stringify(value)) {
+        localStorage.setItem(compareStorageKey, JSON.stringify(sanitized));
+      }
+      return sanitized;
     } catch {
       return [];
     }
@@ -42,6 +63,10 @@
       "[data-compare-bar-link]",
     );
     bar.hidden = slugs.length === 0;
+    document.documentElement.classList.toggle(
+      "compare-bar-visible",
+      slugs.length > 0,
+    );
     if (count) count.textContent = `${slugs.length} de 3`;
     if (link) link.href = `/comparar/?models=${slugs.join(",")}`;
   };
@@ -85,5 +110,16 @@
     color: var(--color-brand-cyan);
     font-weight: 750;
     white-space: nowrap;
+  }
+  :global(html.compare-bar-visible body) {
+    padding-block-end: calc(5rem + env(safe-area-inset-bottom));
+  }
+  @media (max-width: 30rem) {
+    .compare-bar {
+      flex-wrap: wrap;
+    }
+    .compare-bar a {
+      white-space: normal;
+    }
   }
 </style>

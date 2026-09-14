@@ -142,7 +142,7 @@ const hasFilters =
   </Section>
   <footer slot="footer" class="catalog-footer" data-surface="dark">
     <Container size="wide">
-      <p>Catálogo Phase 6 · Información sujeta a validación local.</p>
+      <p>Catálogo de demostración · Información sujeta a validación local.</p>
     </Container>
   </footer>
 </BaseLayout>
@@ -174,6 +174,43 @@ const hasFilters =
       "[data-filter-close]",
     );
     const allowed = new Set(["family", "usage", "displacement", "sort"]);
+    const validValues = new Map<string, Set<string>>();
+    const displayLabels = new Map<string, string>();
+    forms[0]
+      ?.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[name]")
+      .forEach((field) => {
+        const values =
+          field instanceof HTMLSelectElement
+            ? [...field.options].map((option) => option.value)
+            : [field.value];
+        const current = validValues.get(field.name) ?? new Set<string>();
+        values.filter(Boolean).forEach((value) => current.add(value));
+        validValues.set(field.name, current);
+        if (field instanceof HTMLSelectElement) {
+          [...field.options]
+            .filter((option) => option.value)
+            .forEach((option) =>
+              displayLabels.set(
+                `${field.name}:${option.value}`,
+                option.textContent?.trim() ?? option.value,
+              ),
+            );
+        } else if (field.value) {
+          displayLabels.set(
+            `${field.name}:${field.value}`,
+            field.closest("label")?.textContent?.trim() ?? field.value,
+          );
+        }
+      });
+
+    const sanitizeParams = (input: URLSearchParams) => {
+      const clean = new URLSearchParams();
+      input.forEach((value, key) => {
+        if (allowed.has(key) && validValues.get(key)?.has(value))
+          clean.append(key, value);
+      });
+      return clean;
+    };
 
     const values = (params: URLSearchParams, name: string) =>
       params.getAll(name);
@@ -199,7 +236,8 @@ const hasFilters =
           select.value = params.get(select.name) ?? "relevance";
         });
       });
-    const apply = (params: URLSearchParams, announce = false) => {
+    const apply = (input: URLSearchParams, announce = false) => {
+      const params = sanitizeParams(input);
       const families = values(params, "family");
       const usages = values(params, "usage");
       const displacements = values(params, "displacement");
@@ -234,12 +272,20 @@ const hasFilters =
       }
       if (activeFilters) {
         activeFilters.replaceChildren();
-        const selected = [...families, ...usages, ...displacements];
-        selected.forEach((value) => {
+        const selected = [
+          ...families.map((value) => ({ key: "family", value })),
+          ...usages.map((value) => ({ key: "usage", value })),
+          ...displacements.map((value) => ({
+            key: "displacement",
+            value,
+          })),
+        ];
+        selected.forEach(({ key: selectedKey, value }) => {
+          const label = displayLabels.get(`${selectedKey}:${value}`) ?? value;
           const button = document.createElement("button");
           button.type = "button";
-          button.textContent = `${value} ×`;
-          button.setAttribute("aria-label", `Quitar filtro ${value}`);
+          button.textContent = `${label} ×`;
+          button.setAttribute("aria-label", `Quitar filtro ${label}`);
           button.addEventListener("click", () => {
             const next = new URLSearchParams(location.search);
             for (const key of ["family", "usage", "displacement"]) {
@@ -307,12 +353,23 @@ const hasFilters =
       apply(new URLSearchParams(location.search)),
     );
     const initial = new URLSearchParams(location.search);
-    const invalid = [...initial.keys()].filter((key) => !allowed.has(key));
+    const invalid = [...initial.entries()].filter(
+      ([key, value]) => !allowed.has(key) || !validValues.get(key)?.has(value),
+    );
     if (invalid.length && notice) {
       notice.hidden = false;
       notice.textContent = `Se ignoró ${invalid.length === 1 ? "un filtro no reconocido" : "filtros no reconocidos"}.`;
     }
-    apply(initial);
+    const safeInitial = sanitizeParams(initial);
+    if (safeInitial.toString() !== initial.toString()) {
+      const query = safeInitial.toString();
+      history.replaceState(
+        {},
+        "",
+        `${location.pathname}${query ? `?${query}` : ""}`,
+      );
+    }
+    apply(safeInitial);
   });
 </script>
 

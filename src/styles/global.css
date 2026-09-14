@@ -32,6 +32,18 @@ a:hover {
   outline-offset: var(--focus-offset);
 }
 
+:where(
+  .button--primary,
+  .header-cta,
+  .submit-button,
+  .filter-apply,
+  .primary-action
+):focus-visible {
+  outline-color: var(--color-neutral-950);
+  box-shadow: 0 0 0 calc(var(--focus-width) + var(--focus-offset))
+    var(--color-neutral-000);
+}
+
 [data-surface="dark"] :focus-visible,
 [data-surface="photo"] :focus-visible {
   outline-color: var(--color-focus-on-dark);

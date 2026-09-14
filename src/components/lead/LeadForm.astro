@@ -513,7 +513,7 @@ const sortedProducts = [...products].sort((a, b) =>
         event.preventDefault();
         const errors = validate();
         if (errors.length) {
-          errors[0].target.focus();
+          summary.focus();
           return;
         }
         form.reset();

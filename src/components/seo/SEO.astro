@@ -19,8 +19,9 @@ const {
   type = "website",
 } = Astro.props;
 
-const documentTitle =
-  title === siteConfig.name ? title : `${title} | ${siteConfig.name}`;
+const documentTitle = title.includes(siteConfig.name)
+  ? title
+  : `${title} | ${siteConfig.name}`;
 
 const resolveCanonical = (
   value: string | URL | undefined,

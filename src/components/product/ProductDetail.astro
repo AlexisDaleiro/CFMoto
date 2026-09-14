@@ -31,7 +31,7 @@ const description = product.data.description;
   title={`${product.data.name} — CFMOTO Uruguay`}
   description={
     product.data.descriptor
-      ? `${product.data.name}: ${product.data.descriptor}. Información verificada disponible para Uruguay.`
+      ? `${product.data.name}: ${product.data.descriptor}. Consultá los datos técnicos verificados disponibles en esta demo.`
       : `${product.data.name} — CFMOTO Uruguay.`
   }
   robots="noindex, nofollow"
@@ -48,7 +48,7 @@ const description = product.data.description;
           <Stack gap="3">
             <p class="type-label">
               {product.data.copyStatus === "proposal"
-                ? "POSICIONAMIENTO DE PROPUESTA"
+                ? "EXPERIENCIA DE PRODUCTO"
                 : product.data.family}
             </p>
             <h2 id="story-title" class="type-heading-1">

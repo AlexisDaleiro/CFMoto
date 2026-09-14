@@ -73,7 +73,8 @@ const capabilities = Object.entries(location.data.capabilities).filter(
               href={getDirectionsHref(location)}
               variant="secondary"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
+              ariaLabel={`Cómo llegar a ${location.data.name}`}
             >
               Cómo llegar
             </Button>
